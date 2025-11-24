@@ -1,0 +1,29 @@
+#!/bin/sh
+
+branch=$(git rev-parse --abbrev-ref HEAD)
+
+# Block direct pushes to main
+if [ "$branch" = "main" ]; then
+  echo "Error: Direct pushes to main branch are not allowed."
+  echo ""
+  echo "Please create a feature branch and submit a pull request:"
+  echo "  git checkout -b feat/your-feature-name"
+  echo "  git push -u origin feat/your-feature-name"
+  exit 1
+fi
+
+# Validate branch naming convention
+if ! echo "$branch" | grep -qE "^(feat|fix|hotfix|release)/"; then
+  echo "Error: Invalid branch name '$branch'"
+  echo ""
+  echo "Branch names must start with one of:"
+  echo "  feat/    - New features"
+  echo "  fix/     - Bug fixes"
+  echo "  hotfix/  - Urgent production fixes"
+  echo "  release/ - Release preparation"
+  echo ""
+  echo "Example: git checkout -b feat/add-dark-mode"
+  exit 1
+fi
+
+exit 0
