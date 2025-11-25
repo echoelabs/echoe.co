@@ -1,0 +1,6 @@
+# robots.txt for echoe.co
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://echoe.co/sitemap.xml

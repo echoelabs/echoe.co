@@ -1,0 +1,160 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+:root {
+  --font-inter: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-space-grotesk: 'Space Grotesk', 'SF Pro Display', 'Helvetica Neue', sans-serif;
+}
+
+html {
+  scrollbar-gutter: stable;
+  position: relative;
+}
+
+body {
+  font-family: var(--font-inter);
+  background-color: #ffffff;
+  color: #0f172a;
+  overflow-x: hidden;
+  position: relative;
+}
+
+.font-display {
+  font-family: var(--font-space-grotesk);
+}
+
+/* Ensure fonts display swap for performance */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Space Grotesk';
+  font-display: swap;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e2e8f0;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #cbd5e1;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Aurora animations */
+@keyframes nebula-pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.2;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes aurora-flow-1 {
+  0% {
+    transform: translateX(-10%) translateY(-5%) rotate(-3deg) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateX(-10%) translateY(-5%) rotate(-3deg) scale(1);
+    opacity: 0.6;
+  }
+}
+
+@keyframes aurora-flow-2 {
+  0% {
+    transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translateX(-5%) translateY(-5%) rotate(-3deg) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
+    opacity: 0.5;
+  }
+}
+
+@keyframes aurora-shimmer {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+.animate-nebula {
+  animation: nebula-pulse 8s ease-in-out infinite;
+}
+
+.animate-twinkle {
+  animation: twinkle 3s ease-in-out infinite;
+}
+
+.animate-aurora-1 {
+  animation: aurora-flow-1 18s ease-in-out infinite;
+}
+
+.animate-aurora-2 {
+  animation: aurora-flow-2 24s ease-in-out infinite;
+}
+
+.animate-aurora-shimmer {
+  animation: aurora-shimmer 6s ease-in-out infinite;
+}
+
+.delay-100 {
+  animation-delay: 0.1s;
+}
+.delay-200 {
+  animation-delay: 0.2s;
+}
+.delay-500 {
+  animation-delay: 0.5s;
+}
+.delay-1000 {
+  animation-delay: 1s;
+}

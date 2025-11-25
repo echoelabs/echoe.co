@@ -1,0 +1,39 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import Header from '../components/Header';
+import Footer from '../components/Footer.astro';
+import BackToTop from '../components/BackToTop';
+
+interface Props {
+  title: string;
+  lastUpdated: string;
+}
+
+const { title, lastUpdated } = Astro.props;
+---
+
+<BaseLayout title={`${title} - echoe`}>
+  <Header client:load currentPath={Astro.url.pathname} />
+
+  <main class="min-h-dvh pt-16 pb-10 px-3 sm:px-4 sm:pt-20 sm:pb-12 md:px-8 lg:px-16">
+    <div class="max-w-4xl mx-auto">
+      <!-- Page Header -->
+      <header class="mb-8">
+        <h1 class="text-2xl sm:text-3xl font-display font-semibold text-gray-900 mb-2">
+          {title}
+        </h1>
+        <p class="text-sm text-gray-500">
+          Last updated: {lastUpdated}
+        </p>
+      </header>
+
+      <!-- Content -->
+      <article class="prose prose-gray max-w-none">
+        <slot />
+      </article>
+    </div>
+  </main>
+
+  <Footer />
+  <BackToTop client:load />
+</BaseLayout>

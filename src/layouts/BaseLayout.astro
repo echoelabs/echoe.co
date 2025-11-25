@@ -1,0 +1,157 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { SEO } from 'astro-seo';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = "The operating system for next-generation commerce. Manage customer communications, inventory, orders, and AI-powered support across all channels in one unified platform." } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, 'https://echoe.co').toString();
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO Meta Tags -->
+    <SEO
+      title={title}
+      description={description}
+      canonical={canonicalUrl}
+      openGraph={{
+        basic: {
+          title: title,
+          type: "website",
+          image: "https://echoe.co/og-image.png",
+          url: canonicalUrl,
+        },
+        optional: {
+          description: description,
+          siteName: "echoe",
+          locale: "en_US",
+        },
+        image: {
+          alt: "echoe - Unified Commerce Platform",
+        },
+      }}
+      twitter={{
+        card: "summary_large_image",
+        title: title,
+        description: description,
+        image: "https://echoe.co/og-image.png",
+      }}
+      extend={{
+        meta: [
+          { name: "keywords", content: "unified commerce, customer support, AI automation, inventory management, order tracking, multi-channel, SaaS, e-commerce platform" },
+          { name: "author", content: "ECHO HQ CO., LTD." },
+          { name: "robots", content: "index, follow" },
+        ],
+      }}
+    />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+
+    <!-- Theme Color -->
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="msapplication-TileColor" content="#000000" />
+
+    <!-- DNS Prefetch -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
+
+    <!-- Preconnect to Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Google Fonts - Non-blocking load -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" /></noscript>
+
+    <!-- Client Router for View Transitions -->
+    <ClientRouter />
+  </head>
+  <body style="position: relative;">
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-500">
+      Skip to main content
+    </a>
+
+    <!-- JSON-LD Structured Data -->
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "echoe",
+      "url": "https://echoe.co",
+      "logo": "https://echoe.co/favicon.svg",
+      "description": "The operating system for next-generation commerce. Manage customer communications, inventory, orders, and AI-powered support across all channels in one unified platform.",
+      "sameAs": [],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "hello@echoe.co",
+        "contactType": "customer service"
+      }
+    })} />
+
+    <main id="main-content">
+      <slot />
+    </main>
+
+    <!-- Lenis Smooth Scroll -->
+    <script>
+      import Lenis from 'lenis';
+
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true,
+      });
+
+      // Make lenis available globally
+      (window as any).lenis = lenis;
+
+      function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
+      requestAnimationFrame(raf);
+
+      // Scroll to top on page navigation (View Transitions)
+      document.addEventListener('astro:after-swap', () => {
+        // Only scroll to top if no hash in URL
+        if (!window.location.hash) {
+          window.scrollTo(0, 0);
+          if ((window as any).lenis) {
+            (window as any).lenis.scrollTo(0, { immediate: true });
+          }
+        }
+      });
+    </script>
+
+    <!-- PostHog Analytics -->
+    <script>
+      import { initPostHog } from '../services/analytics';
+
+      // Check cookie consent before initializing
+      const consent = localStorage.getItem('cookie-consent');
+      if (consent) {
+        const preferences = JSON.parse(consent);
+        if (preferences.analytics) {
+          initPostHog();
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<style is:global>
+  @import '../styles/global.css';
+</style>
