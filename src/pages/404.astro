@@ -1,0 +1,48 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout title="Page Not Found - echoe">
+  <Header client:load currentPath="/404" />
+
+  <main class="min-h-[var(--min-vh-page)] flex flex-col items-center justify-center px-4">
+    <div class="text-center animate-fade-in">
+      <h1 class="text-8xl md:text-9xl font-display font-bold text-gray-100 select-none">
+        404
+      </h1>
+      <h2 class="text-xl md:text-2xl font-display font-semibold text-gray-900 mt-2 mb-4">
+        Page not found
+      </h2>
+      <p class="text-sm text-gray-500 max-w-sm mx-auto mb-8">
+        The page you're looking for doesn't exist or has been moved.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-black text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-all hover:scale-105 active:scale-95 shadow-md"
+      >
+        Back to Home
+      </a>
+    </div>
+  </main>
+
+  <Footer />
+</BaseLayout>
+
+<style>
+  @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.5s ease-out forwards;
+  }
+</style>

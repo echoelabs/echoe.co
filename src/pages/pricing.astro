@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header';
+import Footer from '../components/Footer.astro';
+import PricingPage from '../components/PricingPage';
+import CookieConsent from '../components/CookieConsent';
+import BackToTop from '../components/BackToTop';
+---
+
+<BaseLayout title="Pricing - echoe">
+  <Header client:load currentPath="/pricing" />
+
+  <main>
+    <PricingPage client:load />
+  </main>
+
+  <Footer />
+  <CookieConsent client:idle />
+  <BackToTop client:idle />
+</BaseLayout>

@@ -1,0 +1,80 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header';
+import Hero from '../components/Hero';
+import InteractiveDemo from '../components/InteractiveDemo';
+import Features from '../components/Features';
+import EarlyAccess from '../components/EarlyAccess';
+import CookieConsent from '../components/CookieConsent';
+---
+
+<BaseLayout title="echoe - Unified Commerce Platform">
+  <Header client:load currentPath="/" />
+
+  <main class="overflow-visible" style="position: relative;">
+    <Hero client:load />
+    <InteractiveDemo client:visible />
+    <Features client:visible />
+    <EarlyAccess client:visible />
+  </main>
+
+  <CookieConsent client:idle />
+
+  <script>
+    import Lenis from 'lenis';
+    import { trackSectionView } from '../services/analytics';
+
+    // Initialize Lenis smooth scroll
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+    });
+
+    // Expose lenis globally for navigation
+    (window as any).lenis = lenis;
+
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+
+    requestAnimationFrame(raf);
+
+    // Track section views with IntersectionObserver
+    const sections = ['hero', 'demo', 'features', 'pricing'];
+    const trackedSections = new Set<string>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.target.id) {
+            const sectionId = entry.target.id;
+            if (!trackedSections.has(sectionId)) {
+              trackedSections.add(sectionId);
+              trackSectionView(sectionId);
+            }
+          }
+        });
+      },
+      { threshold: 0.3 }
+    );
+
+    // Observe sections after a short delay
+    setTimeout(() => {
+      sections.forEach((id) => {
+        const element = document.getElementById(id);
+        if (element) observer.observe(element);
+      });
+    }, 100);
+
+    // Cleanup on page unload
+    document.addEventListener('astro:before-swap', () => {
+      lenis.destroy();
+      (window as any).lenis = undefined;
+      observer.disconnect();
+    });
+  </script>
+</BaseLayout>

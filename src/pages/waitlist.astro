@@ -1,0 +1,20 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header';
+import Footer from '../components/Footer.astro';
+import WaitlistPage from '../components/WaitlistPage';
+import CookieConsent from '../components/CookieConsent';
+import BackToTop from '../components/BackToTop';
+---
+
+<BaseLayout title="Join the Waitlist - echoe">
+  <Header client:load currentPath="/waitlist" />
+
+  <main>
+    <WaitlistPage client:load />
+  </main>
+
+  <Footer />
+  <CookieConsent client:idle />
+  <BackToTop client:idle />
+</BaseLayout>
