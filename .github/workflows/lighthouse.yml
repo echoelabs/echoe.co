@@ -1,0 +1,157 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    name: Validate PR
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check branch naming convention
+        run: |
+          BRANCH="${{ github.head_ref }}"
+          if [[ ! "$BRANCH" =~ ^(feat|fix|hotfix|release)/ ]]; then
+            echo "Error: Invalid branch name '$BRANCH'"
+            echo ""
+            echo "Branch names must start with: feat/, fix/, hotfix/, or release/"
+            exit 1
+          fi
+          echo "Branch name validated: $BRANCH"
+
+      - name: Check branch is up-to-date with main
+        run: |
+          git fetch origin main
+          BEHIND=$(git rev-list --count HEAD..origin/main)
+          if [ "$BEHIND" -gt 0 ]; then
+            echo "Error: Branch is $BEHIND commit(s) behind main."
+            echo ""
+            echo "Please rebase your branch on the latest main:"
+            echo "  git fetch origin main"
+            echo "  git rebase origin/main"
+            echo "  git push --force-with-lease"
+            exit 1
+          fi
+          echo "Branch is up-to-date with main."
+
+      - name: Check for merge commits (enforce linear history)
+        run: |
+          MERGE_COMMITS=$(git rev-list --merges origin/main..HEAD)
+          if [ -n "$MERGE_COMMITS" ]; then
+            echo "Error: Merge commits detected in branch history."
+            echo ""
+            echo "This repository requires linear history (no merge commits)."
+            echo "Please rebase instead of merging:"
+            echo "  git rebase origin/main"
+            echo "  git push --force-with-lease"
+            exit 1
+          fi
+          echo "No merge commits found. Linear history verified."
+
+      - name: Check commit message format
+        run: |
+          PATTERN="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .+"
+          INVALID_COMMITS=""
+
+          for COMMIT in $(git rev-list origin/main..HEAD); do
+            MSG=$(git log --format=%s -n 1 $COMMIT)
+            if ! echo "$MSG" | grep -qE "$PATTERN"; then
+              INVALID_COMMITS="$INVALID_COMMITS\n  - $MSG"
+            fi
+          done
+
+          if [ -n "$INVALID_COMMITS" ]; then
+            echo "Error: Invalid commit message format detected."
+            echo ""
+            echo "The following commits do not follow conventional commits format:"
+            echo -e "$INVALID_COMMITS"
+            echo ""
+            echo "Expected format: <type>: <description> or <type>(scope): <description>"
+            echo "Types: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert"
+            exit 1
+          fi
+          echo "All commit messages validated."
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run ESLint
+        run: bun run lint
+
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Check formatting
+        run: bun run format:check
+
+  typecheck:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    needs: validate
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Type check
+        run: bun run typecheck
+
+  lighthouse:
+    name: Lighthouse
+    runs-on: ubuntu-latest
+    needs: [lint, format, typecheck]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Build
+        run: bun run build
+
+      - name: Run Lighthouse CI
+        uses: treosh/lighthouse-ci-action@v12
+        with:
+          uploadArtifacts: true
+          temporaryPublicStorage: true
+          configPath: ./lighthouserc.json
