@@ -13,14 +13,22 @@ if [ "$branch" = "main" ]; then
 fi
 
 # Validate branch naming convention
-if ! echo "$branch" | grep -qE "^(feat|fix|hotfix|release)/"; then
+if ! echo "$branch" | grep -qE "^(feat|fix|hotfix|release|docs|style|refactor|perf|test|build|ci|chore)/"; then
   echo "Error: Invalid branch name '$branch'"
   echo ""
   echo "Branch names must start with one of:"
-  echo "  feat/    - New features"
-  echo "  fix/     - Bug fixes"
-  echo "  hotfix/  - Urgent production fixes"
-  echo "  release/ - Release preparation"
+  echo "  feat/     - New features"
+  echo "  fix/      - Bug fixes"
+  echo "  hotfix/   - Urgent production fixes"
+  echo "  release/  - Release preparation"
+  echo "  docs/     - Documentation"
+  echo "  style/    - Code style"
+  echo "  refactor/ - Refactoring"
+  echo "  perf/     - Performance"
+  echo "  test/     - Tests"
+  echo "  build/    - Build system"
+  echo "  ci/       - CI/CD"
+  echo "  chore/    - Other changes"
   echo ""
   echo "Example: git checkout -b feat/add-dark-mode"
   exit 1

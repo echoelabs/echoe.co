@@ -21,7 +21,7 @@ The following are automatically validated by CI:
 
 | Check | Description |
 |-------|-------------|
-| **Branch Naming** | Must start with `feat/`, `fix/`, `hotfix/`, or `release/` |
+| **Branch Naming** | Must start with conventional prefix (`feat/`, `fix/`, `docs/`, `chore/`, etc.) |
 | **Commit Format** | Must follow [Conventional Commits](https://www.conventionalcommits.org/) |
 | **Linear History** | No merge commits allowed (rebase only) |
 | **Up to Date** | Branch must be rebased on latest `main` |
