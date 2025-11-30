@@ -212,20 +212,6 @@ jobs:
       - name: Create .assetsignore for wrangler
         run: echo "_worker.js" > dist/.assetsignore
 
-      - name: Create preview wrangler config
-        run: |
-          cat > wrangler-preview.toml << 'EOF'
-          name = "echoeco-preview-${{ github.event.pull_request.number }}"
-          compatibility_date = "2025-11-29"
-          compatibility_flags = ["nodejs_compat"]
-          main = "dist/_worker.js/index.js"
-          workers_dev = true
-
-          [assets]
-          binding = "ASSETS"
-          directory = "./dist"
-          EOF
-
       - name: Deploy Preview to Cloudflare Workers
         id: deploy
         uses: cloudflare/wrangler-action@v3
@@ -233,7 +219,18 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: bun
-          command: deploy --config wrangler-preview.toml
+          command: versions upload
+
+      - name: Get preview URL
+        id: preview-url
+        run: |
+          # Extract version ID from wrangler output
+          VERSION_ID=$(cat wrangler-output.txt 2>/dev/null | grep -oP 'Version ID: \K[a-f0-9-]+' || echo "")
+          if [ -n "$VERSION_ID" ]; then
+            echo "url=https://${VERSION_ID}-echoeco.echoe.workers.dev" >> $GITHUB_OUTPUT
+          else
+            echo "url=https://echoe.co (preview URL not available)" >> $GITHUB_OUTPUT
+          fi
 
       - name: Find existing comment
         uses: peter-evans/find-comment@v3
@@ -255,17 +252,5 @@ jobs:
 
             | Name | Link |
             |------|------|
-            | **Preview URL** | https://echoeco-preview-${{ github.event.pull_request.number }}.workers.dev |
+            | **Preview URL** | ${{ steps.preview-url.outputs.url }} |
             | **Commit** | `${{ github.sha }}` |
-
-  cleanup:
-    name: Cleanup Preview
-    runs-on: ubuntu-latest
-    if: github.event.action == 'closed'
-    steps:
-      - name: Delete preview worker
-        uses: cloudflare/wrangler-action@v3
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: delete echoeco-preview-${{ github.event.pull_request.number }} --force
