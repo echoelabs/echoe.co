@@ -280,7 +280,7 @@ const Hero: React.FC = () => {
 
     // Configuration - Adjust grid spacing for performance
     const isMobile = window.innerWidth < 640;
-    const GRID_SPACING = isMobile ? 35 : 30; // Larger grid = fewer lines = better performance
+    const GRID_SPACING = isMobile ? 40 : 35; // Larger grid = fewer lines = better performance
     const MAX_RIPPLES = 40;
     const DRAG_SPAWN_DIST = 10; // Frequent for smooth stream
 
@@ -549,7 +549,7 @@ const Hero: React.FC = () => {
     };
 
     // Defer canvas animation to not block initial paint (improves LCP)
-    const startTimeout = setTimeout(() => draw(Date.now()), 50);
+    const startTimeout = setTimeout(() => draw(Date.now()), 150);
 
     return () => {
       clearTimeout(startTimeout);
