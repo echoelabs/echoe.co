@@ -8,6 +8,12 @@ workers_dev = false
 # Enable preview URLs for testing deployments
 preview_urls = true
 
+# Custom domain route
+[[routes]]
+pattern = "echoe.co/*"
+zone_name = "echoe.co"
+custom_domain = true
+
 [assets]
 directory = "./dist"
 
