@@ -1,6 +1,12 @@
-name = "echoe-co"
-compatibility_date = "2024-09-23"
+name = "echoeco"
+compatibility_date = "2025-11-29"
 compatibility_flags = ["nodejs_compat_v2"]
+
+# Disable workers.dev subdomain (using custom domain echoe.co)
+workers_dev = false
+
+# Enable preview URLs for testing deployments
+preview_urls = true
 
 [assets]
 directory = "./dist"
