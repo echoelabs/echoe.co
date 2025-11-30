@@ -212,13 +212,23 @@ jobs:
       - name: Create .assetsignore for wrangler
         run: echo "_worker.js" > dist/.assetsignore
 
-      - name: Upload version and create alias
+      - name: Get branch alias
+        id: branch-alias
+        run: |
+          # Convert branch name to alias format (lowercase, replace / with -)
+          BRANCH="${{ github.head_ref }}"
+          ALIAS=$(echo "$BRANCH" | tr '/' '-' | tr '[:upper:]' '[:lower:]')
+          echo "alias=$ALIAS" >> $GITHUB_OUTPUT
+
+      - name: Upload preview version
+        id: deploy
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: bun
-          command: versions upload --tag pr-${{ github.event.pull_request.number }} --message "PR #${{ github.event.pull_request.number }}"
+          wranglerVersion: '3.108.0'
+          command: versions upload --preview-alias ${{ steps.branch-alias.outputs.alias }} --message "PR #${{ github.event.pull_request.number }}"
 
       - name: Find existing comment
         uses: peter-evans/find-comment@v3
@@ -240,5 +250,5 @@ jobs:
 
             | Name | Link |
             |------|------|
-            | **Preview URL** | https://preview-${{ github.event.pull_request.number }}-echoeco.echoe.workers.dev |
+            | **Preview URL** | https://${{ steps.branch-alias.outputs.alias }}-echoeco.echoe.workers.dev |
             | **Commit** | `${{ github.sha }}` |
