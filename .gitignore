@@ -58,3 +58,4 @@ seo-report*.json
 # Documentation - ignore all except essentials
 *.md
 !README.md
+!CHANGELOG.md
