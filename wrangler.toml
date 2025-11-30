@@ -10,7 +10,7 @@ preview_urls = true
 
 # Custom domain route
 [[routes]]
-pattern = "echoe.co/*"
+pattern = "echoe.co"
 zone_name = "echoe.co"
 custom_domain = true
 
