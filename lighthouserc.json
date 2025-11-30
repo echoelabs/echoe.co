@@ -4,7 +4,10 @@
       "startServerCommand": "bunx wrangler pages dev dist --port 8788",
       "startServerReadyPattern": "Ready on",
       "url": ["http://localhost:8788/"],
-      "numberOfRuns": 3
+      "numberOfRuns": 3,
+      "settings": {
+        "skipAudits": ["screenshot-thumbnails", "final-screenshot"]
+      }
     },
     "assert": {
       "aggregationMethod": "median-run",
