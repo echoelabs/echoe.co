@@ -198,6 +198,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: Download build artifacts
         uses: actions/download-artifact@v4
         with:
@@ -210,6 +215,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: bun
           # Deploy to isolated preview worker (not production)
           command: deploy --name echoeco-preview-${{ github.event.pull_request.number }}
 
