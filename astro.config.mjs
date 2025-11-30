@@ -1,3 +1,4 @@
+/* global process */
 import { defineConfig } from 'astro/config';
 import cloudflare from '@astrojs/cloudflare';
 import react from '@astrojs/react';
@@ -19,6 +20,10 @@ export default defineConfig({
   ],
   vite: {
     plugins: [tailwindcss()],
+    define: {
+      'import.meta.env.PUBLIC_POSTHOG_KEY': JSON.stringify(process.env.PUBLIC_POSTHOG_KEY || ''),
+      'import.meta.env.PUBLIC_POSTHOG_HOST': JSON.stringify(process.env.PUBLIC_POSTHOG_HOST || ''),
+    },
     ssr: {
       external: ['node:buffer'],
     },
