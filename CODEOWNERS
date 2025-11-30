@@ -1,0 +1,24 @@
+# CODEOWNERS - Define code ownership for PR reviews
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Default owners for everything
+* @echoelabs/engineering
+
+# Frontend components
+/components/ @echoelabs/frontend
+/pages/ @echoelabs/frontend
+
+# Backend/API
+/functions/ @echoelabs/backend
+/services/ @echoelabs/backend
+
+# Email templates
+/emails/ @echoelabs/marketing
+
+# Infrastructure and config
+vite.config.ts @echoelabs/engineering
+tsconfig.json @echoelabs/engineering
+package.json @echoelabs/engineering
+
+# Documentation
+*.md @echoelabs/engineering
