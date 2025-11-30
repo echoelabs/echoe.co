@@ -88,6 +88,15 @@ const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Safari/iOS detection for performance optimizations
+  const [isSafari, setIsSafari] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
+
+  useEffect(() => {
+    setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
+    setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
+  }, []);
+
   // Title Sets - pick random one on client only to avoid hydration mismatch
   const titleSets = [
     {
@@ -222,12 +231,12 @@ const Hero: React.FC = () => {
   // STICKY SCROLL LOGIC - Based on scroll progress (0-1) instead of absolute pixels
   // Title 1 fades out from 0% to 60% of scroll
   const title1Opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const title1Scale = useTransform(scrollYProgress, [0, 0.6], [1, 0.9]);
+  const title1Scale = useTransform(scrollYProgress, [0, 0.6], isIOS ? [1, 1] : [1, 0.9]);
   const title1Y = useTransform(scrollYProgress, [0, 0.6], [0, -50]);
 
   // Title 2 fades in from 40% to 100% of scroll
   const title2Opacity = useTransform(scrollYProgress, [0.4, 1], [0, 1]);
-  const title2Scale = useTransform(scrollYProgress, [0.4, 1], [1.1, 1]);
+  const title2Scale = useTransform(scrollYProgress, [0.4, 1], isIOS ? [1, 1] : [1.1, 1]);
   const title2Y = useTransform(scrollYProgress, [0.4, 1], [50, 0]);
 
   // Bubble Visibility Logic - Group 1 appears early, Group 2 appears mid-scroll
@@ -306,17 +315,18 @@ const Hero: React.FC = () => {
         });
       } else {
         // STOP RIPPLE SEQUENCE
-        // Spawn 3 concentric ripples
-        [0, 150, 300].forEach((delay, i) => {
+        // Spawn fewer, lighter ripples on Safari for better performance
+        const stopRippleDelays = isSafari ? [0] : [0, 150, 300];
+        stopRippleDelays.forEach((delay, i) => {
           setTimeout(() => {
             ripples.push({
               x,
               y,
               r: 0,
-              maxR: 600 + i * 50,
-              strength: 4.0 - i * 0.5, // Fade out strength
-              speed: 3.0,
-              life: 1.5,
+              maxR: isSafari ? 350 + i * 30 : 600 + i * 50,
+              strength: isSafari ? 2.5 - i * 0.3 : 4.0 - i * 0.5,
+              speed: 3.5,
+              life: isSafari ? 1.0 : 1.5,
               type: 'stop',
             });
           }, delay);
@@ -471,43 +481,70 @@ const Hero: React.FC = () => {
 
       ctx.lineWidth = 1;
 
-      // Helper to draw a segment between two points with interpolated alpha
-      const drawSegment = (
-        p1: { x: number; y: number; alpha: number },
-        p2: { x: number; y: number; alpha: number }
-      ) => {
-        const avgAlpha = (p1.alpha + p2.alpha) / 2;
-        if (avgAlpha < 0.02) return; // Skip invisible lines
+      // Batch segments by alpha for better performance
+      interface Segment {
+        p1: { x: number; y: number };
+        p2: { x: number; y: number };
+        alpha: number;
+      }
 
-        ctx.beginPath();
-        ctx.moveTo(p1.x, p1.y);
-        ctx.lineTo(p2.x, p2.y);
+      const segments: Segment[] = [];
 
-        // Color logic:
-        // High alpha -> Blueish/Darker
-        // Low alpha -> Faint Gray
-        ctx.strokeStyle = `rgba(15, 23, 42, ${avgAlpha * 0.25})`;
-        ctx.stroke();
-      };
-
-      // Draw Horizontal Lines
+      // Collect Horizontal Lines
       for (let y = 0; y <= height + GRID_SPACING; y += GRID_SPACING) {
         let p1 = getPointInfo(0, y);
         for (let x = GRID_SPACING; x <= width + GRID_SPACING; x += GRID_SPACING) {
           const p2 = getPointInfo(x, y);
-          drawSegment(p1, p2);
+          const avgAlpha = (p1.alpha + p2.alpha) / 2;
+          if (avgAlpha >= 0.02) {
+            segments.push({
+              p1: { x: p1.x, y: p1.y },
+              p2: { x: p2.x, y: p2.y },
+              alpha: avgAlpha,
+            });
+          }
           p1 = p2;
         }
       }
 
-      // Draw Vertical Lines
+      // Collect Vertical Lines
       for (let x = 0; x <= width + GRID_SPACING; x += GRID_SPACING) {
         let p1 = getPointInfo(x, 0);
         for (let y = GRID_SPACING; y <= height + GRID_SPACING; y += GRID_SPACING) {
           const p2 = getPointInfo(x, y);
-          drawSegment(p1, p2);
+          const avgAlpha = (p1.alpha + p2.alpha) / 2;
+          if (avgAlpha >= 0.02) {
+            segments.push({
+              p1: { x: p1.x, y: p1.y },
+              p2: { x: p2.x, y: p2.y },
+              alpha: avgAlpha,
+            });
+          }
           p1 = p2;
         }
+      }
+
+      // Group segments by alpha (rounded to reduce groups)
+      const segmentsByAlpha = new Map<number, Segment[]>();
+      for (const seg of segments) {
+        const alphaKey = Math.round(seg.alpha * 20) / 20; // Round to 0.05 increments
+        const existing = segmentsByAlpha.get(alphaKey);
+        if (existing) {
+          existing.push(seg);
+        } else {
+          segmentsByAlpha.set(alphaKey, [seg]);
+        }
+      }
+
+      // Draw all segments with same alpha in one batch
+      for (const [alpha, segs] of segmentsByAlpha) {
+        ctx.strokeStyle = `rgba(15, 23, 42, ${alpha * 0.25})`;
+        ctx.beginPath();
+        for (const seg of segs) {
+          ctx.moveTo(seg.p1.x, seg.p1.y);
+          ctx.lineTo(seg.p2.x, seg.p2.y);
+        }
+        ctx.stroke();
       }
 
       animationFrameId = requestAnimationFrame(() => draw(Date.now()));
@@ -521,7 +558,7 @@ const Hero: React.FC = () => {
       window.removeEventListener('mouseleave', onMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [isSafari]);
 
   return (
     <LazyMotion features={domAnimation}>
