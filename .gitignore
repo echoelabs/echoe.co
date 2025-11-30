@@ -60,3 +60,4 @@ seo-report*.json
 !README.md
 !CHANGELOG.md
 !.github/*.md
+.wrangler/

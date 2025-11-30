@@ -280,8 +280,8 @@ const Hero: React.FC = () => {
 
     // Configuration - Adjust grid spacing for performance
     const isMobile = window.innerWidth < 640;
-    const GRID_SPACING = isMobile ? 30 : 25; // Larger grid = fewer lines = better performance
-    const MAX_RIPPLES = 60;
+    const GRID_SPACING = isMobile ? 35 : 30; // Larger grid = fewer lines = better performance
+    const MAX_RIPPLES = 40;
     const DRAG_SPAWN_DIST = 10; // Frequent for smooth stream
 
     interface Ripple {
@@ -548,9 +548,11 @@ const Hero: React.FC = () => {
       animationFrameId = requestAnimationFrame(() => draw(Date.now()));
     };
 
-    draw(Date.now());
+    // Defer canvas animation to not block initial paint (improves LCP)
+    const startTimeout = setTimeout(() => draw(Date.now()), 50);
 
     return () => {
+      clearTimeout(startTimeout);
       window.removeEventListener('resize', resize);
       window.removeEventListener('mousemove', onMouseMove);
       window.removeEventListener('mouseleave', onMouseLeave);
