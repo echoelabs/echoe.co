@@ -209,6 +209,9 @@ jobs:
           name: dist
           path: dist/
 
+      - name: Create .assetsignore for wrangler
+        run: echo "_worker.js" > dist/.assetsignore
+
       - name: Deploy Preview to Cloudflare Workers
         id: deploy
         uses: cloudflare/wrangler-action@v3
