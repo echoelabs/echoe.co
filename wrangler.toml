@@ -2,6 +2,9 @@ name = "echoeco"
 compatibility_date = "2025-11-29"
 compatibility_flags = ["nodejs_compat_v2"]
 
+# Worker entry point (built by Astro)
+main = "dist/_worker.js/index.js"
+
 # Disable workers.dev subdomain (using custom domain echoe.co)
 workers_dev = false
 
@@ -12,6 +15,7 @@ preview_urls = true
 # Go to: Workers & Pages > echoeco > Settings > Domains & Routes
 
 [assets]
+binding = "ASSETS"
 directory = "./dist"
 
 [vars]
