@@ -227,7 +227,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           packageManager: bun
-          wranglerVersion: '3.108.0'
+          wranglerVersion: '4.51.0'
           command: versions upload --preview-alias ${{ steps.branch-alias.outputs.alias }} --message "PR #${{ github.event.pull_request.number }}"
 
       - name: Find existing comment
