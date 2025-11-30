@@ -21,6 +21,9 @@
     "upload": {
       "target": "filesystem",
       "outputDir": ".lighthouseci"
+    },
+    "settings": {
+      "temporaryPublicStorage": false
     }
   }
 }
