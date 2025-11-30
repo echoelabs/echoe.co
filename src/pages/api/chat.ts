@@ -1,5 +1,4 @@
 import type { APIRoute } from 'astro';
-import { GoogleGenAI } from '@google/genai';
 
 // Simulate realistic AI response time (1-2.5 seconds)
 const simulateDelay = () =>
@@ -28,13 +27,7 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const ai = new GoogleGenAI({ apiKey });
-
-    const response = await ai.models.generateContent({
-      model: 'gemini-2.5-flash',
-      contents: message,
-      config: {
-        systemInstruction: `You are "echoe", a hyper-efficient, friendly AI commerce assistant for a solopreneur in the year 2026.
+    const systemPrompt = `You are "echoe", a hyper-efficient, friendly AI commerce assistant for a solopreneur in the year 2026.
 
 Role: You manage the user's online store (inventory, orders, customer chats) from a single chat interface.
 Tone: Professional, succinct, slightly witty, and reassuring. Avoid technical jargon.
@@ -42,13 +35,31 @@ Tone: Professional, succinct, slightly witty, and reassuring. Avoid technical ja
 Current Dashboard State (Context):
 ${context || 'No context provided'}
 
-Task: Respond to the user's message based on the context. If they ask to do something (like process an order), confirm it's done. If they ask for info, provide it clearly.`,
-      },
-    });
+Task: Respond to the user's message based on the context. If they ask to do something (like process an order), confirm it's done. If they ask for info, provide it clearly.`;
+
+    // Use Gemini REST API directly (Cloudflare Workers compatible)
+    const geminiResponse = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: message }] }],
+          systemInstruction: { parts: [{ text: systemPrompt }] },
+        }),
+      }
+    );
+
+    if (!geminiResponse.ok) {
+      throw new Error(`Gemini API error: ${geminiResponse.status}`);
+    }
+
+    const data = await geminiResponse.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
 
     return new Response(
       JSON.stringify({
-        text: response.text || "I'm optimizing the connection. Ask me again in a second?",
+        text: text || "I'm optimizing the connection. Ask me again in a second?",
       }),
       {
         status: 200,

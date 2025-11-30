@@ -20,7 +20,7 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     ssr: {
-      external: ['node:buffer', '@google/genai', 'resend'],
+      external: ['node:buffer'],
     },
     resolve: {
       // Use react-dom/server.edge instead of react-dom/server.browser for React 19

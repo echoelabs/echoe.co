@@ -24,7 +24,6 @@
     "@astrojs/cloudflare": "^12.6.12",
     "@astrojs/react": "^4.4.2",
     "@astrojs/sitemap": "^3.6.0",
-    "@google/genai": "^1.30.0",
     "@react-email/components": "^1.0.1",
     "@tailwindcss/typography": "^0.5.19",
     "astro": "^5.16.2",
