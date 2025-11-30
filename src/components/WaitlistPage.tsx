@@ -46,7 +46,7 @@ const WaitlistPage: React.FC = () => {
 
   return (
     <div className="relative overflow-hidden">
-      <div className="relative z-10 flex min-h-[var(--min-vh-page)] flex-col items-center px-3 pt-32 pb-24 sm:px-4 sm:pt-40 sm:pb-32">
+      <div className="relative z-10 flex min-h-[var(--min-vh-page)] flex-col items-center px-3 pt-48 pb-24 sm:px-4 sm:pt-60 sm:pb-32">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
