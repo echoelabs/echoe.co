@@ -140,14 +140,9 @@ const canonicalUrl = new URL(Astro.url.pathname, 'https://echoe.co').toString();
     <script>
       import { initPostHog } from '../services/analytics';
 
-      // Check cookie consent before initializing
-      const consent = localStorage.getItem('cookie-consent');
-      if (consent) {
-        const preferences = JSON.parse(consent);
-        if (preferences.analytics) {
-          initPostHog();
-        }
-      }
+      // Always initialize - analytics.ts handles consent mode internally
+      // (cookieless/anonymous mode without consent, full tracking with consent)
+      initPostHog();
     </script>
   </body>
 </html>
