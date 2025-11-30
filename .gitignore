@@ -59,3 +59,4 @@ seo-report*.json
 *.md
 !README.md
 !CHANGELOG.md
+!.github/*.md
