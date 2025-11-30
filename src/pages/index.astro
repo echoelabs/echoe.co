@@ -12,6 +12,21 @@ import CookieConsent from '../components/CookieConsent';
   <Header client:idle currentPath="/" />
 
   <main class="overflow-visible" style="position: relative;">
+    <!-- Static LCP headline - visible immediately, hidden when Hero hydrates -->
+    <div id="static-hero-headline" class="pointer-events-none fixed inset-0 z-[100] flex items-center justify-center bg-white transition-opacity duration-300">
+      <div class="text-center px-6">
+        <div class="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 shadow-sm sm:px-3">
+          <span class="relative flex h-2 w-2">
+            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
+            <span class="relative inline-flex h-2 w-2 rounded-full bg-blue-500"></span>
+          </span>
+          <span class="text-xs font-medium tracking-wider text-slate-600 uppercase">Early Access 2026</span>
+        </div>
+        <h1 class="font-display text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
+          Simplify Your<br/>Commerce.
+        </h1>
+      </div>
+    </div>
     <Hero client:idle />
     <InteractiveDemo client:visible />
     <Features client:visible />

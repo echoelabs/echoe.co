@@ -93,6 +93,12 @@ const Hero: React.FC = () => {
 
   useEffect(() => {
     setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
+    // Hide the static LCP headline now that Hero has hydrated
+    const staticHeadline = document.getElementById('static-hero-headline');
+    if (staticHeadline) {
+      staticHeadline.style.opacity = '0';
+      setTimeout(() => staticHeadline.remove(), 300);
+    }
   }, []);
 
   // Title Sets - pick random one on client only to avoid hydration mismatch
