@@ -392,7 +392,10 @@ const Features: React.FC = () => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const featureIds = useMemo(() => ['chat', 'order', 'inventory', 'ai', 'market', 'competitor'], []);
+  const featureIds = useMemo(
+    () => ['chat', 'order', 'inventory', 'ai', 'market', 'competitor'],
+    []
+  );
 
   // Scroll-based card highlighting using useScroll (same technique as InteractiveDemo zoom)
   const { scrollYProgress } = useScroll({

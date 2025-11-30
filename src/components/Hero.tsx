@@ -1,5 +1,12 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { LazyMotion, domAnimation, m, useScroll, useTransform, useMotionValue } from 'framer-motion';
+import {
+  LazyMotion,
+  domAnimation,
+  m,
+  useScroll,
+  useTransform,
+  useMotionValue,
+} from 'framer-motion';
 import {
   Check,
   MessageCircle,
@@ -518,179 +525,184 @@ const Hero: React.FC = () => {
 
   return (
     <LazyMotion features={domAnimation}>
-    <div
-      ref={containerRef}
-      className="relative h-[150vh] bg-white sm:h-[200vh] lg:h-[250vh]"
-      style={{ position: 'relative' }}
-      onMouseMove={handleMouseMove}
-    >
-      <div className="sticky top-0 flex h-dvh w-full flex-col items-center justify-center overflow-hidden">
-        {/* --- Content Wrapper (Standard Sticky) --- */}
-        <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-white shadow-none">
-          {/* --- Canvas Background --- */}
-          <canvas
-            ref={canvasRef}
-            className="pointer-events-none absolute inset-0 z-0"
-            aria-hidden="true"
-            role="presentation"
-          />
+      <div
+        ref={containerRef}
+        className="relative h-[150vh] bg-white sm:h-[200vh] lg:h-[250vh]"
+        style={{ position: 'relative' }}
+        onMouseMove={handleMouseMove}
+      >
+        <div className="sticky top-0 flex h-dvh w-full flex-col items-center justify-center overflow-hidden">
+          {/* --- Content Wrapper (Standard Sticky) --- */}
+          <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-white shadow-none">
+            {/* --- Canvas Background --- */}
+            <canvas
+              ref={canvasRef}
+              className="pointer-events-none absolute inset-0 z-0"
+              aria-hidden="true"
+              role="presentation"
+            />
 
-          {/* --- Fade Out Gradient at Bottom - Reduced to 30vh to show more grid --- */}
-          <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-20 h-[30vh] bg-gradient-to-t from-white via-white/80 to-transparent" />
+            {/* --- Fade Out Gradient at Bottom - Reduced to 30vh to show more grid --- */}
+            <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-20 h-[30vh] bg-gradient-to-t from-white via-white/80 to-transparent" />
 
-          {/* --- Content Layer --- */}
-          {/* Z-INDEX INCREASED TO 30 TO SIT ABOVE THE FADE GRADIENT */}
-          <div className="relative z-30 mx-auto flex w-full max-w-6xl flex-col items-center justify-center px-6 text-center">
-            {/* Badge */}
-            <m.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 shadow-sm backdrop-blur-md sm:px-3"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500"></span>
-              </span>
-              <span className="text-xs font-medium tracking-wider text-slate-600 uppercase">
-                Early Access 2026
-              </span>
-            </m.div>
-
-            {/* Dynamic Titles Wrapper */}
-            <div className="perspective-1000 relative flex h-[140px] w-full items-center justify-center sm:h-[180px] md:h-[280px]">
-              {/* Title 1 */}
+            {/* --- Content Layer --- */}
+            {/* Z-INDEX INCREASED TO 30 TO SIT ABOVE THE FADE GRADIENT */}
+            <div className="relative z-30 mx-auto flex w-full max-w-6xl flex-col items-center justify-center px-6 text-center">
+              {/* Badge */}
               <m.div
-                style={{ opacity: title1Opacity, scale: title1Scale, y: title1Y }}
-                className="absolute inset-0 flex items-center justify-center"
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 }}
+                className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 shadow-sm backdrop-blur-md sm:px-3"
               >
-                <h1 className="font-display text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
-                  {titles.t1[0]}
-                  <br />
-                  {titles.t1[1]}
-                </h1>
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500"></span>
+                </span>
+                <span className="text-xs font-medium tracking-wider text-slate-600 uppercase">
+                  Early Access 2026
+                </span>
               </m.div>
 
-              {/* Title 2 */}
+              {/* Dynamic Titles Wrapper */}
+              <div className="perspective-1000 relative flex h-[140px] w-full items-center justify-center sm:h-[180px] md:h-[280px]">
+                {/* Title 1 */}
+                <m.div
+                  style={{ opacity: title1Opacity, scale: title1Scale, y: title1Y }}
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <h1 className="font-display text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
+                    {titles.t1[0]}
+                    <br />
+                    {titles.t1[1]}
+                  </h1>
+                </m.div>
+
+                {/* Title 2 */}
+                <m.div
+                  style={{ opacity: title2Opacity, scale: title2Scale, y: title2Y }}
+                  className="absolute inset-0 flex items-center justify-center"
+                >
+                  <h1 className="font-display text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
+                    {titles.t2[0]}
+                    <br />
+                    {titles.t2[1]}
+                  </h1>
+                </m.div>
+              </div>
+
+              {/* Subtitle & CTA */}
               <m.div
-                style={{ opacity: title2Opacity, scale: title2Scale, y: title2Y }}
-                className="absolute inset-0 flex items-center justify-center"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                className="mt-6 flex w-full flex-col items-center"
               >
-                <h1 className="font-display text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
-                  {titles.t2[0]}
-                  <br />
-                  {titles.t2[1]}
-                </h1>
+                {/* Typewriter Subheadline */}
+                <div className="mb-8 min-h-[5rem] w-full">
+                  <TypewriterHeadline />
+                </div>
+
+                <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+                  <button
+                    onClick={() => {
+                      trackButtonClick('join_waitlist', 'hero');
+                      document
+                        .getElementById('early-access')
+                        ?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="touch-target rounded-full bg-slate-900 px-5 py-3 text-xs font-medium text-white shadow-lg shadow-slate-900/20 transition-all hover:scale-105 hover:bg-slate-800 active:scale-95 sm:px-6"
+                  >
+                    Join Waitlist
+                  </button>
+                  <button
+                    onClick={() => {
+                      trackButtonClick('see_simulation', 'hero');
+                      const el = document.getElementById('simulation-window');
+                      if (el) {
+                        const headerOffset = 80;
+                        const elementPosition = el.getBoundingClientRect().top + window.scrollY;
+                        window.scrollTo({
+                          top: elementPosition - headerOffset,
+                          behavior: 'smooth',
+                        });
+                      }
+                    }}
+                    className="touch-target rounded-full border border-slate-200 bg-white px-5 py-3 text-xs font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 active:scale-95 sm:px-6"
+                  >
+                    See Simulation
+                  </button>
+                </div>
               </m.div>
             </div>
 
-            {/* Subtitle & CTA */}
-            <m.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-              className="mt-6 flex w-full flex-col items-center"
-            >
-              {/* Typewriter Subheadline */}
-              <div className="mb-8 min-h-[5rem] w-full">
-                <TypewriterHeadline />
-              </div>
-
-              <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
-                <button
-                  onClick={() => {
-                    trackButtonClick('join_waitlist', 'hero');
-                    document.getElementById('early-access')?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="touch-target rounded-full bg-slate-900 px-5 py-3 text-xs font-medium text-white shadow-lg shadow-slate-900/20 transition-all hover:scale-105 hover:bg-slate-800 active:scale-95 sm:px-6"
-                >
-                  Join Waitlist
-                </button>
-                <button
-                  onClick={() => {
-                    trackButtonClick('see_simulation', 'hero');
-                    const el = document.getElementById('simulation-window');
-                    if (el) {
-                      const headerOffset = 80;
-                      const elementPosition = el.getBoundingClientRect().top + window.scrollY;
-                      window.scrollTo({ top: elementPosition - headerOffset, behavior: 'smooth' });
-                    }
-                  }}
-                  className="touch-target rounded-full border border-slate-200 bg-white px-5 py-3 text-xs font-medium text-slate-600 shadow-sm transition-all hover:border-slate-300 hover:bg-slate-50 active:scale-95 sm:px-6"
-                >
-                  See Simulation
-                </button>
-              </div>
-            </m.div>
-          </div>
-
-          {/* --- Desktop Floating Notifications (lg: 1024px+) - 6 tags --- */}
-          {activeBubbles.map((bubble, index) => (
-            <m.div
-              key={`desktop-${index}`}
-              style={{
-                opacity: bubble.group === 'group1' ? group1Opacity : group2Opacity,
-                y: bubbleY,
-                ...bubble.pos,
-              }}
-              className="absolute z-20 hidden rounded-2xl border border-slate-200/50 bg-white/90 px-4 py-3 shadow-xl shadow-slate-200/30 backdrop-blur-xl transition-transform duration-700 will-change-transform lg:block"
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1, rotate: bubble.pos.rotation }}
-            >
-              <div className="flex items-center gap-3">
-                <div
-                  className={`flex h-8 w-8 items-center justify-center rounded-full ${bubble.item.iconBgClass} ${bubble.item.colorClass}`}
-                >
-                  {bubble.item.icon}
-                </div>
-                <div className="text-xs font-medium whitespace-nowrap text-slate-700">
-                  {bubble.item.text}
-                </div>
-              </div>
-            </m.div>
-          ))}
-
-          {/* --- Tablet Floating Notifications (md: 768-1024px) - 3 compact tags at corners --- */}
-          {activeBubbles
-            .filter((bubble) => bubble.tabletPos !== null)
-            .map((bubble, index) => (
+            {/* --- Desktop Floating Notifications (lg: 1024px+) - 6 tags --- */}
+            {activeBubbles.map((bubble, index) => (
               <m.div
-                key={`tablet-${index}`}
+                key={`desktop-${index}`}
                 style={{
-                  opacity: group1Opacity,
+                  opacity: bubble.group === 'group1' ? group1Opacity : group2Opacity,
                   y: bubbleY,
-                  ...bubble.tabletPos,
+                  ...bubble.pos,
                 }}
-                className="absolute z-20 hidden rounded-lg border border-slate-200/50 bg-white/90 px-2 py-1.5 shadow-lg shadow-slate-200/20 backdrop-blur-xl transition-transform duration-700 will-change-transform md:block lg:hidden"
+                className="absolute z-20 hidden rounded-2xl border border-slate-200/50 bg-white/90 px-4 py-3 shadow-xl shadow-slate-200/30 backdrop-blur-xl transition-transform duration-700 will-change-transform lg:block"
                 initial={{ scale: 0.8 }}
-                animate={{ scale: 1, rotate: bubble.tabletPos?.rotation || 0 }}
+                animate={{ scale: 1, rotate: bubble.pos.rotation }}
               >
-                <div className="flex items-center gap-1.5">
+                <div className="flex items-center gap-3">
                   <div
-                    className={`flex h-5 w-5 items-center justify-center rounded-full ${bubble.item.iconBgClass} ${bubble.item.colorClass} [&>svg]:h-2.5 [&>svg]:w-2.5`}
+                    className={`flex h-8 w-8 items-center justify-center rounded-full ${bubble.item.iconBgClass} ${bubble.item.colorClass}`}
                   >
                     {bubble.item.icon}
                   </div>
-                  <div className="text-[9px] font-medium whitespace-nowrap text-slate-700">
+                  <div className="text-xs font-medium whitespace-nowrap text-slate-700">
                     {bubble.item.text}
                   </div>
                 </div>
               </m.div>
             ))}
-        </div>
 
-        {/* Scroll Indicator */}
-        <m.div
-          style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]) }}
-          className="pointer-events-none absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-2"
-        >
-          <div className="h-10 w-[1px] bg-gradient-to-b from-slate-300 to-transparent" />
-          <span className="text-[10px] font-medium tracking-wide text-slate-400 uppercase">
-            Scroll
-          </span>
-        </m.div>
+            {/* --- Tablet Floating Notifications (md: 768-1024px) - 3 compact tags at corners --- */}
+            {activeBubbles
+              .filter((bubble) => bubble.tabletPos !== null)
+              .map((bubble, index) => (
+                <m.div
+                  key={`tablet-${index}`}
+                  style={{
+                    opacity: group1Opacity,
+                    y: bubbleY,
+                    ...bubble.tabletPos,
+                  }}
+                  className="absolute z-20 hidden rounded-lg border border-slate-200/50 bg-white/90 px-2 py-1.5 shadow-lg shadow-slate-200/20 backdrop-blur-xl transition-transform duration-700 will-change-transform md:block lg:hidden"
+                  initial={{ scale: 0.8 }}
+                  animate={{ scale: 1, rotate: bubble.tabletPos?.rotation || 0 }}
+                >
+                  <div className="flex items-center gap-1.5">
+                    <div
+                      className={`flex h-5 w-5 items-center justify-center rounded-full ${bubble.item.iconBgClass} ${bubble.item.colorClass} [&>svg]:h-2.5 [&>svg]:w-2.5`}
+                    >
+                      {bubble.item.icon}
+                    </div>
+                    <div className="text-[9px] font-medium whitespace-nowrap text-slate-700">
+                      {bubble.item.text}
+                    </div>
+                  </div>
+                </m.div>
+              ))}
+          </div>
+
+          {/* Scroll Indicator */}
+          <m.div
+            style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]) }}
+            className="pointer-events-none absolute bottom-8 left-1/2 z-30 flex -translate-x-1/2 flex-col items-center gap-2"
+          >
+            <div className="h-10 w-[1px] bg-gradient-to-b from-slate-300 to-transparent" />
+            <span className="text-[10px] font-medium tracking-wide text-slate-400 uppercase">
+              Scroll
+            </span>
+          </m.div>
+        </div>
       </div>
-    </div>
     </LazyMotion>
   );
 };
