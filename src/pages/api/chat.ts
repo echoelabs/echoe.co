@@ -4,7 +4,7 @@ import type { APIRoute } from 'astro';
 const simulateDelay = () =>
   new Promise((resolve) => setTimeout(resolve, 1000 + Math.random() * 1500));
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const { message, context } = await request.json();
 
@@ -15,7 +15,7 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const apiKey = import.meta.env.GEMINI_API_KEY;
+    const apiKey = locals.runtime.env.GEMINI_API_KEY;
 
     // If no API key, return demo response with simulated delay
     if (!apiKey) {

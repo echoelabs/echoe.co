@@ -59,7 +59,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
-export const POST: APIRoute = async ({ request }) => {
+export const POST: APIRoute = async ({ request, locals }) => {
   try {
     const { email } = (await request.json()) as { email: string };
 
@@ -70,7 +70,7 @@ export const POST: APIRoute = async ({ request }) => {
       });
     }
 
-    const RESEND_API_KEY = import.meta.env.RESEND_API_KEY;
+    const RESEND_API_KEY = locals.runtime.env.RESEND_API_KEY;
 
     if (!RESEND_API_KEY) {
       console.error('RESEND_API_KEY not configured');

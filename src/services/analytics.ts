@@ -1,7 +1,7 @@
 import posthog from 'posthog-js';
 
-const POSTHOG_KEY = import.meta.env.POSTHOG_KEY;
-const POSTHOG_HOST = 'https://a.echoe.co';
+const POSTHOG_KEY = import.meta.env.PUBLIC_POSTHOG_KEY;
+const POSTHOG_HOST = import.meta.env.PUBLIC_POSTHOG_HOST || 'https://a.echoe.co';
 const COOKIE_CONSENT_KEY = 'echoe-cookie-consent';
 
 interface CookiePreferences {
@@ -41,7 +41,7 @@ export function hasAnalyticsConsent(): boolean {
  */
 export function initPostHog(): void {
   if (!POSTHOG_KEY) {
-    console.warn('PostHog key not found. Set VITE_POSTHOG_KEY in your .env file.');
+    console.warn('PostHog key not found. Set PUBLIC_POSTHOG_KEY in your .env file.');
     return;
   }
 
