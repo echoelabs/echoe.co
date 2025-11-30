@@ -1,8 +1,9 @@
 {
   "ci": {
     "collect": {
-      "staticDistDir": "./dist",
-      "url": ["http://localhost/"]
+      "startServerCommand": "bunx wrangler pages dev dist --port 8788",
+      "startServerReadyPattern": "Ready on",
+      "url": ["http://localhost:8788/"]
     },
     "assert": {
       "assertions": {
