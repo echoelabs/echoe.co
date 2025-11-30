@@ -8,13 +8,15 @@ import BackToTop from '../components/BackToTop';
 ---
 
 <BaseLayout title="Join the Waitlist - echoe">
-  <Header client:load currentPath="/waitlist" />
+  <div class="flex min-h-screen flex-col">
+    <Header client:load currentPath="/waitlist" />
 
-  <main>
-    <WaitlistPage client:load />
-  </main>
+    <main class="flex-1">
+      <WaitlistPage client:load />
+    </main>
 
-  <Footer />
+    <Footer />
+  </div>
   <CookieConsent client:idle />
   <BackToTop client:idle />
 </BaseLayout>
