@@ -19,10 +19,10 @@ jobs:
       - name: Check branch naming convention
         run: |
           BRANCH="${{ github.head_ref }}"
-          if [[ ! "$BRANCH" =~ ^(feat|fix|hotfix|release)/ ]]; then
+          if [[ ! "$BRANCH" =~ ^(feat|fix|hotfix|release|docs|style|refactor|perf|test|build|ci|chore)/ ]]; then
             echo "Error: Invalid branch name '$BRANCH'"
             echo ""
-            echo "Branch names must start with: feat/, fix/, hotfix/, or release/"
+            echo "Branch names must start with: feat/, fix/, hotfix/, release/, docs/, style/, refactor/, perf/, test/, build/, ci/, or chore/"
             exit 1
           fi
           echo "Branch name validated: $BRANCH"
