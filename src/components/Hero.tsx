@@ -88,12 +88,10 @@ const Hero: React.FC = () => {
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Safari/iOS detection for performance optimizations
-  const [isSafari, setIsSafari] = useState(false);
+  // iOS detection for scroll animation optimization
   const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
-    setIsSafari(/^((?!chrome|android).)*safari/i.test(navigator.userAgent));
     setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
   }, []);
 
@@ -280,9 +278,9 @@ const Hero: React.FC = () => {
       canvas.height = height;
     };
 
-    // Configuration - Adjust grid spacing for mobile performance
+    // Configuration - Adjust grid spacing for performance
     const isMobile = window.innerWidth < 640;
-    const GRID_SPACING = isMobile ? 30 : 20; // Larger grid = fewer lines = better performance
+    const GRID_SPACING = isMobile ? 30 : 25; // Larger grid = fewer lines = better performance
     const MAX_RIPPLES = 60;
     const DRAG_SPAWN_DIST = 10; // Frequent for smooth stream
 
@@ -315,18 +313,18 @@ const Hero: React.FC = () => {
         });
       } else {
         // STOP RIPPLE SEQUENCE
-        // Spawn fewer, lighter ripples on Safari for better performance
-        const stopRippleDelays = isSafari ? [0] : [0, 150, 300];
+        // Subtle ripples for all browsers (performance optimization)
+        const stopRippleDelays = [0, 150, 300];
         stopRippleDelays.forEach((delay, i) => {
           setTimeout(() => {
             ripples.push({
               x,
               y,
               r: 0,
-              maxR: isSafari ? 350 + i * 30 : 600 + i * 50,
-              strength: isSafari ? 2.5 - i * 0.3 : 4.0 - i * 0.5,
+              maxR: 400 + i * 40, // Reduced from 600+
+              strength: 2.5 - i * 0.4, // Reduced from 4.0
               speed: 3.5,
-              life: isSafari ? 1.0 : 1.5,
+              life: 1.0, // Reduced from 1.5
               type: 'stop',
             });
           }, delay);
@@ -558,7 +556,7 @@ const Hero: React.FC = () => {
       window.removeEventListener('mouseleave', onMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, [isSafari]);
+  }, []);
 
   return (
     <LazyMotion features={domAnimation}>
