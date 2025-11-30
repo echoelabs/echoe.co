@@ -197,9 +197,11 @@ jobs:
 
       - name: Update preview comment with Lighthouse links
         uses: actions/github-script@v7
+        env:
+          LIGHTHOUSE_LINKS: ${{ steps.lighthouse.outputs.links }}
         with:
           script: |
-            const links = ${{ steps.lighthouse.outputs.links }};
+            const links = JSON.parse(process.env.LIGHTHOUSE_LINKS || '{}');
             const viewerUrl = Object.values(links)[0];
             if (!viewerUrl) return;
 
