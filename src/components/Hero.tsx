@@ -585,13 +585,8 @@ const Hero: React.FC = () => {
             {/* --- Content Layer --- */}
             {/* Z-INDEX INCREASED TO 30 TO SIT ABOVE THE FADE GRADIENT */}
             <div className="relative z-30 mx-auto flex w-full max-w-6xl flex-col items-center justify-center px-6 text-center">
-              {/* Badge */}
-              <m.div
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.1 }}
-                className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 shadow-sm backdrop-blur-md sm:px-3"
-              >
+              {/* Badge - No initial animation to ensure LCP visibility */}
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 shadow-sm backdrop-blur-md sm:px-3">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500"></span>
@@ -599,12 +594,13 @@ const Hero: React.FC = () => {
                 <span className="text-xs font-medium tracking-wider text-slate-600 uppercase">
                   Early Access 2026
                 </span>
-              </m.div>
+              </div>
 
               {/* Dynamic Titles Wrapper */}
               <div className="perspective-1000 relative flex h-[140px] w-full items-center justify-center sm:h-[180px] md:h-[280px]">
-                {/* Title 1 */}
+                {/* Title 1 - initial ensures SSR renders with opacity:1 for LCP */}
                 <m.div
+                  initial={{ opacity: 1, scale: 1, y: 0 }}
                   style={{ opacity: title1Opacity, scale: title1Scale, y: title1Y }}
                   className="absolute inset-0 flex items-center justify-center"
                 >
@@ -615,8 +611,9 @@ const Hero: React.FC = () => {
                   </h1>
                 </m.div>
 
-                {/* Title 2 */}
+                {/* Title 2 - initial hidden, fades in on scroll */}
                 <m.div
+                  initial={{ opacity: 0, scale: 1.1, y: 50 }}
                   style={{ opacity: title2Opacity, scale: title2Scale, y: title2Y }}
                   className="absolute inset-0 flex items-center justify-center"
                 >
@@ -628,13 +625,8 @@ const Hero: React.FC = () => {
                 </m.div>
               </div>
 
-              {/* Subtitle & CTA */}
-              <m.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="mt-6 flex w-full flex-col items-center"
-              >
+              {/* Subtitle & CTA - No initial animation to ensure LCP visibility */}
+              <div className="mt-6 flex w-full flex-col items-center">
                 {/* Typewriter Subheadline */}
                 <div className="mb-8 min-h-[5rem] w-full">
                   <TypewriterHeadline />
@@ -670,7 +662,7 @@ const Hero: React.FC = () => {
                     See Simulation
                   </button>
                 </div>
-              </m.div>
+              </div>
             </div>
 
             {/* --- Desktop Floating Notifications (lg: 1024px+) - 6 tags --- */}
