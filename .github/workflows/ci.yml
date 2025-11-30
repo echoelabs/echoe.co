@@ -219,15 +219,14 @@ jobs:
               // Remove old lighthouse section if exists
               let body = previewComment.body.replace(/\n## Lighthouse[\s\S]*<!-- lighthouse -->/, '');
 
-              // Append lighthouse section
-              body += `\n## Lighthouse
-
-| | Link |
-|--|------|
-| **View Report** | [Google Lighthouse Viewer](${viewerUrl}) |
-| **Download** | [GitHub Artifacts](${runUrl}#artifacts) |
-
-<!-- lighthouse -->`;
+              // Append lighthouse section (build table to avoid YAML pipe issues)
+              const table = [
+                '| | Link |',
+                '|--|------|',
+                `| **View Report** | [Google Lighthouse Viewer](${viewerUrl}) |`,
+                `| **Download** | [GitHub Artifacts](${runUrl}#artifacts) |`
+              ].join('\n');
+              body += '\n## Lighthouse\n\n' + table + '\n\n<!-- lighthouse -->';
 
               await github.rest.issues.updateComment({
                 owner: context.repo.owner,
