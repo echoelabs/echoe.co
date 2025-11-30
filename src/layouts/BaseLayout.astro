@@ -138,11 +138,12 @@ const canonicalUrl = new URL(Astro.url.pathname, 'https://echoe.co').toString();
 
     <!-- PostHog Analytics -->
     <script>
-      import { initPostHog } from '../services/analytics';
-
-      // Always initialize - analytics.ts handles consent mode internally
-      // (cookieless/anonymous mode without consent, full tracking with consent)
-      initPostHog();
+      // Defer PostHog load AND init by 100ms to not block LCP
+      // Dynamic import means the SDK isn't even fetched until after LCP
+      setTimeout(async () => {
+        const { initPostHog } = await import('../services/analytics');
+        initPostHog();
+      }, 100);
     </script>
   </body>
 </html>
