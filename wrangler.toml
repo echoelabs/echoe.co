@@ -1,6 +1,6 @@
 name = "echoeco"
 compatibility_date = "2025-11-29"
-compatibility_flags = ["nodejs_compat", "nodejs_compat_v2"]
+compatibility_flags = ["nodejs_compat"]
 
 # Worker entry point (built by Astro)
 main = "dist/_worker.js/index.js"
