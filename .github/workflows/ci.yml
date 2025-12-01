@@ -80,6 +80,33 @@ jobs:
           fi
           echo "All commit messages validated."
 
+      - name: Validate PR body format
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          MISSING=""
+
+          if ! echo "$PR_BODY" | grep -q "## Summary"; then
+            MISSING="${MISSING}## Summary, "
+          fi
+
+          if ! echo "$PR_BODY" | grep -q "## Type of Change"; then
+            MISSING="${MISSING}## Type of Change, "
+          fi
+
+          if ! echo "$PR_BODY" | grep -q "## Testing"; then
+            MISSING="${MISSING}## Testing, "
+          fi
+
+          if [ -n "$MISSING" ]; then
+            MISSING="${MISSING%, }"
+            echo "Error: PR body is missing required sections: $MISSING"
+            echo ""
+            echo "Please use the template from .github/PULL_REQUEST_TEMPLATE.md"
+            exit 1
+          fi
+          echo "PR body validated."
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
