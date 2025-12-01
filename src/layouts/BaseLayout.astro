@@ -124,8 +124,12 @@ const canonicalUrl = new URL(Astro.url.pathname, 'https://echoe.co').toString();
 
       requestAnimationFrame(raf);
 
-      // Scroll to top on page navigation (View Transitions)
+      // Handle View Transitions navigation
       document.addEventListener('astro:after-swap', () => {
+        // Remove loading screen on navigation (it only shows on first visit)
+        const loadingScreen = document.getElementById('loading-screen');
+        if (loadingScreen) loadingScreen.remove();
+
         // Only scroll to top if no hash in URL
         if (!window.location.hash) {
           window.scrollTo(0, 0);
