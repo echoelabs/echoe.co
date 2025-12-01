@@ -4,12 +4,12 @@ Landing page for **echoe** - a unified commerce platform for next-generation bus
 
 ## Tech Stack
 
-- **Framework**: React 19 + Vite 7
+- **Framework**: Astro 5 + React 19
 - **Styling**: Tailwind CSS 4
 - **Animations**: Framer Motion + Lenis (smooth scroll)
 - **Email**: Resend + React Email
 - **Analytics**: PostHog
-- **Deployment**: Cloudflare Pages
+- **Deployment**: Cloudflare Workers
 
 ## Prerequisites
 
@@ -35,8 +35,8 @@ Landing page for **echoe** - a unified commerce platform for next-generation bus
    ```
 
 4. Configure environment variables in `.env`:
-   - `VITE_GEMINI_API_KEY` - Google Gemini AI (optional)
-   - `VITE_POSTHOG_KEY` - PostHog analytics (optional)
+   - `PUBLIC_POSTHOG_KEY` - PostHog project API key (optional)
+   - `PUBLIC_POSTHOG_HOST` - PostHog host URL (optional)
 
 ## Development
 
@@ -44,7 +44,7 @@ Landing page for **echoe** - a unified commerce platform for next-generation bus
 bun run dev
 ```
 
-Opens at [http://localhost:3000](http://localhost:3000)
+Opens at [http://localhost:4321](http://localhost:4321)
 
 ## Build
 
@@ -63,23 +63,30 @@ bun run preview
 ## Project Structure
 
 ```
-├── components/          # React components
-│   ├── layout/          # Header, Footer, Layout
-│   ├── sections/        # Hero, Features, EarlyAccess
-│   └── ui/              # BackToTop, CookieConsent
-├── pages/               # Route pages
-├── services/            # API services (analytics, email)
-├── functions/           # Cloudflare Pages functions
-├── emails/              # React Email templates
-└── public/              # Static assets
+src/
+├── components/          # React components (Header, Hero, Features, etc.)
+├── layouts/             # Astro layouts (BaseLayout, LegalLayout)
+├── pages/               # Astro pages and API routes
+│   └── api/             # Server-side API endpoints
+├── services/            # Services (analytics, AI)
+├── styles/              # Global CSS
+└── types/               # TypeScript definitions
+public/                  # Static assets
 ```
 
 ## Deployment
 
-Deployed automatically to Cloudflare Pages on push to `main`.
+Deployed automatically to Cloudflare Workers on push to `main`.
 
-Server-side environment variables (set in Cloudflare dashboard):
-- `RESEND_API_KEY` - Email service for waitlist
+### Runtime Secrets (set via wrangler CLI)
+```bash
+bunx wrangler secret put GEMINI_API_KEY   # Google Gemini AI for chat
+bunx wrangler secret put RESEND_API_KEY   # Resend for waitlist emails
+```
+
+### Build-time Variables (set in GitHub repository variables)
+- `PUBLIC_POSTHOG_KEY` - PostHog project API key
+- `PUBLIC_POSTHOG_HOST` - PostHog host URL
 
 ## License
 
