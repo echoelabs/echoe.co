@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform, useScroll } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
 import {
   MessageSquare,
   Package,
@@ -385,8 +385,11 @@ const CompetitorWatchVisual = () => {
 // --- MAIN COMPONENT ---
 
 const Features: React.FC = () => {
-  const [activeId, setActiveId] = useState<string>('chat');
-  const [userInteracted, setUserInteracted] = useState(false);
+  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const [dimensions, setDimensions] = useState({
+    sectionHeight: '160vh', // fallback for SSR
+    scrollPerCard: 120, // fallback
+  });
   const containerRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
@@ -397,35 +400,78 @@ const Features: React.FC = () => {
     []
   );
 
-  // Scroll-based card highlighting using useScroll (same technique as InteractiveDemo zoom)
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ['start start', 'end end'],
-  });
+  const numCards = featureIds.length;
+  const headerHeight = 56; // 3.5rem in pixels
 
-  // Map scroll progress to active card index
-  const cardIndex = useTransform(scrollYProgress, [0, 1], [0, featureIds.length - 0.01]);
-
-  // Update activeId based on scroll when not user-interacting
+  // Calculate dimensions on mount
   useEffect(() => {
-    const unsubscribe = cardIndex.on('change', (latest) => {
-      if (!userInteracted) {
-        const index = Math.floor(latest);
-        const clampedIndex = Math.max(0, Math.min(index, featureIds.length - 1));
-        setActiveId(featureIds[clampedIndex]);
+    const calculate = () => {
+      const vh = window.innerHeight;
+      const stickyHeight = vh - headerHeight;
+      const scrollPerCard = vh * 0.18; // 18vh per card transition (more time on each card)
+      const sectionHeight = stickyHeight + (numCards - 1) * scrollPerCard + headerHeight;
+
+      setDimensions({
+        sectionHeight: `${sectionHeight}px`,
+        scrollPerCard,
+      });
+    };
+
+    calculate();
+  }, [numCards]);
+
+  // Scroll-based card switching
+  useEffect(() => {
+    const handleScroll = () => {
+      const section = containerRef.current;
+      if (!section) return;
+
+      const rect = section.getBoundingClientRect();
+      const sectionTop = rect.top;
+
+      // How far past the header is the section top? (negative = scrolled past)
+      const scrolledPast = headerHeight - sectionTop;
+
+      if (scrolledPast < 0) {
+        // Section hasn't reached header yet
+        setActiveIndex(0);
+        return;
       }
-    });
 
-    return () => unsubscribe();
-  }, [userInteracted, cardIndex, featureIds]);
+      // Calculate which card based on scroll distance
+      const cardIndex = Math.floor(scrolledPast / dimensions.scrollPerCard);
+      const clampedIndex = Math.max(0, Math.min(cardIndex, numCards - 1));
+      setActiveIndex(clampedIndex);
+    };
 
-  // Handle user interaction - temporarily override scroll behavior
-  const handleUserInteraction = (id: string) => {
-    setActiveId(id);
-    setUserInteracted(true);
-    // Resume scroll-based behavior after 3 seconds
-    setTimeout(() => setUserInteracted(false), 3000);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll(); // Initial check
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [dimensions.scrollPerCard, numCards]);
+
+  // Handle card click - scroll to card position
+  const handleCardClick = (index: number) => {
+    const section = containerRef.current;
+    if (!section) return;
+
+    // Calculate target scroll position for this card
+    const sectionOffsetTop = section.offsetTop;
+    const targetScroll = sectionOffsetTop - headerHeight + index * dimensions.scrollPerCard;
+
+    // Use Lenis for smooth scroll if available
+    const lenis = (
+      window as unknown as {
+        lenis?: { scrollTo: (target: number, options?: { duration?: number }) => void };
+      }
+    ).lenis;
+    if (lenis) {
+      lenis.scrollTo(targetScroll, { duration: 0.8 });
+    } else {
+      window.scrollTo({ top: targetScroll, behavior: 'smooth' });
+    }
   };
+
+  const activeId = featureIds[activeIndex];
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const sticky = stickyRef.current;
@@ -485,10 +531,11 @@ const Features: React.FC = () => {
       id="features"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative h-[300vh] bg-white px-3 sm:h-[400vh] sm:px-4 md:px-8 lg:h-[600vh] lg:px-16"
+      className="relative bg-white px-3 sm:px-4 md:px-8 lg:px-16"
+      style={{ height: dimensions.sectionHeight }}
     >
       {/* Sticky content wrapper */}
-      <div ref={stickyRef} className="sticky top-0 h-dvh pt-24 pb-24">
+      <div ref={stickyRef} className="sticky top-14 h-[calc(100dvh-3.5rem)] pt-16 pb-16">
         {/* --- BACKGROUND (bg color + dot grid) --- */}
         <div className="pointer-events-none absolute inset-y-0 -right-3 -left-3 bg-white sm:-right-4 sm:-left-4 md:-right-8 md:-left-8 lg:-right-16 lg:-left-16">
           <div
@@ -536,8 +583,7 @@ const Features: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: index * 0.05, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
-                    onClick={() => handleUserInteraction(feature.id)}
-                    onMouseEnter={() => handleUserInteraction(feature.id)}
+                    onClick={() => handleCardClick(index)}
                     whileHover={{ scale: isActive ? 1 : 1.01 }}
                     className={`relative cursor-pointer rounded-2xl border p-4 transition-all duration-300 ease-out sm:p-5 ${isActive ? 'border-slate-200 bg-white shadow-md' : 'border-slate-200/50 bg-white hover:shadow-sm'}`}
                   >

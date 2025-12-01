@@ -8,12 +8,12 @@ import EarlyAccess from '../components/EarlyAccess';
 import CookieConsent from '../components/CookieConsent';
 ---
 
-<BaseLayout title="echoe - Unified Commerce Platform">
+<BaseLayout title="echoe">
   <Header client:idle currentPath="/" />
 
   <main class="overflow-visible" style="position: relative;">
-    <!-- Static LCP headline - visible immediately with inline styles, hidden when Hero hydrates -->
-    <div id="static-hero-headline" style="position:fixed;inset:0;z-index:100;display:flex;align-items:center;justify-content:center;background:#fff;pointer-events:none;transition:opacity 0.3s;">
+    <!-- Loading Screen - shows for 1.5s then fades out -->
+    <div id="loading-screen" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#fff;transition:opacity 0.6s ease-out;padding-bottom:8rem;">
       <div style="text-align:center;padding:0 1.5rem;">
         <h1 style="font-family:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;font-size:clamp(1.875rem,5vw,3.75rem);line-height:1.1;font-weight:600;letter-spacing:-0.025em;color:#0f172a;margin:0;">
           Simplify Your<br/>Commerce.
@@ -32,24 +32,61 @@ import CookieConsent from '../components/CookieConsent';
     import Lenis from 'lenis';
     import { trackSectionView } from '../services/analytics';
 
-    // Initialize Lenis smooth scroll
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
-      smoothWheel: true,
-    });
+    // Disable pointer events while loading (keep scrollbar visible to prevent shift)
+    document.body.style.pointerEvents = 'none';
+    document.documentElement.style.overflowY = 'scroll';
+    document.body.style.overflow = 'hidden';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.top = '0';
 
-    // Expose lenis globally for navigation
-    (window as any).lenis = lenis;
+    // Loading screen fade out after 1.5 seconds
+    const loadingScreen = document.getElementById('loading-screen');
 
-    function raf(time: number) {
-      lenis.raf(time);
+    const initLenis = () => {
+      // Initialize Lenis smooth scroll
+      const lenis = new Lenis({
+        duration: 1.2,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
+        smoothWheel: true,
+      });
+
+      // Expose lenis globally for navigation
+      (window as any).lenis = lenis;
+
+      function raf(time: number) {
+        lenis.raf(time);
+        requestAnimationFrame(raf);
+      }
+
       requestAnimationFrame(raf);
-    }
+      return lenis;
+    };
 
-    requestAnimationFrame(raf);
+    let lenis: any;
+
+    if (loadingScreen) {
+      setTimeout(() => {
+        loadingScreen.style.opacity = '0';
+        // Re-enable scrolling and pointer events
+        document.body.style.pointerEvents = '';
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        document.documentElement.style.overflowY = '';
+
+        // Initialize Lenis after unlocking scroll
+        lenis = initLenis();
+
+        setTimeout(() => loadingScreen.remove(), 600); // Remove after fade completes
+      }, 1500);
+    } else {
+      // No loading screen, init immediately
+      lenis = initLenis();
+    }
 
     // Track section views with IntersectionObserver
     const sections = ['hero', 'demo', 'features', 'pricing'];
@@ -80,7 +117,7 @@ import CookieConsent from '../components/CookieConsent';
 
     // Cleanup on page unload
     document.addEventListener('astro:before-swap', () => {
-      lenis.destroy();
+      if (lenis) lenis.destroy();
       (window as any).lenis = undefined;
       observer.disconnect();
     });
