@@ -32,16 +32,8 @@ import CookieConsent from '../components/CookieConsent';
     import Lenis from 'lenis';
     import { trackSectionView } from '../services/analytics';
 
-    // Disable pointer events while loading (keep scrollbar visible to prevent shift)
-    document.body.style.pointerEvents = 'none';
-    document.documentElement.style.overflowY = 'scroll';
-    document.body.style.overflow = 'hidden';
-    document.body.style.position = 'fixed';
-    document.body.style.width = '100%';
-    document.body.style.top = '0';
-
-    // Loading screen fade out after 1.5 seconds
     const loadingScreen = document.getElementById('loading-screen');
+    const isFirstVisit = !sessionStorage.getItem('hasVisited');
 
     const initLenis = () => {
       // Initialize Lenis smooth scroll
@@ -54,7 +46,7 @@ import CookieConsent from '../components/CookieConsent';
       });
 
       // Expose lenis globally for navigation
-      (window as any).lenis = lenis;
+      (window as unknown as { lenis: typeof lenis }).lenis = lenis;
 
       function raf(time: number) {
         lenis.raf(time);
@@ -65,9 +57,20 @@ import CookieConsent from '../components/CookieConsent';
       return lenis;
     };
 
-    let lenis: any;
+    let lenis: ReturnType<typeof initLenis> | undefined;
 
-    if (loadingScreen) {
+    if (loadingScreen && isFirstVisit) {
+      // First visit - show loading screen
+      sessionStorage.setItem('hasVisited', 'true');
+
+      // Disable pointer events while loading (keep scrollbar visible to prevent shift)
+      document.body.style.pointerEvents = 'none';
+      document.documentElement.style.overflowY = 'scroll';
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.top = '0';
+
       setTimeout(() => {
         loadingScreen.style.opacity = '0';
         // Re-enable scrolling and pointer events
@@ -84,7 +87,8 @@ import CookieConsent from '../components/CookieConsent';
         setTimeout(() => loadingScreen.remove(), 600); // Remove after fade completes
       }, 1500);
     } else {
-      // No loading screen, init immediately
+      // Not first visit or no loading screen - remove it and init immediately
+      if (loadingScreen) loadingScreen.remove();
       lenis = initLenis();
     }
 
@@ -118,7 +122,7 @@ import CookieConsent from '../components/CookieConsent';
     // Cleanup on page unload
     document.addEventListener('astro:before-swap', () => {
       if (lenis) lenis.destroy();
-      (window as any).lenis = undefined;
+      (window as unknown as { lenis: undefined }).lenis = undefined;
       observer.disconnect();
     });
   </script>
