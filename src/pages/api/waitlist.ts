@@ -1,5 +1,35 @@
 import type { APIRoute } from 'astro';
 
+// Turnstile verification helper
+async function verifyTurnstileToken(token: string, secretKey: string): Promise<boolean> {
+  try {
+    const response = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        secret: secretKey,
+        response: token,
+      }),
+    });
+
+    const data = (await response.json()) as {
+      success: boolean;
+      'error-codes'?: string[];
+    };
+
+    if (!data.success) {
+      console.error('Turnstile verification failed:', data['error-codes']);
+    }
+
+    return data.success;
+  } catch (error) {
+    console.error('Turnstile verification error:', error);
+    return false;
+  }
+}
+
 // Email HTML template
 const getEmailHtml = (email: string) => `
 <!DOCTYPE html>
@@ -61,13 +91,37 @@ const corsHeaders = {
 
 export const POST: APIRoute = async ({ request, locals }) => {
   try {
-    const { email } = (await request.json()) as { email: string };
+    const { email, turnstileToken } = (await request.json()) as {
+      email: string;
+      turnstileToken?: string;
+    };
 
     if (!email || !email.includes('@')) {
       return new Response(JSON.stringify({ error: 'Invalid email address' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
+    }
+
+    // Verify Turnstile token (if secret key is configured)
+    const TURNSTILE_SECRET_KEY = locals.runtime.env.TURNSTILE_SECRET_KEY;
+
+    if (TURNSTILE_SECRET_KEY) {
+      if (!turnstileToken) {
+        return new Response(JSON.stringify({ error: 'Verification required' }), {
+          status: 400,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        });
+      }
+
+      const isValidToken = await verifyTurnstileToken(turnstileToken, TURNSTILE_SECRET_KEY);
+
+      if (!isValidToken) {
+        return new Response(JSON.stringify({ error: 'Verification failed. Please try again.' }), {
+          status: 403,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        });
+      }
     }
 
     const RESEND_API_KEY = locals.runtime.env.RESEND_API_KEY;

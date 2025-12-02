@@ -4,11 +4,23 @@ import { Check, Lock, Loader2 } from 'lucide-react';
 import isEmail from 'validator/lib/isEmail';
 import FooterReact from './FooterReact';
 import { trackSignup, trackButtonClick } from '../services/analytics';
+import { useTurnstile } from '../hooks/useTurnstile';
+import TurnstileWidget from './TurnstileWidget';
 
 const EarlyAccess: React.FC = () => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [isFocused, setIsFocused] = useState(false);
+
+  const {
+    token,
+    siteKey,
+    handleSuccess: handleTurnstileSuccess,
+    handleError: handleTurnstileError,
+    handleExpire: handleTurnstileExpire,
+    reset: resetTurnstile,
+    widgetRef,
+  } = useTurnstile();
 
   // Attach ref to the parent section to track the full scroll progress
   const sectionRef = useRef<HTMLElement>(null);
@@ -130,6 +142,12 @@ const EarlyAccess: React.FC = () => {
       return;
     }
 
+    // Check for Turnstile token (only if site key is configured)
+    if (siteKey && !token) {
+      setStatus('error');
+      return;
+    }
+
     setStatus('loading');
 
     // Track signup event
@@ -141,21 +159,24 @@ const EarlyAccess: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, turnstileToken: token }),
       });
 
       if (!response.ok) {
         const data = await response.json();
         console.error('Waitlist error:', data.error);
         setStatus('error');
+        resetTurnstile();
         return;
       }
 
       setStatus('success');
       setEmail('');
+      resetTurnstile();
     } catch (error) {
       console.error('Waitlist error:', error);
       setStatus('error');
+      resetTurnstile();
     }
   };
 
@@ -586,6 +607,14 @@ const EarlyAccess: React.FC = () => {
                       onSubmit={handleSubscribe}
                       className="relative w-full"
                     >
+                      <TurnstileWidget
+                        ref={widgetRef}
+                        siteKey={siteKey}
+                        onSuccess={handleTurnstileSuccess}
+                        onError={handleTurnstileError}
+                        onExpire={handleTurnstileExpire}
+                        theme="dark"
+                      />
                       <div
                         className={`relative flex items-center rounded-full border bg-white/10 p-2 backdrop-blur-xl transition-all duration-300 ${
                           status === 'error'

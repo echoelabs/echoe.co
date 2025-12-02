@@ -23,6 +23,9 @@ export default defineConfig({
     define: {
       'import.meta.env.PUBLIC_POSTHOG_KEY': JSON.stringify(process.env.PUBLIC_POSTHOG_KEY || ''),
       'import.meta.env.PUBLIC_POSTHOG_HOST': JSON.stringify(process.env.PUBLIC_POSTHOG_HOST || ''),
+      'import.meta.env.PUBLIC_TURNSTILE_SITE_KEY': JSON.stringify(
+        process.env.PUBLIC_TURNSTILE_SITE_KEY || ''
+      ),
     },
     ssr: {
       external: ['node:buffer'],

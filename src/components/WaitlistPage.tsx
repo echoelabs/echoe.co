@@ -3,16 +3,34 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Check, Loader2 } from 'lucide-react';
 import isEmail from 'validator/lib/isEmail';
 import { trackSignup } from '../services/analytics';
+import { useTurnstile } from '../hooks/useTurnstile';
+import TurnstileWidget from './TurnstileWidget';
 
 const WaitlistPage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [isFocused, setIsFocused] = useState(false);
 
+  const {
+    token,
+    siteKey,
+    handleSuccess: handleTurnstileSuccess,
+    handleError: handleTurnstileError,
+    handleExpire: handleTurnstileExpire,
+    reset: resetTurnstile,
+    widgetRef,
+  } = useTurnstile();
+
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!email || !isEmail(email)) {
+      setStatus('error');
+      return;
+    }
+
+    // Check for Turnstile token (only if site key is configured)
+    if (siteKey && !token) {
       setStatus('error');
       return;
     }
@@ -26,21 +44,24 @@ const WaitlistPage: React.FC = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, turnstileToken: token }),
       });
 
       if (!response.ok) {
         const data = await response.json();
         console.error('Waitlist error:', data.error);
         setStatus('error');
+        resetTurnstile();
         return;
       }
 
       setStatus('success');
       setEmail('');
+      resetTurnstile();
     } catch (error) {
       console.error('Waitlist error:', error);
       setStatus('error');
+      resetTurnstile();
     }
   };
 
@@ -97,6 +118,14 @@ const WaitlistPage: React.FC = () => {
                   onSubmit={handleSubscribe}
                   className="relative w-full"
                 >
+                  <TurnstileWidget
+                    ref={widgetRef}
+                    siteKey={siteKey}
+                    onSuccess={handleTurnstileSuccess}
+                    onError={handleTurnstileError}
+                    onExpire={handleTurnstileExpire}
+                    theme="light"
+                  />
                   <div
                     className={`relative flex items-center rounded-full border bg-gray-50 p-2 transition-all duration-300 ${
                       status === 'error'
