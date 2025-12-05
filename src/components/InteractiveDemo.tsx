@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
 import {
   Send,
   Sparkles,
@@ -28,7 +28,7 @@ const InteractiveDemo: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null); // This ref is used for both useScroll and useInView
 
   // Live Metrics Simulation
   const [revenue, setRevenue] = useState(1240.5);
@@ -45,9 +45,18 @@ const InteractiveDemo: React.FC = () => {
     offset: ['start start', 'end end'],
   });
 
+  // Mobile detection for gentler zoom effect
+  const [isMobile, setIsMobile] = useState(true);
+  useEffect(() => {
+    setIsMobile(window.innerWidth < 1024);
+    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
   // Scale from 0.75 (quite zoomed out) to 1 (full size) as user scrolls down
-  // Updated: Finish zooming at 0.5 so it stays full size for the remaining 50% of the scroll ("Stay longer")
-  const scale = useTransform(scrollYProgress, [0, 0.5], [0.75, 1]);
+  // Mobile: No zoom effect (strictly 1)
+  const scale = useTransform(scrollYProgress, [0, 0.5], isMobile ? [1, 1] : [0.75, 1]);
 
   // Simulated Dashboard Data
   const [inventory, setInventory] = useState<InventoryItem[]>([
@@ -74,8 +83,12 @@ const InteractiveDemo: React.FC = () => {
     }
   }, [messages, isTyping]);
 
+  const isInView = useInView(containerRef); // Use the existing containerRef
+
   // Simulate Live Data Changes
   useEffect(() => {
+    if (!isInView) return; // Only run interval when component is in view
+
     const interval = setInterval(() => {
       // Jitter revenue more noticeably
       if (Math.random() > 0.5) {
@@ -114,7 +127,7 @@ const InteractiveDemo: React.FC = () => {
       }
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isInView]); // Add isInView to dependency array
 
   const handleSend = async () => {
     if (!inputValue.trim()) return;
@@ -166,10 +179,10 @@ const InteractiveDemo: React.FC = () => {
   return (
     // Updated background to pure white and removed margin-top to prevent gaps
     // Increased height to 400vh for even longer stay
-    <section id="demo" className="relative z-20 -mt-4 -mb-1 bg-white">
+    <section id="demo" ref={containerRef} className="relative bg-white py-16 sm:py-24 md:py-32">
       {/* Title section - scrolls normally */}
-      <div className="px-4 pt-24 pb-8 md:px-8 lg:px-16">
-        <div className="mx-auto w-full max-w-[90vw] lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px]">
+      <div className="px-4 pt-24 pb-8 md:px-12 lg:px-16">
+        <div className="mx-auto w-full max-w-[90vw] lg:max-w-[1600px]">
           <div className="relative z-10 mb-8 shrink-0 text-center">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -199,16 +212,18 @@ const InteractiveDemo: React.FC = () => {
 
       {/* Simulation section - sticky with zoom effect */}
       <div
-        ref={containerRef}
-        className="relative h-[200vh] sm:h-[280vh] lg:h-[380vh]"
+        ref={containerRef} // This ref is now used for useScroll and useInView
+        className={`relative ${isMobile ? 'h-auto pb-24' : 'h-[150vh] sm:h-[200vh] md:h-[280vh] lg:h-[380vh]'}`}
         style={{ position: 'relative' }}
       >
-        <div className="sticky top-16 flex h-[var(--vh-hero)] flex-col px-2 py-1 sm:top-20 sm:px-4 sm:py-4 md:px-8 lg:px-16 lg:py-6">
+        <div
+          className={`${isMobile ? 'relative px-0' : 'sticky top-16 sm:top-20 lg:py-6'} flex h-[var(--vh-hero)] flex-col py-1 sm:py-4`}
+        >
           {/* Dynamic Background decoration - Removed Grid Pattern Completely */}
           <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-full bg-gradient-to-r from-blue-100/40 via-purple-100/40 to-pink-100/40 opacity-60 blur-3xl" />
           <div className="pointer-events-none absolute top-1/2 right-10 h-64 w-64 animate-pulse rounded-full bg-emerald-100/30 blur-[80px]" />
 
-          <div className="mx-auto flex min-h-0 w-full max-w-[90vw] flex-1 flex-col lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px]">
+          <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col">
             {/* Wrapper for the floating app window - TRANSPARENT */}
             <motion.div
               id="simulation-window"
@@ -217,13 +232,13 @@ const InteractiveDemo: React.FC = () => {
             >
               {/* The Main Interface Container (The App Window) */}
               {/* Added more horizontal padding (px-6 md:px-12) to prevent shadow cutoff */}
-              <div className="no-scrollbar mx-auto flex min-h-0 w-full max-w-[98%] flex-1 flex-col sm:max-w-[95%] md:px-8 lg:max-w-[1700px] lg:px-12 xl:max-w-[1900px] 2xl:max-w-[2100px]">
+              <div className="no-scrollbar mx-auto flex min-h-0 w-full flex-1 flex-col px-6 sm:px-8 md:px-12 lg:px-16">
                 <motion.div
                   initial={{ y: 60, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.8, ease: 'easeOut' }}
                   viewport={{ once: true, amount: 0.1 }}
-                  className="relative grid h-[calc(100dvh-110px)] grid-cols-1 grid-rows-[1fr] gap-0 overflow-hidden rounded-[2rem] border border-t border-gray-200/80 border-white/50 bg-white shadow-xl shadow-blue-900/5 sm:h-[calc(100dvh-130px)] sm:rounded-[2.5rem] lg:h-[calc(100dvh-160px)] lg:grid-cols-12"
+                  className="relative grid h-[calc(100svh-110px)] grid-cols-1 grid-rows-[1fr] gap-0 overflow-hidden rounded-2xl border border-t border-gray-200/80 border-white/50 bg-white shadow-xl shadow-blue-900/5 sm:h-[calc(100svh-130px)] sm:rounded-[2rem] md:rounded-[2.5rem] lg:h-[calc(100svh-160px)] lg:grid-cols-12"
                 >
                   {/* Scanning Effect Overlay */}
                   <div
@@ -379,20 +394,26 @@ const InteractiveDemo: React.FC = () => {
                   {/* RIGHT PANEL: Chat Interface */}
                   <div className="relative z-10 col-span-1 flex min-h-0 flex-col bg-white lg:col-span-7">
                     {/* Mobile Stats Bar - visible when dashboard is hidden */}
-                    <div className="flex justify-around border-b border-gray-100 bg-gray-50/50 py-3 lg:hidden">
-                      <div className="text-center">
-                        <div className="text-xs font-medium text-gray-900">
+                    <div className="flex justify-around border-b border-gray-100 bg-gray-50/50 py-3.5 lg:hidden">
+                      <div className="px-3 text-center">
+                        <div
+                          className={`text-sm font-semibold tabular-nums transition-colors ${revenueChanged ? 'text-emerald-600' : 'text-gray-900'}`}
+                        >
                           ${revenue.toFixed(0)}
                         </div>
-                        <div className="text-[10px] text-gray-400">Revenue</div>
+                        <div className="text-[11px] text-gray-400">Revenue</div>
                       </div>
-                      <div className="text-center">
-                        <div className="text-xs font-medium text-gray-900">{visitors}</div>
-                        <div className="text-[10px] text-gray-400">Visitors</div>
+                      <div className="px-3 text-center">
+                        <div className="text-sm font-semibold text-gray-900 tabular-nums">
+                          {visitors}
+                        </div>
+                        <div className="text-[11px] text-gray-400">Visitors</div>
                       </div>
-                      <div className="text-center">
-                        <div className="text-xs font-medium text-gray-900">{activeCarts}</div>
-                        <div className="text-[10px] text-gray-400">Carts</div>
+                      <div className="px-3 text-center">
+                        <div className="text-sm font-semibold text-gray-900 tabular-nums">
+                          {activeCarts}
+                        </div>
+                        <div className="text-[11px] text-gray-400">Carts</div>
                       </div>
                     </div>
                     {/* Header */}
@@ -509,7 +530,7 @@ const InteractiveDemo: React.FC = () => {
                           onChange={(e) => setInputValue(e.target.value)}
                           onKeyDown={handleKeyDown}
                           placeholder="Ask echoe anything..."
-                          className="w-full rounded-full border border-gray-200 bg-white py-3 pr-12 pl-5 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition-all group-hover:shadow-md focus:border-gray-300 focus:ring-2 focus:ring-black/5 focus:outline-none"
+                          className="w-full rounded-full border border-gray-200 bg-white py-3.5 pr-14 pl-4 text-base text-gray-900 placeholder-gray-400 shadow-sm transition-all group-hover:shadow-md focus:border-gray-300 focus:ring-2 focus:ring-black/5 focus:outline-none sm:py-3 sm:pr-12 sm:pl-5 sm:text-sm"
                         />
                         <button
                           onClick={handleSend}
@@ -528,7 +549,7 @@ const InteractiveDemo: React.FC = () => {
                   </div>
                 </motion.div>
 
-                <div className="mx-auto mt-2 flex w-full max-w-[90vw] shrink-0 justify-center pb-1 sm:mt-4 sm:pb-4 lg:mt-6 lg:max-w-[1800px] lg:pb-6 xl:max-w-[2000px] 2xl:max-w-[2200px]">
+                <div className="mx-auto mt-2 flex w-full max-w-[90vw] shrink-0 justify-center pb-1 sm:mt-4 sm:pb-4 lg:mt-6 lg:max-w-[1600px] lg:pb-6">
                   <p className="text-center text-[10px] leading-relaxed font-medium text-zinc-400">
                     * This is a conceptual mockup. Actual application design and functionality may
                     change drastically during development.

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform, useInView } from 'framer-motion';
 import {
   MessageSquare,
   Package,
@@ -198,10 +198,11 @@ const InventoryVisual = () => {
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-slate-100">
             <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${(product.stock / product.max) * 100}%` }}
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: product.stock / product.max }}
               transition={{ duration: 0.8, delay: i * 0.1 }}
-              className={`h-full rounded-full ${product.status === 'Out' ? 'bg-red-400' : product.status === 'Low' ? 'bg-amber-400' : 'bg-emerald-400'}`}
+              style={{ originX: 0 }}
+              className={`h-full w-full rounded-full ${product.status === 'Out' ? 'bg-red-400' : product.status === 'Low' ? 'bg-amber-400' : 'bg-emerald-400'}`}
             />
           </div>
         </motion.div>
@@ -215,7 +216,12 @@ const AIAutopilotVisual = () => {
   const fullText =
     'Hi! Thanks for reaching out. Yes, the Minimal Vase is available in both White and Terracotta. Would you like me to create an order for you?';
 
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef);
+
   useEffect(() => {
+    if (!isInView) return;
+
     let i = 0;
     const interval = setInterval(() => {
       setText(fullText.slice(0, i + 1));
@@ -228,10 +234,10 @@ const AIAutopilotVisual = () => {
       }
     }, 30);
     return () => clearInterval(interval);
-  }, []);
+  }, [isInView]);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div ref={containerRef} className="flex h-full w-full flex-col gap-4 p-6">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100">
@@ -389,6 +395,7 @@ const Features: React.FC = () => {
   const [dimensions, setDimensions] = useState({
     sectionHeight: '160vh', // fallback for SSR
     scrollPerCard: 120, // fallback
+    isMobile: false,
   });
   const containerRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
@@ -414,6 +421,7 @@ const Features: React.FC = () => {
       setDimensions({
         sectionHeight: `${sectionHeight}px`,
         scrollPerCard,
+        isMobile: vh < 1024 || window.innerWidth < 1024,
       });
     };
 
@@ -423,6 +431,8 @@ const Features: React.FC = () => {
   // Scroll-based card switching
   useEffect(() => {
     const handleScroll = () => {
+      if (dimensions.isMobile) return;
+
       const section = containerRef.current;
       if (!section) return;
 
@@ -454,9 +464,9 @@ const Features: React.FC = () => {
     const section = containerRef.current;
     if (!section) return;
 
-    // Calculate target scroll position for this card
+    // Calculate target scroll position for this card (add 2px buffer to ensure Math.floor lands on correct index)
     const sectionOffsetTop = section.offsetTop;
-    const targetScroll = sectionOffsetTop - headerHeight + index * dimensions.scrollPerCard;
+    const targetScroll = sectionOffsetTop - headerHeight + index * dimensions.scrollPerCard + 2;
 
     // Use Lenis for smooth scroll if available
     const lenis = (
@@ -531,11 +541,14 @@ const Features: React.FC = () => {
       id="features"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative bg-white px-3 sm:px-4 md:px-8 lg:px-16"
-      style={{ height: dimensions.sectionHeight }}
+      className={`relative bg-white ${dimensions.isMobile ? 'h-auto py-16' : ''}`}
+      style={{ height: dimensions.isMobile ? 'auto' : dimensions.sectionHeight }}
     >
-      {/* Sticky content wrapper */}
-      <div ref={stickyRef} className="sticky top-14 h-[calc(100dvh-3.5rem)] pt-16 pb-16">
+      {/* --- DESKTOP LAYOUT (Sticky Scroll) --- */}
+      <div
+        ref={stickyRef}
+        className="hidden lg:sticky lg:top-14 lg:block lg:h-[calc(100svh-3.5rem)] lg:pt-16 lg:pb-16"
+      >
         {/* --- BACKGROUND (bg color + dot grid) --- */}
         <div className="pointer-events-none absolute inset-y-0 -right-3 -left-3 bg-white sm:-right-4 sm:-left-4 md:-right-8 md:-left-8 lg:-right-16 lg:-left-16">
           <div
@@ -557,24 +570,24 @@ const Features: React.FC = () => {
           />
         </div>
 
-        <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col">
-          <div className="shrink-0 pb-8 text-center lg:pb-12">
+        <div className="relative z-10 mx-auto flex h-full min-h-0 w-full max-w-[1600px] flex-1 flex-col px-6 sm:px-8 md:px-12 lg:px-16">
+          <div className="shrink-0 pb-12 text-center">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="font-display mb-6 text-2xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl"
+              className="font-display mb-6 text-5xl leading-tight font-semibold tracking-tight text-slate-900"
             >
-              Command Center.
+              The Operating System.
               <br />
               For Modern Commerce.
             </motion.h2>
           </div>
 
-          <div className="grid min-h-0 flex-1 grid-cols-1 items-start gap-5 overflow-visible sm:gap-6 lg:grid-cols-12 lg:gap-8">
+          <div className="grid min-h-0 flex-1 grid-cols-12 gap-8 overflow-visible">
             {/* LEFT COLUMN: THE STREAM (Navigation) */}
-            <div className="no-scrollbar flex h-full flex-col justify-between gap-2 overflow-y-auto px-2 py-3 pb-4 sm:gap-3 sm:px-4 sm:py-4 sm:pb-6 lg:col-span-5 lg:px-6">
+            <div className="no-scrollbar col-span-5 flex h-full flex-col justify-between gap-3 overflow-y-auto pb-6">
               {features.map((feature, index) => {
                 const isActive = activeId === feature.id;
                 return (
@@ -585,7 +598,7 @@ const Features: React.FC = () => {
                     transition={{ delay: index * 0.05, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
                     onClick={() => handleCardClick(index)}
                     whileHover={{ scale: isActive ? 1 : 1.01 }}
-                    className={`relative cursor-pointer rounded-2xl border p-4 transition-all duration-300 ease-out sm:p-5 ${isActive ? 'border-slate-200 bg-white shadow-md' : 'border-slate-200/50 bg-white hover:shadow-sm'}`}
+                    className={`relative cursor-pointer rounded-2xl border p-5 transition-all duration-300 ease-out ${isActive ? 'no-scrollbar max-h-none overflow-visible border-slate-200 bg-white shadow-md' : 'border-slate-200/50 bg-white hover:shadow-sm'}`}
                   >
                     <motion.div
                       className="flex gap-3"
@@ -593,7 +606,7 @@ const Features: React.FC = () => {
                       transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
                     >
                       <motion.div
-                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-2xl sm:h-10 sm:w-10"
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl"
                         animate={{
                           backgroundColor: isActive ? '#4f46e5' : '#f1f5f9',
                           color: isActive ? '#ffffff' : '#64748b',
@@ -607,7 +620,7 @@ const Features: React.FC = () => {
                       </motion.div>
                       <div className="flex-1">
                         <motion.h3
-                          className="font-display text-sm font-semibold sm:text-base"
+                          className="font-display text-base font-semibold"
                           animate={{
                             color: isActive ? '#0f172a' : '#475569',
                             marginBottom: isActive ? 8 : 0,
@@ -638,8 +651,8 @@ const Features: React.FC = () => {
               })}
             </div>
 
-            {/* RIGHT COLUMN: THE STAGE (Sticky Visual) - matches expanded list height */}
-            <div className="relative hidden h-full px-4 py-4 lg:col-span-7 lg:block">
+            {/* RIGHT COLUMN: THE STAGE (Sticky Visual) */}
+            <div className="col-span-7 block h-full px-4 py-4">
               <div className="h-full w-full">
                 <div className="relative h-full w-full overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl ring-1 shadow-slate-200/50 ring-slate-100">
                   {/* Monitor Header / HUD */}
@@ -678,15 +691,62 @@ const Features: React.FC = () => {
           </div>
         </div>
 
-        {/* Disclaimer - only show on lg+ where the graphic panel is visible */}
-        <div className="absolute right-0 bottom-8 left-0 hidden justify-center lg:flex">
+        {/* Disclaimer */}
+        <div className="absolute right-0 bottom-8 left-0 flex justify-center">
           <p className="text-center text-[10px] leading-relaxed font-medium text-slate-400">
             * This is a conceptual mockup. Actual application design and functionality may change
             during development.
           </p>
         </div>
-      </div>{' '}
-      {/* End sticky wrapper */}
+      </div>
+
+      {/* --- MOBILE LAYOUT (Vertical Stack) --- */}
+      <div className="relative z-10 mx-auto flex w-full max-w-[1600px] flex-col gap-12 px-6 sm:px-8 lg:hidden">
+        <div className="text-center">
+          <motion.h2
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.8 }}
+            className="font-display mb-4 text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl"
+          >
+            The Operating System.
+            <br />
+            For Modern Commerce.
+          </motion.h2>
+        </div>
+
+        <div className="flex flex-col gap-8">
+          {features.map((feature) => (
+            <motion.div
+              key={feature.id}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: '-50px' }}
+              transition={{ delay: 0.1, duration: 0.5 }}
+              className="group flex flex-col gap-4"
+            >
+              {/* Card Header */}
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-sm ring-1 ring-indigo-500/10">
+                  {feature.icon}
+                </div>
+                <div>
+                  <h3 className="font-display text-lg font-semibold text-slate-900">
+                    {feature.title}
+                  </h3>
+                  <p className="mt-1 text-sm leading-relaxed text-slate-500">{feature.desc}</p>
+                </div>
+              </div>
+
+              {/* Card Visual - Full Width Preview */}
+              <div className="overflow-hidden rounded-2xl border border-slate-100 bg-slate-50/50 shadow-sm">
+                <div className="w-full">{feature.visual}</div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 };

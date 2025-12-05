@@ -58,7 +58,7 @@ jobs:
 
       - name: Check commit message format
         run: |
-          PATTERN="^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .+"
+          PATTERN="^((feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\(.+\))?: .+|Revert \".+\")"
           INVALID_COMMITS=""
 
           for COMMIT in $(git rev-list origin/main..HEAD); do

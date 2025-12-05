@@ -90,10 +90,27 @@ const Hero: React.FC = () => {
 
   // iOS detection for scroll animation optimization
   const [isIOS, setIsIOS] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileTitleIndex, setMobileTitleIndex] = useState(0);
 
   useEffect(() => {
     setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
+
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
   }, []);
+
+  // Auto-rotate headlines on mobile
+  useEffect(() => {
+    if (!isMobile) return;
+    const interval = setInterval(() => {
+      setMobileTitleIndex((prev) => (prev + 1) % 2);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [isMobile]);
 
   // Title Sets - pick random one on client only to avoid hydration mismatch
   // Note: "Simplify Your Commerce" is exclusive to the loading screen
@@ -281,9 +298,11 @@ const Hero: React.FC = () => {
 
     // Configuration - Adjust grid spacing for performance
     const isMobile = window.innerWidth < 640;
-    const GRID_SPACING = isMobile ? 40 : 35; // Larger grid = fewer lines = better performance
-    const MAX_RIPPLES = 40;
-    const DRAG_SPAWN_DIST = 10; // Frequent for smooth stream
+    const GRID_SPACING = isMobile ? 50 : 35; // Larger grid on mobile = fewer lines = better performance
+    const MAX_RIPPLES = isMobile ? 25 : 40; // Fewer ripples on mobile
+    const DRAG_SPAWN_DIST = isMobile ? 15 : 10; // Less frequent spawning on mobile
+    const FRAME_SKIP = isMobile ? 2 : 1; // Skip frames on mobile for better performance
+    let frameCount = 0;
 
     interface Ripple {
       x: number;
@@ -355,12 +374,32 @@ const Hero: React.FC = () => {
     };
 
     window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseleave', onMouseLeave);
+
+    // Only add interaction listeners on desktop
+    if (!isMobile) {
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseleave', onMouseLeave);
+    }
     resize();
 
     const draw = (time: number) => {
       if (!ctx) return;
+
+      // Frame skipping for mobile performance
+      frameCount++;
+      if (isMobile) {
+        // On mobile, draw once and stop (Static Grid) to save massive GPU/JS overhead during scroll
+        if (frameCount > 1) {
+          cancelAnimationFrame(animationFrameId);
+          return;
+        }
+      } else {
+        // Desktop: Frame skipping logic
+        if (frameCount % FRAME_SKIP !== 0) {
+          animationFrameId = requestAnimationFrame(() => draw(Date.now()));
+          return;
+        }
+      }
 
       // Clear canvas
       ctx.clearRect(0, 0, width, height);
@@ -565,11 +604,11 @@ const Hero: React.FC = () => {
     <LazyMotion features={domAnimation}>
       <div
         ref={containerRef}
-        className="relative h-[150vh] bg-white sm:h-[200vh] lg:h-[250vh]"
+        className="relative min-h-[100svh] bg-white sm:h-[150vh] md:h-[200vh] lg:h-[250vh]"
         style={{ position: 'relative' }}
         onMouseMove={handleMouseMove}
       >
-        <div className="sticky top-0 flex h-dvh w-full flex-col items-center justify-center overflow-hidden">
+        <div className="relative flex h-[100svh] w-full flex-col items-center justify-center overflow-hidden sm:sticky sm:top-0">
           {/* --- Content Wrapper (Standard Sticky) --- */}
           <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-white shadow-none">
             {/* --- Canvas Background --- */}
@@ -598,11 +637,17 @@ const Hero: React.FC = () => {
               </div>
 
               {/* Dynamic Titles Wrapper */}
-              <div className="perspective-1000 relative flex h-[140px] w-full items-center justify-center sm:h-[180px] md:h-[280px]">
+              <div className="perspective-1000 relative flex min-h-[100px] w-full items-center justify-center py-4 sm:min-h-[140px] md:min-h-[200px]">
                 {/* Title 1 - initial ensures SSR renders with opacity:1 for LCP */}
                 <m.div
                   initial={{ opacity: 1, scale: 1, y: 0 }}
-                  style={{ opacity: title1Opacity, scale: title1Scale, y: title1Y }}
+                  style={{
+                    opacity: isMobile ? (mobileTitleIndex === 0 ? 1 : 0) : title1Opacity,
+                    scale: isMobile ? 1 : title1Scale,
+                    y: isMobile ? 0 : title1Y,
+                  }}
+                  animate={isMobile ? { opacity: mobileTitleIndex === 0 ? 1 : 0 } : {}}
+                  transition={{ duration: 0.5 }} // Smooth fade for mobile auto-rotate
                   className="absolute inset-0 flex items-center justify-center"
                 >
                   <h1 className="font-display text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
@@ -615,7 +660,13 @@ const Hero: React.FC = () => {
                 {/* Title 2 - initial hidden, fades in on scroll */}
                 <m.div
                   initial={{ opacity: 0, scale: 1.1, y: 50 }}
-                  style={{ opacity: title2Opacity, scale: title2Scale, y: title2Y }}
+                  style={{
+                    opacity: isMobile ? (mobileTitleIndex === 1 ? 1 : 0) : title2Opacity,
+                    scale: isMobile ? 1 : title2Scale,
+                    y: isMobile ? 0 : title2Y,
+                  }}
+                  animate={isMobile ? { opacity: mobileTitleIndex === 1 ? 1 : 0 } : {}}
+                  transition={{ duration: 0.5 }}
                   className="absolute inset-0 flex items-center justify-center"
                 >
                   <h1 className="font-display text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
@@ -719,6 +770,9 @@ const Hero: React.FC = () => {
                   </div>
                 </m.div>
               ))}
+
+            {/* --- Mobile Floating Notifications (< md) - Horizontal strip at bottom --- */}
+            {/* --- Mobile Floating Notifications Removed --- */}
           </div>
 
           {/* Scroll Indicator */}

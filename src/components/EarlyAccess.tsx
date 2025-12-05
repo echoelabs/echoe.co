@@ -1,5 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+  useMotionValueEvent,
+} from 'framer-motion';
 import { Check, Lock, Loader2 } from 'lucide-react';
 import isEmail from 'validator/lib/isEmail';
 import FooterReact from './FooterReact';
@@ -29,6 +35,16 @@ const EarlyAccess: React.FC = () => {
     offset: ['start start', 'end end'],
   });
 
+  // Mobile detection for disabling expensive parallax
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // --- REFINED PHYSICS-BASED SKY TRANSITION ---
   // HEIGHT: 800vh total
   // Background moves UP to reveal the "night" section.
@@ -48,12 +64,53 @@ const EarlyAccess: React.FC = () => {
   // This prevents the "washed out white" look on the blue sky
   const auroraOpacity = useTransform(scrollYProgress, [0.55, 0.75], [0, 1]);
 
-  // BOTTOM AURORA - Fades in specifically for the newsletter section
-  const bottomAuroraOpacity = useTransform(scrollYProgress, [0.8, 0.95], [0, 1]);
+  // BOTTOM AURORA
+  // Mobile: Fade in early (0.2) to match the earlier form appearance.
+  // Desktop: Fade in late (0.8) for the second step.
+  const bottomAuroraOpacity = useTransform(
+    scrollYProgress,
+    isMobile ? [0.2, 0.4] : [0.8, 0.95],
+    [0, 1]
+  );
 
   // Content Animations
-  const newsletterOpacity = useTransform(scrollYProgress, [0.65, 0.8], [0, 1]);
-  const newsletterScale = useTransform(scrollYProgress, [0.65, 0.8], [0.9, 1]);
+  // Mobile: Fade in early (0.2-0.4) to replace the "Step 1" text phase.
+  // Desktop: Fade in late (0.65-0.8) after the text phase.
+  const newsletterOpacity = useTransform(
+    scrollYProgress,
+    isMobile ? [0.2, 0.4] : [0.65, 0.8],
+    [0, 1]
+  );
+  const newsletterScale = useTransform(
+    scrollYProgress,
+    isMobile ? [0.2, 0.4] : [0.65, 0.8],
+    isMobile ? [0.95, 1] : [0.9, 1]
+  );
+
+  // DYNAMIC SAFARI SAFE AREA COLOR TOGGLE
+  // Switches body background to black when user scrolls deep into the dark area.
+  useMotionValueEvent(scrollYProgress, 'change', (latest: number) => {
+    // Threshold: 0.25 (When the blue/dark gradient is significant covering the screen)
+    // This ensures bottom bar/overscroll matches the content visual.
+    const isDark = latest > 0.25;
+    if (typeof document !== 'undefined') {
+      const targetColor = isDark ? '#000000' : '#ffffff';
+      if (document.body.style.backgroundColor !== targetColor) {
+        document.body.style.backgroundColor = targetColor;
+        document.documentElement.style.backgroundColor = targetColor;
+      }
+    }
+  });
+
+  // Reset to white on unmount
+  useEffect(() => {
+    return () => {
+      if (typeof document !== 'undefined') {
+        document.body.style.backgroundColor = '#ffffff';
+        document.documentElement.style.backgroundColor = '#ffffff';
+      }
+    };
+  }, []);
 
   // DYNAMIC POSITIONING - calculated based on footer height
   const footerRef = useRef<HTMLDivElement>(null);
@@ -85,12 +142,19 @@ const EarlyAccess: React.FC = () => {
 
   const newsletterY = useTransform(
     scrollYProgress,
-    [0.65, 0.85, 0.95, 1],
-    [150, 0, 0, finalYOffset]
+    isMobile ? [0.2, 0.9, 0.95, 1] : [0.65, 0.85, 0.95, 1],
+    // Mobile: Lock to finalYOffset / 2 (Middle Ground).
+    // Original (finalYOffset) was too high. 0 was too low.
+    // Desktop: Slide in from 150 -> 0 -> finalYOffset.
+    isMobile
+      ? [finalYOffset / 2, finalYOffset / 2, finalYOffset / 2, finalYOffset / 2]
+      : [150, 0, 0, finalYOffset]
   );
 
-  // Footer fade in at the very end
-  const footerOpacity = useTransform(scrollYProgress, [0.95, 1], [0, 1]);
+  // Footer fade in
+  // Mobile: Sync with newsletter (0.2-0.4) for single-step appearance.
+  // Desktop: Fade in at end.
+  const footerOpacity = useTransform(scrollYProgress, isMobile ? [0.2, 0.4] : [0.95, 1], [0, 1]);
 
   // Newsletter collapse when footer appears - hide heading/description
   const headingOpacity = useTransform(scrollYProgress, [0.92, 0.96], [1, 0]);
@@ -110,9 +174,12 @@ const EarlyAccess: React.FC = () => {
   const [denseStars, setDenseStars] = useState<Star[]>([]);
 
   useEffect(() => {
-    // Generate stars on client only
+    // Generate stars on client only - reduce count on mobile for performance
+    const starCount = isMobile ? 25 : 50;
+    const denseStarCount = isMobile ? 60 : 150;
+
     setStars(
-      [...Array(50)].map((_, i) => ({
+      [...Array(starCount)].map((_, i) => ({
         id: i,
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
@@ -123,7 +190,7 @@ const EarlyAccess: React.FC = () => {
     );
 
     setDenseStars(
-      [...Array(150)].map((_, i) => ({
+      [...Array(denseStarCount)].map((_, i) => ({
         id: i,
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
@@ -132,7 +199,7 @@ const EarlyAccess: React.FC = () => {
         delay: `${Math.random() * 5}s`,
       }))
     );
-  }, []);
+  }, [isMobile]);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -184,13 +251,13 @@ const EarlyAccess: React.FC = () => {
     <>
       {/* PRICING SECTION - Static white background, normal flow */}
       <section id="pricing" className="relative bg-white py-16 text-slate-900 sm:py-20 md:py-24">
-        <div className="mx-auto max-w-[1400px] px-3 sm:px-4 md:px-8 lg:px-16">
+        <div className="mx-auto max-w-[1600px] px-6 sm:px-8 md:px-12 lg:px-16">
           <div className="mb-16 text-center">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.5 }}
               className="font-display mb-6 text-2xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl"
             >
               Start small.
@@ -200,7 +267,7 @@ const EarlyAccess: React.FC = () => {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.8 }}
+              transition={{ delay: 0.1, duration: 0.5 }}
               viewport={{ once: true }}
               className="mx-auto max-w-2xl text-sm font-normal text-gray-500 md:text-base"
             >
@@ -220,7 +287,7 @@ const EarlyAccess: React.FC = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+              transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
               className="relative z-10 flex h-full flex-col rounded-2xl border-2 border-blue-500 bg-white p-5 shadow-xl shadow-blue-500/10 transition-shadow duration-300 hover:shadow-2xl hover:shadow-blue-500/20 sm:p-6 lg:p-8"
             >
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-blue-500 px-3 py-1 text-[10px] font-semibold tracking-wider text-white uppercase">
@@ -282,7 +349,7 @@ const EarlyAccess: React.FC = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ delay: 0.1, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+              transition={{ delay: 0.1, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
               className="group relative z-10 flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-lg transition-shadow duration-300 hover:border-gray-300 hover:shadow-xl sm:p-6 lg:p-8"
             >
               {/* Overlay */}
@@ -340,7 +407,7 @@ const EarlyAccess: React.FC = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ delay: 0.2, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+              transition={{ delay: 0.2, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
               className="group relative z-10 flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-lg transition-shadow duration-300 hover:border-gray-300 hover:shadow-xl sm:p-6 lg:p-8"
             >
               {/* Overlay */}
@@ -398,7 +465,7 @@ const EarlyAccess: React.FC = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ delay: 0.3, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+              transition={{ delay: 0.3, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
               className="group relative z-10 flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-lg transition-shadow duration-300 hover:border-gray-300 hover:shadow-xl sm:p-6 lg:p-8"
             >
               {/* Overlay */}
@@ -453,12 +520,12 @@ const EarlyAccess: React.FC = () => {
       <section
         id="early-access"
         ref={sectionRef}
-        className="relative h-[400vh] bg-white text-slate-900 sm:h-[600vh] lg:h-[800vh]"
+        className="relative h-[200vh] bg-black text-slate-900 sm:h-[350vh] md:h-[500vh] lg:h-[800vh]"
         style={{ position: 'relative' }}
       >
         {/* 1. STICKY STAGE (Backgrounds + Newsletter + Footer) */}
         {/* This container stays pinned to the viewport while the parent section scrolls */}
-        <div className="sticky top-0 h-dvh w-full overflow-hidden">
+        <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
           {/* A. BACKGROUND LAYERS (z-0) */}
           <div className="pointer-events-none absolute inset-0 z-0 h-full w-full">
             {/* Base White Background (for the start) */}
@@ -519,6 +586,7 @@ const EarlyAccess: React.FC = () => {
               style={{ opacity: auroraOpacity }}
               className="mask-linear-fade absolute top-[25%] left-0 h-[60vh] w-full mix-blend-plus-lighter"
             >
+              {/* Desktop Animated Aurora - Restored on Mobile */}
               <div className="animate-aurora-1 absolute top-0 left-[-10%] h-full w-[120%] bg-gradient-to-r from-emerald-500/10 via-teal-500/20 to-emerald-500/10 blur-[100px]" />
               <div className="animate-aurora-2 absolute top-[20%] right-[-10%] h-full w-[120%] bg-gradient-to-l from-cyan-500/10 via-blue-500/20 to-cyan-500/10 blur-[80px]" />
             </motion.div>
@@ -546,26 +614,27 @@ const EarlyAccess: React.FC = () => {
                 scale: newsletterScale,
                 y: newsletterY,
               }}
-              className="pointer-events-auto relative z-40 flex w-full max-w-xl flex-col items-center justify-center px-6"
+              className="pointer-events-auto relative z-40 flex w-full max-w-4xl flex-col items-center justify-center px-6"
             >
-              {/* Full heading - fades out when footer appears */}
-              <motion.div
-                style={{
-                  opacity: headingOpacity,
-                  scale: headingScale,
-                  y: headingY,
-                }}
-                className="mb-8 text-center"
-              >
-                <h2 className="font-display mb-6 text-2xl leading-tight font-semibold tracking-tight text-white drop-shadow-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-                  Ready to <br />
-                  echoe?
-                </h2>
-                <p className="mx-auto max-w-md text-sm font-normal text-blue-200/80 md:text-base">
-                  Join the waiting list for early access updates and be the first to experience the
-                  future.
-                </p>
-              </motion.div>
+              {/* Full heading - fades out when footer appears - DESKTOP ONLY */}
+              {!isMobile && (
+                <motion.div
+                  style={{
+                    opacity: headingOpacity,
+                    scale: headingScale,
+                    y: headingY,
+                  }}
+                  className="mb-8 text-center"
+                >
+                  <h2 className="font-display mb-6 text-4xl leading-none font-semibold tracking-tighter text-nowrap text-white drop-shadow-2xl sm:text-5xl md:text-6xl lg:text-7xl">
+                    Ready to echoe?
+                  </h2>
+                  <p className="mx-auto max-w-md text-sm font-normal text-blue-200/80 md:text-base">
+                    Join the waiting list for early access updates and be the first to experience
+                    the future.
+                  </p>
+                </motion.div>
+              )}
 
               {/* Compact "Join..." label - fades in when footer appears */}
               <motion.p
@@ -607,14 +676,6 @@ const EarlyAccess: React.FC = () => {
                       onSubmit={handleSubscribe}
                       className="relative w-full"
                     >
-                      <TurnstileWidget
-                        ref={widgetRef}
-                        siteKey={siteKey}
-                        onSuccess={handleTurnstileSuccess}
-                        onError={handleTurnstileError}
-                        onExpire={handleTurnstileExpire}
-                        theme="dark"
-                      />
                       <div
                         className={`relative flex items-center rounded-full border bg-white/10 p-2 backdrop-blur-xl transition-all duration-300 ${
                           status === 'error'
@@ -630,6 +691,8 @@ const EarlyAccess: React.FC = () => {
                         <input
                           id="waitlist-email"
                           type="email"
+                          inputMode="email"
+                          autoComplete="email"
                           placeholder="Enter your email"
                           value={email}
                           onChange={(e) => {
@@ -642,7 +705,8 @@ const EarlyAccess: React.FC = () => {
                           aria-label="Email address for waitlist"
                           aria-invalid={status === 'error'}
                           aria-describedby={status === 'error' ? 'email-error' : undefined}
-                          className="min-w-0 flex-1 border-none bg-transparent px-4 py-3.5 text-sm text-white placeholder-blue-200/50 outline-none focus:ring-0 sm:px-5 sm:py-3"
+                          style={{ transform: 'translate3d(0,0,0)' }}
+                          className="m-0 h-12 min-w-0 flex-1 appearance-none border-none bg-transparent px-4 py-0 align-middle text-base leading-normal text-white placeholder-blue-200/50 outline-none focus:ring-0 sm:h-auto sm:px-5 sm:py-3 sm:text-sm"
                         />
                         <button
                           type="submit"
@@ -659,6 +723,17 @@ const EarlyAccess: React.FC = () => {
                             </div>
                           )}
                         </button>
+                      </div>
+                      {/* Turnstile widget - positioned absolutely to not affect layout or capture focus */}
+                      <div className="pointer-events-none absolute inset-0 -z-10">
+                        <TurnstileWidget
+                          ref={widgetRef}
+                          siteKey={siteKey}
+                          onSuccess={handleTurnstileSuccess}
+                          onError={handleTurnstileError}
+                          onExpire={handleTurnstileExpire}
+                          theme="dark"
+                        />
                       </div>
                     </motion.form>
                   )}
@@ -677,8 +752,11 @@ const EarlyAccess: React.FC = () => {
             {/* Footer sticks to bottom of this sticky container - BLENDED WITH GRADIENT */}
             <motion.div
               ref={footerRef}
-              style={{ opacity: footerOpacity }}
-              className="pointer-events-auto absolute bottom-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent pt-32 pb-8"
+              style={{
+                opacity: footerOpacity,
+                paddingBottom: 'max(2rem, env(safe-area-inset-bottom))',
+              }}
+              className="pointer-events-auto absolute bottom-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent pt-32"
             >
               <FooterReact darkMode={true} />
             </motion.div>
