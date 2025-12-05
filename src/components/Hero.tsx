@@ -281,9 +281,11 @@ const Hero: React.FC = () => {
 
     // Configuration - Adjust grid spacing for performance
     const isMobile = window.innerWidth < 640;
-    const GRID_SPACING = isMobile ? 40 : 35; // Larger grid = fewer lines = better performance
-    const MAX_RIPPLES = 40;
-    const DRAG_SPAWN_DIST = 10; // Frequent for smooth stream
+    const GRID_SPACING = isMobile ? 50 : 35; // Larger grid on mobile = fewer lines = better performance
+    const MAX_RIPPLES = isMobile ? 25 : 40; // Fewer ripples on mobile
+    const DRAG_SPAWN_DIST = isMobile ? 15 : 10; // Less frequent spawning on mobile
+    const FRAME_SKIP = isMobile ? 2 : 1; // Skip frames on mobile for better performance
+    let frameCount = 0;
 
     interface Ripple {
       x: number;
@@ -355,12 +357,23 @@ const Hero: React.FC = () => {
     };
 
     window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseleave', onMouseLeave);
+
+    // Only add interaction listeners on desktop
+    if (!isMobile) {
+      window.addEventListener('mousemove', onMouseMove);
+      window.addEventListener('mouseleave', onMouseLeave);
+    }
     resize();
 
     const draw = (time: number) => {
       if (!ctx) return;
+
+      // Frame skipping for mobile performance
+      frameCount++;
+      if (frameCount % FRAME_SKIP !== 0) {
+        animationFrameId = requestAnimationFrame(() => draw(Date.now()));
+        return;
+      }
 
       // Clear canvas
       ctx.clearRect(0, 0, width, height);
@@ -565,7 +578,7 @@ const Hero: React.FC = () => {
     <LazyMotion features={domAnimation}>
       <div
         ref={containerRef}
-        className="relative h-[150vh] bg-white sm:h-[200vh] lg:h-[250vh]"
+        className="relative h-[120vh] bg-white sm:h-[150vh] md:h-[200vh] lg:h-[250vh]"
         style={{ position: 'relative' }}
         onMouseMove={handleMouseMove}
       >
@@ -598,7 +611,7 @@ const Hero: React.FC = () => {
               </div>
 
               {/* Dynamic Titles Wrapper */}
-              <div className="perspective-1000 relative flex h-[140px] w-full items-center justify-center sm:h-[180px] md:h-[280px]">
+              <div className="perspective-1000 relative flex min-h-[100px] w-full items-center justify-center py-4 sm:min-h-[140px] md:min-h-[200px]">
                 {/* Title 1 - initial ensures SSR renders with opacity:1 for LCP */}
                 <m.div
                   initial={{ opacity: 1, scale: 1, y: 0 }}
@@ -719,6 +732,35 @@ const Hero: React.FC = () => {
                   </div>
                 </m.div>
               ))}
+
+            {/* --- Mobile Floating Notifications (< md) - Horizontal strip at bottom --- */}
+            <m.div
+              style={{ opacity: group1Opacity }}
+              className="absolute right-0 bottom-24 left-0 z-20 flex justify-center gap-2 px-3 md:hidden"
+            >
+              {activeBubbles.slice(0, 3).map((bubble, index) => (
+                <m.div
+                  key={`mobile-${index}`}
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.5 + index * 0.15 }}
+                  className="rounded-full border border-slate-200/60 bg-white/95 px-2.5 py-1.5 shadow-md backdrop-blur-md"
+                >
+                  <div className="flex items-center gap-1.5">
+                    <div
+                      className={`flex h-5 w-5 items-center justify-center rounded-full ${bubble.item.iconBgClass} ${bubble.item.colorClass} [&>svg]:h-2.5 [&>svg]:w-2.5`}
+                    >
+                      {bubble.item.icon}
+                    </div>
+                    <div className="text-[10px] font-medium whitespace-nowrap text-slate-600">
+                      {bubble.item.text.length > 12
+                        ? bubble.item.text.slice(0, 12) + '...'
+                        : bubble.item.text}
+                    </div>
+                  </div>
+                </m.div>
+              ))}
+            </m.div>
           </div>
 
           {/* Scroll Indicator */}
