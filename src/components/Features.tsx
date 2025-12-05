@@ -431,6 +431,8 @@ const Features: React.FC = () => {
   // Scroll-based card switching
   useEffect(() => {
     const handleScroll = () => {
+      if (dimensions.isMobile) return;
+
       const section = containerRef.current;
       if (!section) return;
 
