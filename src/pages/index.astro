@@ -39,30 +39,27 @@ import CookieConsent from '../components/CookieConsent';
     // User requested loading screen to always show for testing/demo purposes
 
     const initLenis = () => {
-      // Disable Lenis on mobile/tablet (width < 1024px) for native 60fps scroll
-      if (window.innerWidth < 1024) {
-        return undefined;
-      }
-
-      // Initialize Lenis smooth scroll
+      // Initialize Lenis for smooth scrolling
       const lenis = new Lenis({
         duration: 1.2,
-        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        orientation: 'vertical',
-        gestureOrientation: 'vertical',
-        smoothWheel: true,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        smoothTouch: false,
+        touchMultiplier: 2,
       });
 
       // Expose lenis globally for navigation
       (window as unknown as { lenis: typeof lenis }).lenis = lenis;
 
-      function raf(time: number) {
+      function raf(time) {
         lenis.raf(time);
         requestAnimationFrame(raf);
       }
 
       requestAnimationFrame(raf);
-      return lenis;
+      window.lenis = lenis;
     };
 
     let lenis: ReturnType<typeof initLenis> | undefined;
