@@ -234,7 +234,7 @@ const InteractiveDemo: React.FC = () => {
                   whileInView={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.8, ease: 'easeOut' }}
                   viewport={{ once: true, amount: 0.1 }}
-                  className="relative grid h-[calc(100dvh-110px)] grid-cols-1 grid-rows-[1fr] gap-0 overflow-hidden rounded-2xl border border-t border-gray-200/80 border-white/50 bg-white shadow-xl shadow-blue-900/5 sm:h-[calc(100dvh-130px)] sm:rounded-[2rem] md:rounded-[2.5rem] lg:h-[calc(100dvh-160px)] lg:grid-cols-12"
+                  className="relative grid h-[calc(100svh-110px)] grid-cols-1 grid-rows-[1fr] gap-0 overflow-hidden rounded-2xl border border-t border-gray-200/80 border-white/50 bg-white shadow-xl shadow-blue-900/5 sm:h-[calc(100svh-130px)] sm:rounded-[2rem] md:rounded-[2.5rem] lg:h-[calc(100svh-160px)] lg:grid-cols-12"
                 >
                   {/* Scanning Effect Overlay */}
                   <div
