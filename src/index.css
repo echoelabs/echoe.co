@@ -6,13 +6,20 @@
   --font-space-grotesk: 'Space Grotesk', 'SF Pro Display', 'Helvetica Neue', sans-serif;
 
   /* Fluid Typography Scale (320px - 1536px) */
-  --text-display: clamp(2.25rem, 1.5rem + 3.75vw, 4.5rem); /* 36-72px */
-  --text-headline: clamp(1.875rem, 1.25rem + 3.125vw, 3.75rem); /* 30-60px */
-  --text-title: clamp(1.5rem, 1.125rem + 1.875vw, 2.5rem); /* 24-40px */
-  --text-subtitle: clamp(1.125rem, 0.9375rem + 0.9375vw, 1.5rem); /* 18-24px */
-  --text-body-lg: clamp(1rem, 0.875rem + 0.625vw, 1.25rem); /* 16-20px */
-  --text-body: clamp(0.875rem, 0.8125rem + 0.3125vw, 1rem); /* 14-16px */
-  --text-small: clamp(0.75rem, 0.6875rem + 0.3125vw, 0.875rem); /* 12-14px */
+  --text-display: clamp(2.25rem, 1.5rem + 3.75vw, 4.5rem);
+  /* 36-72px */
+  --text-headline: clamp(1.875rem, 1.25rem + 3.125vw, 3.75rem);
+  /* 30-60px */
+  --text-title: clamp(1.5rem, 1.125rem + 1.875vw, 2.5rem);
+  /* 24-40px */
+  --text-subtitle: clamp(1.125rem, 0.9375rem + 0.9375vw, 1.5rem);
+  /* 18-24px */
+  --text-body-lg: clamp(1rem, 0.875rem + 0.625vw, 1.25rem);
+  /* 16-20px */
+  --text-body: clamp(0.875rem, 0.8125rem + 0.3125vw, 1rem);
+  /* 14-16px */
+  --text-small: clamp(0.75rem, 0.6875rem + 0.3125vw, 0.875rem);
+  /* 12-14px */
 
   /* Fluid Spacing */
   --space-sm: clamp(0.5rem, 0.375rem + 0.625vw, 1rem);
@@ -35,12 +42,12 @@
 }
 
 /* Progressive enhancement for modern browsers with dvh support */
-@supports (height: 100dvh) {
+@supports (height: 100svh) {
   :root {
-    --vh-full: 100dvh;
-    --vh-content: clamp(400px, calc(100dvh - 300px), 700px);
-    --vh-hero: calc(100dvh - 72px);
-    --min-vh-page: calc(100dvh - 160px);
+    --vh-full: 100svh;
+    --vh-content: clamp(400px, calc(100svh - 300px), 700px);
+    --vh-hero: calc(100svh - 72px);
+    --min-vh-page: calc(100svh - 160px);
   }
 }
 
@@ -96,6 +103,7 @@ body {
     opacity: 0.3;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.6;
     transform: scale(1.1);
@@ -108,6 +116,7 @@ body {
     opacity: 0.8;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.2;
     transform: scale(0.5);
@@ -120,10 +129,12 @@ body {
     transform: translateX(-10%) translateY(-5%) rotate(-3deg) scale(1);
     opacity: 0.6;
   }
+
   50% {
     transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
     opacity: 0.9;
   }
+
   100% {
     transform: translateX(-10%) translateY(-5%) rotate(-3deg) scale(1);
     opacity: 0.6;
@@ -135,10 +146,12 @@ body {
     transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
     opacity: 0.5;
   }
+
   50% {
     transform: translateX(-5%) translateY(-5%) rotate(-3deg) scale(1);
     opacity: 0.8;
   }
+
   100% {
     transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
     opacity: 0.5;
@@ -150,6 +163,7 @@ body {
   100% {
     opacity: 0.4;
   }
+
   50% {
     opacity: 0.8;
   }
@@ -178,12 +192,15 @@ body {
 .delay-100 {
   animation-delay: 0.1s;
 }
+
 .delay-200 {
   animation-delay: 0.2s;
 }
+
 .delay-500 {
   animation-delay: 0.5s;
 }
+
 .delay-1000 {
   animation-delay: 1s;
 }
@@ -250,11 +267,13 @@ body {
   /* Reduce aurora animations on mobile for performance */
   .animate-aurora-1,
   .animate-aurora-2 {
-    animation-duration: 30s; /* Slower = less CPU */
+    animation-duration: 30s;
+    /* Slower = less CPU */
   }
 
   .animate-twinkle {
-    animation-duration: 5s; /* Slower twinkle */
+    animation-duration: 5s;
+    /* Slower twinkle */
   }
 }
 
