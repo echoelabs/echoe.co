@@ -109,13 +109,12 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
               </p>
               <ul className={`space-y-0.5 text-xs sm:space-y-1 ${textColor}`}>
                 <li>
-                  <a
-                    href="mailto:hello@echoe.co"
-                    data-astro-reload
-                    className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
+                  <button
+                    onClick={() => (window.location.href = 'mailto:hello@echoe.co')}
+                    className={`${hoverColor} -mx-1 block px-1 py-1.5 text-left transition-colors`}
                   >
                     Contact
-                  </a>
+                  </button>
                 </li>
                 <li>
                   <span className={`${disabledColor} -mx-1 block px-1 py-1.5`}>Newsroom</span>
@@ -194,13 +193,12 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
           style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
         >
           <div className={`text-[10px] ${textColor}`}>© 2026 ECHO HQ CO., LTD.</div>
-          <a
-            href="mailto:hello@echoe.co"
-            data-astro-reload
+          <button
+            onClick={() => (window.location.href = 'mailto:hello@echoe.co')}
             className={`text-[10px] ${textColor} ${hoverColor} transition-colors`}
           >
             hello@echoe.co
-          </a>
+          </button>
         </div>
       </div>
     </footer>
