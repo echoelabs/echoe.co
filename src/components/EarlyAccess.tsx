@@ -536,12 +536,9 @@ const EarlyAccess: React.FC = () => {
               style={{ opacity: auroraOpacity }}
               className="mask-linear-fade absolute top-[25%] left-0 h-[60vh] w-full mix-blend-plus-lighter"
             >
-              {/* Mobile Static Fallback */}
-              <div className="absolute inset-0 bg-gradient-to-b from-teal-500/10 to-blue-500/10 md:hidden" />
-
-              {/* Desktop Animated Aurora */}
-              <div className="animate-aurora-1 absolute top-0 left-[-10%] hidden h-full w-[120%] bg-gradient-to-r from-emerald-500/10 via-teal-500/20 to-emerald-500/10 blur-[100px] md:block" />
-              <div className="animate-aurora-2 absolute top-[20%] right-[-10%] hidden h-full w-[120%] bg-gradient-to-l from-cyan-500/10 via-blue-500/20 to-cyan-500/10 blur-[80px] md:block" />
+              {/* Desktop Animated Aurora - Restored on Mobile */}
+              <div className="animate-aurora-1 absolute top-0 left-[-10%] h-full w-[120%] bg-gradient-to-r from-emerald-500/10 via-teal-500/20 to-emerald-500/10 blur-[100px]" />
+              <div className="animate-aurora-2 absolute top-[20%] right-[-10%] h-full w-[120%] bg-gradient-to-l from-cyan-500/10 via-blue-500/20 to-cyan-500/10 blur-[80px]" />
             </motion.div>
 
             {/* Bottom Dynamic Aurora (Intense Green/Teal at bottom) */}
@@ -549,15 +546,12 @@ const EarlyAccess: React.FC = () => {
               style={{ opacity: bottomAuroraOpacity }}
               className="absolute bottom-[-10%] left-0 h-[80vh] w-full mix-blend-screen"
             >
-              {/* Mobile Static Fallback */}
-              <div className="absolute inset-0 bg-gradient-to-t from-emerald-600/20 to-transparent md:hidden" />
-
               {/* Main Green Glow */}
-              <div className="animate-aurora-shimmer absolute bottom-0 left-0 hidden h-full w-full bg-gradient-to-t from-emerald-600/30 via-teal-500/10 to-transparent blur-[120px] md:block" />
+              <div className="animate-aurora-shimmer absolute bottom-0 left-0 h-full w-full bg-gradient-to-t from-emerald-600/30 via-teal-500/10 to-transparent blur-[120px]" />
 
               {/* Moving Curtains */}
-              <div className="animate-aurora-1 absolute bottom-0 left-[-20%] hidden h-[80%] w-[140%] bg-gradient-to-tr from-green-400/20 via-emerald-300/10 to-transparent blur-[60px] md:block" />
-              <div className="animate-aurora-2 absolute right-[-20%] bottom-[-20%] hidden h-[90%] w-[140%] bg-gradient-to-tl from-teal-300/20 via-cyan-400/10 to-transparent blur-[70px] delay-1000 md:block" />
+              <div className="animate-aurora-1 absolute bottom-0 left-[-20%] h-[80%] w-[140%] bg-gradient-to-tr from-green-400/20 via-emerald-300/10 to-transparent blur-[60px]" />
+              <div className="animate-aurora-2 absolute right-[-20%] bottom-[-20%] h-[90%] w-[140%] bg-gradient-to-tl from-teal-300/20 via-cyan-400/10 to-transparent blur-[70px] delay-1000" />
             </motion.div>
           </div>
 
