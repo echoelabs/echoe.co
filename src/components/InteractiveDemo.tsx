@@ -179,7 +179,11 @@ const InteractiveDemo: React.FC = () => {
   return (
     // Updated background to pure white and removed margin-top to prevent gaps
     // Increased height to 400vh for even longer stay
-    <section id="demo" className="relative z-20 -mt-4 -mb-1 bg-white">
+    <section
+      id="demo"
+      ref={containerRef}
+      className="relative bg-white px-6 py-16 sm:py-24 md:py-32"
+    >
       {/* Title section - scrolls normally */}
       <div className="px-4 pt-24 pb-8 md:px-8 lg:px-16">
         <div className="mx-auto w-full max-w-[90vw] lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px]">
