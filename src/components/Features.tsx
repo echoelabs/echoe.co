@@ -701,7 +701,7 @@ const Features: React.FC = () => {
       </div>
 
       {/* --- MOBILE LAYOUT (Vertical Stack) --- */}
-      <div className="relative z-10 mx-auto flex max-w-lg flex-col gap-12 lg:hidden">
+      <div className="relative z-10 mx-auto flex max-w-lg flex-col gap-12 px-6 sm:px-8 lg:hidden">
         <div className="text-center">
           <motion.h2
             initial={{ opacity: 0, y: 30 }}
