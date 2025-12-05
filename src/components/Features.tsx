@@ -198,10 +198,11 @@ const InventoryVisual = () => {
           </div>
           <div className="h-2 overflow-hidden rounded-full bg-slate-100">
             <motion.div
-              initial={{ width: 0 }}
-              animate={{ width: `${(product.stock / product.max) * 100}%` }}
+              initial={{ scaleX: 0 }}
+              animate={{ scaleX: product.stock / product.max }}
               transition={{ duration: 0.8, delay: i * 0.1 }}
-              className={`h-full rounded-full ${product.status === 'Out' ? 'bg-red-400' : product.status === 'Low' ? 'bg-amber-400' : 'bg-emerald-400'}`}
+              style={{ originX: 0 }}
+              className={`h-full w-full rounded-full ${product.status === 'Out' ? 'bg-red-400' : product.status === 'Low' ? 'bg-amber-400' : 'bg-emerald-400'}`}
             />
           </div>
         </motion.div>
@@ -566,7 +567,7 @@ const Features: React.FC = () => {
               transition={{ duration: 0.8 }}
               className="font-display mb-6 text-2xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl"
             >
-              Command Center.
+              The Operating System.
               <br />
               For Modern Commerce.
             </motion.h2>
@@ -585,10 +586,10 @@ const Features: React.FC = () => {
                     transition={{ delay: index * 0.05, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
                     onClick={() => handleCardClick(index)}
                     whileHover={{ scale: isActive ? 1 : 1.01 }}
-                    className={`relative cursor-pointer rounded-2xl border p-4 transition-all duration-300 ease-out sm:p-5 ${isActive ? 'border-slate-200 bg-white shadow-md' : 'border-slate-200/50 bg-white hover:shadow-sm'}`}
+                    className={`relative cursor-pointer rounded-2xl border p-3 transition-all duration-300 ease-out sm:p-4 md:p-5 ${isActive ? 'no-scrollbar max-h-[65vh] overflow-x-hidden overflow-y-auto overscroll-contain border-slate-200 bg-white shadow-md lg:max-h-none lg:overflow-visible' : 'border-slate-200/50 bg-white hover:shadow-sm'}`}
                   >
                     <motion.div
-                      className="flex gap-3"
+                      className={`flex gap-3 ${isActive ? 'sticky top-0 z-10 -mx-3 -mt-3 bg-white px-3 pt-3 pb-2 before:absolute before:inset-x-0 before:-top-4 before:h-4 before:bg-white sm:-mx-4 sm:-mt-4 sm:px-4 sm:pt-4 md:-mx-5 md:-mt-5 md:px-5 md:pt-5 lg:static lg:mx-0 lg:mt-0 lg:px-0 lg:pt-0 lg:pb-0 lg:before:hidden' : ''}`}
                       animate={{ alignItems: isActive ? 'flex-start' : 'center' }}
                       transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
                     >
@@ -633,6 +634,25 @@ const Features: React.FC = () => {
                         </AnimatePresence>
                       </div>
                     </motion.div>
+
+                    {/* Mobile Visual Preview - Shows inline below active card on < lg screens */}
+                    <AnimatePresence>
+                      {isActive && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+                          className="mt-3 overflow-hidden lg:hidden"
+                        >
+                          <div className="rounded-xl border border-slate-100 bg-slate-50/50">
+                            <div className="w-full [&>div]:!w-full [&>div]:!max-w-none">
+                              {feature.visual}
+                            </div>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </motion.div>
                 );
               })}
