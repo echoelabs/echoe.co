@@ -614,9 +614,8 @@ const EarlyAccess: React.FC = () => {
                 scale: newsletterScale,
                 y: newsletterY,
               }}
-              className="pointer-events-auto relative z-40 flex w-full max-w-xl flex-col items-center justify-center px-6"
+              className="pointer-events-auto relative z-40 flex w-full max-w-4xl flex-col items-center justify-center px-6"
             >
-              {/* Full heading - fades out when footer appears */}
               {/* Full heading - fades out when footer appears - DESKTOP ONLY */}
               {!isMobile && (
                 <motion.div
@@ -627,7 +626,7 @@ const EarlyAccess: React.FC = () => {
                   }}
                   className="mb-8 text-center"
                 >
-                  <h2 className="font-display mb-6 text-4xl leading-none font-semibold tracking-tighter text-white drop-shadow-2xl sm:text-5xl md:text-6xl lg:text-7xl">
+                  <h2 className="font-display mb-6 text-4xl leading-none font-semibold tracking-tighter text-nowrap text-white drop-shadow-2xl sm:text-5xl md:text-6xl lg:text-7xl">
                     Ready to echoe?
                   </h2>
                   <p className="mx-auto max-w-md text-sm font-normal text-blue-200/80 md:text-base">
