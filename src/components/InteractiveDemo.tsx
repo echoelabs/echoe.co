@@ -85,6 +85,9 @@ const InteractiveDemo: React.FC = () => {
 
   // Simulate Live Data Changes
   useEffect(() => {
+    // Optimization: Disable live simulation on mobile to save resources
+    if (window.innerWidth < 1024) return;
+
     const interval = setInterval(() => {
       // Jitter revenue more noticeably
       if (Math.random() > 0.5) {
@@ -215,9 +218,9 @@ const InteractiveDemo: React.FC = () => {
         <div
           className={`${isMobile ? 'relative' : 'sticky top-16'} flex h-[var(--vh-hero)] flex-col px-2 py-1 sm:top-20 sm:px-4 sm:py-4 md:px-8 lg:px-16 lg:py-6`}
         >
-          {/* Dynamic Background decoration - Removed Grid Pattern Completely */}
-          <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-full bg-gradient-to-r from-blue-100/40 via-purple-100/40 to-pink-100/40 opacity-60 blur-3xl" />
-          <div className="pointer-events-none absolute top-1/2 right-10 h-64 w-64 animate-pulse rounded-full bg-emerald-100/30 blur-[80px]" />
+          {/* Dynamic Background decoration - Removed on mobile for performance */}
+          <div className="pointer-events-none absolute top-1/4 left-0 hidden h-[500px] w-full bg-gradient-to-r from-blue-100/40 via-purple-100/40 to-pink-100/40 opacity-60 blur-3xl lg:block" />
+          <div className="pointer-events-none absolute top-1/2 right-10 hidden h-64 w-64 animate-pulse rounded-full bg-emerald-100/30 blur-[80px] lg:block" />
 
           <div className="mx-auto flex min-h-0 w-full max-w-[90vw] flex-1 flex-col lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px]">
             {/* Wrapper for the floating app window - TRANSPARENT */}
