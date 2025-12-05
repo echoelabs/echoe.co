@@ -118,8 +118,28 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
     const maxScroll = docHeight - winHeight;
     const distanceFromBottom = maxScroll - latest;
 
-    const parallaxZoneThreshold = winHeight * 8; // Start hiding earlier (full 800vh section)
-    const footerVisibleThreshold = winHeight * 2.5;
+    // Dynamic thresholds based on EarlyAccess.tsx responsive heights
+    // Mobile (<640px): h-[200vh]
+    // SM (>=640px): h-[350vh]
+    // MD (>=768px): h-[500vh]
+    // LG (>=1024px): h-[800vh]
+
+    let sectionMult = 8;
+    let footerMult = 2.5;
+
+    if (window.innerWidth < 640) {
+      sectionMult = 2;
+      footerMult = 0.6; // Show earlier on mobile scroller
+    } else if (window.innerWidth < 768) {
+      sectionMult = 3.5;
+      footerMult = 1.2;
+    } else if (window.innerWidth < 1024) {
+      sectionMult = 5;
+      footerMult = 1.8;
+    }
+
+    const parallaxZoneThreshold = winHeight * sectionMult;
+    const footerVisibleThreshold = winHeight * footerMult;
 
     if (distanceFromBottom < parallaxZoneThreshold && distanceFromBottom > footerVisibleThreshold) {
       setHidden(true);
