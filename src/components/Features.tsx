@@ -464,9 +464,9 @@ const Features: React.FC = () => {
     const section = containerRef.current;
     if (!section) return;
 
-    // Calculate target scroll position for this card
+    // Calculate target scroll position for this card (add 2px buffer to ensure Math.floor lands on correct index)
     const sectionOffsetTop = section.offsetTop;
-    const targetScroll = sectionOffsetTop - headerHeight + index * dimensions.scrollPerCard;
+    const targetScroll = sectionOffsetTop - headerHeight + index * dimensions.scrollPerCard + 2;
 
     // Use Lenis for smooth scroll if available
     const lenis = (
@@ -570,7 +570,7 @@ const Features: React.FC = () => {
           />
         </div>
 
-        <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col">
+        <div className="relative z-10 mx-auto flex h-full min-h-0 w-full flex-1 flex-col lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px]">
           <div className="shrink-0 pb-12 text-center">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
