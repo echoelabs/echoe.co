@@ -223,7 +223,7 @@ const InteractiveDemo: React.FC = () => {
           <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-full bg-gradient-to-r from-blue-100/40 via-purple-100/40 to-pink-100/40 opacity-60 blur-3xl" />
           <div className="pointer-events-none absolute top-1/2 right-10 h-64 w-64 animate-pulse rounded-full bg-emerald-100/30 blur-[80px]" />
 
-          <div className="mx-auto flex min-h-0 w-full flex-1 flex-col lg:max-w-[1600px]">
+          <div className="mx-auto flex min-h-0 w-full max-w-[1600px] flex-1 flex-col">
             {/* Wrapper for the floating app window - TRANSPARENT */}
             <motion.div
               id="simulation-window"
