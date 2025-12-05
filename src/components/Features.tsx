@@ -570,7 +570,7 @@ const Features: React.FC = () => {
           />
         </div>
 
-        <div className="relative z-10 mx-auto flex h-full min-h-0 w-full flex-1 flex-col px-6 sm:px-4 md:px-12 lg:max-w-[1600px] lg:px-16">
+        <div className="relative z-10 mx-auto flex h-full min-h-0 w-full flex-1 flex-col px-6 sm:px-8 md:px-12 lg:max-w-[1600px] lg:px-16">
           <div className="shrink-0 pb-12 text-center">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
