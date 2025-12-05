@@ -179,11 +179,7 @@ const InteractiveDemo: React.FC = () => {
   return (
     // Updated background to pure white and removed margin-top to prevent gaps
     // Increased height to 400vh for even longer stay
-    <section
-      id="demo"
-      ref={containerRef}
-      className="relative bg-white px-6 py-16 sm:py-24 md:py-32"
-    >
+    <section id="demo" ref={containerRef} className="relative bg-white py-16 sm:py-24 md:py-32">
       {/* Title section - scrolls normally */}
       <div className="px-4 pt-24 pb-8 md:px-12 lg:px-16">
         <div className="mx-auto w-full max-w-[90vw] lg:max-w-[1600px]">
@@ -236,7 +232,7 @@ const InteractiveDemo: React.FC = () => {
             >
               {/* The Main Interface Container (The App Window) */}
               {/* Added more horizontal padding (px-6 md:px-12) to prevent shadow cutoff */}
-              <div className="no-scrollbar mx-auto flex min-h-0 w-full flex-1 flex-col sm:max-w-[95%] md:px-12 lg:max-w-[1500px] lg:px-12">
+              <div className="no-scrollbar mx-auto flex min-h-0 w-full flex-1 flex-col px-6 sm:max-w-[95%] sm:px-4 md:px-12 lg:px-16">
                 <motion.div
                   initial={{ y: 60, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
