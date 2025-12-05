@@ -251,7 +251,7 @@ const EarlyAccess: React.FC = () => {
     <>
       {/* PRICING SECTION - Static white background, normal flow */}
       <section id="pricing" className="relative bg-white py-16 text-slate-900 sm:py-20 md:py-24">
-        <div className="mx-auto max-w-[1400px] px-6 sm:px-4 md:px-8 lg:px-16">
+        <div className="mx-auto max-w-[1600px] px-6 sm:px-4 md:px-12 lg:px-16">
           <div className="mb-16 text-center">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
