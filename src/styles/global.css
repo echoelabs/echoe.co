@@ -9,12 +9,14 @@
 html {
   scrollbar-gutter: stable;
   position: relative;
-  background-color: #0f172a; /* dark - prevents white flash on iOS keyboard */
+  background-color: #0f172a;
+  /* dark - prevents white flash on iOS keyboard */
 }
 
 body {
   font-family: var(--font-inter);
-  background-color: #0f172a; /* dark - prevents white flash on iOS keyboard */
+  background-color: #0f172a;
+  /* dark - prevents white flash on iOS keyboard */
   color: #0f172a;
   overflow-x: hidden;
   position: relative;
@@ -69,6 +71,7 @@ body {
     opacity: 0.3;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.6;
     transform: scale(1.1);
@@ -81,6 +84,7 @@ body {
     opacity: 0.8;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.2;
     transform: scale(0.5);
@@ -92,10 +96,12 @@ body {
     transform: translateX(-10%) translateY(-5%) rotate(-3deg) scale(1);
     opacity: 0.6;
   }
+
   50% {
     transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
     opacity: 0.9;
   }
+
   100% {
     transform: translateX(-10%) translateY(-5%) rotate(-3deg) scale(1);
     opacity: 0.6;
@@ -107,10 +113,12 @@ body {
     transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
     opacity: 0.5;
   }
+
   50% {
     transform: translateX(-5%) translateY(-5%) rotate(-3deg) scale(1);
     opacity: 0.8;
   }
+
   100% {
     transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
     opacity: 0.5;
@@ -122,6 +130,7 @@ body {
   100% {
     opacity: 0.4;
   }
+
   50% {
     opacity: 0.8;
   }
@@ -150,25 +159,27 @@ body {
 .delay-100 {
   animation-delay: 0.1s;
 }
+
 .delay-200 {
   animation-delay: 0.2s;
 }
+
 .delay-500 {
   animation-delay: 0.5s;
 }
+
 .delay-1000 {
   animation-delay: 1s;
 }
 
 /* Disable hover animations/transitions on touch devices */
+/* Optimize transitions for touch devices */
 @media (hover: none) {
-  a,
-  button {
-    transition: none !important;
-  }
-
+  /* Only disable heavy transform animations on touch to prevent jank */
   a:hover,
   button:hover {
     transform: none !important;
   }
+
+  /* Keep opacity and color transitions enabled for responsive feel */
 }
