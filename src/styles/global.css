@@ -9,11 +9,12 @@
 html {
   scrollbar-gutter: stable;
   position: relative;
+  background-color: #0f172a; /* dark - prevents white flash on iOS keyboard */
 }
 
 body {
   font-family: var(--font-inter);
-  background-color: #ffffff;
+  background-color: #0f172a; /* dark - prevents white flash on iOS keyboard */
   color: #0f172a;
   overflow-x: hidden;
   position: relative;
@@ -157,4 +158,17 @@ body {
 }
 .delay-1000 {
   animation-delay: 1s;
+}
+
+/* Disable hover animations/transitions on touch devices */
+@media (hover: none) {
+  a,
+  button {
+    transition: none !important;
+  }
+
+  a:hover,
+  button:hover {
+    transform: none !important;
+  }
 }
