@@ -217,7 +217,7 @@ const InteractiveDemo: React.FC = () => {
         style={{ position: 'relative' }}
       >
         <div
-          className={`${isMobile ? 'relative px-0' : 'sticky top-16 px-2 sm:top-20 sm:px-8 md:px-12 lg:px-16 lg:py-6'} flex h-[var(--vh-hero)] flex-col py-1 sm:py-4`}
+          className={`${isMobile ? 'relative px-0' : 'sticky top-16 sm:top-20 lg:py-6'} flex h-[var(--vh-hero)] flex-col py-1 sm:py-4`}
         >
           {/* Dynamic Background decoration - Removed Grid Pattern Completely */}
           <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-full bg-gradient-to-r from-blue-100/40 via-purple-100/40 to-pink-100/40 opacity-60 blur-3xl" />
