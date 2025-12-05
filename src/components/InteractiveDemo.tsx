@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useInView } from 'framer-motion';
 import {
   Send,
   Sparkles,
@@ -28,7 +28,7 @@ const InteractiveDemo: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null); // This ref is used for both useScroll and useInView
 
   // Live Metrics Simulation
   const [revenue, setRevenue] = useState(1240.5);
@@ -83,8 +83,12 @@ const InteractiveDemo: React.FC = () => {
     }
   }, [messages, isTyping]);
 
+  const isInView = useInView(containerRef); // Use the existing containerRef
+
   // Simulate Live Data Changes
   useEffect(() => {
+    if (!isInView) return; // Only run interval when component is in view
+
     const interval = setInterval(() => {
       // Jitter revenue more noticeably
       if (Math.random() > 0.5) {
@@ -123,7 +127,7 @@ const InteractiveDemo: React.FC = () => {
       }
     }, 2000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isInView]); // Add isInView to dependency array
 
   const handleSend = async () => {
     if (!inputValue.trim()) return;
@@ -208,7 +212,7 @@ const InteractiveDemo: React.FC = () => {
 
       {/* Simulation section - sticky with zoom effect */}
       <div
-        ref={containerRef}
+        ref={containerRef} // This ref is now used for useScroll and useInView
         className={`relative ${isMobile ? 'h-auto pb-24' : 'h-[150vh] sm:h-[200vh] md:h-[280vh] lg:h-[380vh]'}`}
         style={{ position: 'relative' }}
       >

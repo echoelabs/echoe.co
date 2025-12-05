@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useTransform, useInView } from 'framer-motion';
 import {
   MessageSquare,
   Package,
@@ -216,7 +216,12 @@ const AIAutopilotVisual = () => {
   const fullText =
     'Hi! Thanks for reaching out. Yes, the Minimal Vase is available in both White and Terracotta. Would you like me to create an order for you?';
 
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef);
+
   useEffect(() => {
+    if (!isInView) return;
+
     let i = 0;
     const interval = setInterval(() => {
       setText(fullText.slice(0, i + 1));
@@ -229,10 +234,10 @@ const AIAutopilotVisual = () => {
       }
     }, 30);
     return () => clearInterval(interval);
-  }, []);
+  }, [isInView]);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div ref={containerRef} className="flex h-full w-full flex-col gap-4 p-6">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100">
