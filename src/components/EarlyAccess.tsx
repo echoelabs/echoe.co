@@ -627,7 +627,7 @@ const EarlyAccess: React.FC = () => {
                   }}
                   className="mb-8 text-center"
                 >
-                  <h2 className="font-display mb-6 text-6xl leading-none font-semibold tracking-tighter text-white drop-shadow-2xl sm:text-7xl md:text-8xl lg:text-9xl">
+                  <h2 className="font-display mb-6 text-4xl leading-none font-semibold tracking-tighter text-white drop-shadow-2xl sm:text-5xl md:text-6xl lg:text-7xl">
                     Ready to <br />
                     echoe?
                   </h2>
