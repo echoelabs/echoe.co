@@ -42,14 +42,10 @@ const EarlyAccess: React.FC = () => {
   // --- REFINED PHYSICS-BASED SKY TRANSITION ---
   // HEIGHT: 800vh total
   // Background moves UP to reveal the "night" section.
-  const backgroundY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    isMobile ? ['0%', '0%'] : ['0%', '-75%']
-  );
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '-75%']);
 
   // Parallax for stars:
-  const starsY = useTransform(scrollYProgress, [0, 1], isMobile ? ['0%', '0%'] : ['10%', '-20%']);
+  const starsY = useTransform(scrollYProgress, [0, 1], ['10%', '-20%']);
 
   // Fade stars in later to ensure sky is dark enough
   const starsOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0, 1]);
