@@ -46,7 +46,7 @@ const InteractiveDemo: React.FC = () => {
   });
 
   // Mobile detection for gentler zoom effect
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(true);
   useEffect(() => {
     setIsMobile(window.innerWidth < 1024);
     const handleResize = () => setIsMobile(window.innerWidth < 1024);
