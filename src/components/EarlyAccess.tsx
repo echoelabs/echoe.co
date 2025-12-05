@@ -112,13 +112,15 @@ const EarlyAccess: React.FC = () => {
   const newsletterY = useTransform(
     scrollYProgress,
     isMobile ? [0.2, 0.9, 0.95, 1] : [0.65, 0.85, 0.95, 1],
-    // Mobile: Stay at 0 (center) until 95%, then slide up to finalYOffset.
+    // Mobile: Lock to finalYOffset (No slide up). Position is fixed/centered from start.
     // Desktop: Slide in from 150 -> 0 -> finalYOffset.
-    isMobile ? [0, 0, 0, finalYOffset] : [150, 0, 0, finalYOffset]
+    isMobile ? [finalYOffset, finalYOffset, finalYOffset, finalYOffset] : [150, 0, 0, finalYOffset]
   );
 
-  // Footer fade in at the very end
-  const footerOpacity = useTransform(scrollYProgress, [0.95, 1], [0, 1]);
+  // Footer fade in
+  // Mobile: Sync with newsletter (0.2-0.4) for single-step appearance.
+  // Desktop: Fade in at end.
+  const footerOpacity = useTransform(scrollYProgress, isMobile ? [0.2, 0.4] : [0.95, 1], [0, 1]);
 
   // Newsletter collapse when footer appears - hide heading/description
   const headingOpacity = useTransform(scrollYProgress, [0.92, 0.96], [1, 0]);
