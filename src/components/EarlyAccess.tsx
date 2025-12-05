@@ -563,23 +563,26 @@ const EarlyAccess: React.FC = () => {
               className="pointer-events-auto relative z-40 flex w-full max-w-xl flex-col items-center justify-center px-6"
             >
               {/* Full heading - fades out when footer appears */}
-              <motion.div
-                style={{
-                  opacity: headingOpacity,
-                  scale: headingScale,
-                  y: headingY,
-                }}
-                className="mb-8 text-center"
-              >
-                <h2 className="font-display mb-6 text-6xl leading-none font-semibold tracking-tighter text-white drop-shadow-2xl sm:text-7xl md:text-8xl lg:text-9xl">
-                  Ready to <br />
-                  echoe?
-                </h2>
-                <p className="mx-auto max-w-md text-sm font-normal text-blue-200/80 md:text-base">
-                  Join the waiting list for early access updates and be the first to experience the
-                  future.
-                </p>
-              </motion.div>
+              {/* Full heading - fades out when footer appears - DESKTOP ONLY */}
+              {!isMobile && (
+                <motion.div
+                  style={{
+                    opacity: headingOpacity,
+                    scale: headingScale,
+                    y: headingY,
+                  }}
+                  className="mb-8 text-center"
+                >
+                  <h2 className="font-display mb-6 text-6xl leading-none font-semibold tracking-tighter text-white drop-shadow-2xl sm:text-7xl md:text-8xl lg:text-9xl">
+                    Ready to <br />
+                    echoe?
+                  </h2>
+                  <p className="mx-auto max-w-md text-sm font-normal text-blue-200/80 md:text-base">
+                    Join the waiting list for early access updates and be the first to experience
+                    the future.
+                  </p>
+                </motion.div>
+              )}
 
               {/* Compact "Join..." label - fades in when footer appears */}
               <motion.p
