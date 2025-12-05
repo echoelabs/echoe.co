@@ -58,11 +58,16 @@ const EarlyAccess: React.FC = () => {
   // This prevents the "washed out white" look on the blue sky
   const auroraOpacity = useTransform(scrollYProgress, [0.55, 0.75], [0, 1]);
 
-  // BOTTOM AURORA - Fades in specifically for the newsletter section
-  const bottomAuroraOpacity = useTransform(scrollYProgress, [0.8, 0.95], [0, 1]);
+  // BOTTOM AURORA - Fades in specifically for the newsletter section. On mobile: Always visible.
+  const bottomAuroraOpacity = useTransform(
+    scrollYProgress,
+    [0.8, 0.95],
+    isMobile ? [1, 1] : [0, 1]
+  );
 
   // Content Animations
-  const newsletterOpacity = useTransform(scrollYProgress, [0.65, 0.8], [0, 1]);
+  // On mobile: Always visible (1). On desktop: Fade in scroll-linked.
+  const newsletterOpacity = useTransform(scrollYProgress, [0.65, 0.8], isMobile ? [1, 1] : [0, 1]);
   const newsletterScale = useTransform(scrollYProgress, [0.65, 0.8], isMobile ? [1, 1] : [0.9, 1]);
 
   // DYNAMIC POSITIONING - calculated based on footer height
@@ -96,11 +101,12 @@ const EarlyAccess: React.FC = () => {
   const newsletterY = useTransform(
     scrollYProgress,
     [0.65, 0.85, 0.95, 1],
-    isMobile ? [0, 0, 0, finalYOffset] : [150, 0, 0, finalYOffset]
+    // On mobile: Lock to final position immediately (Single Step)
+    isMobile ? [finalYOffset, finalYOffset, finalYOffset, finalYOffset] : [150, 0, 0, finalYOffset]
   );
 
-  // Footer fade in at the very end
-  const footerOpacity = useTransform(scrollYProgress, [0.95, 1], [0, 1]);
+  // Footer fade in at the very end. On mobile: Always visible.
+  const footerOpacity = useTransform(scrollYProgress, [0.95, 1], isMobile ? [1, 1] : [0, 1]);
 
   // Newsletter collapse when footer appears - hide heading/description
   const headingOpacity = useTransform(scrollYProgress, [0.92, 0.96], [1, 0]);
@@ -145,7 +151,7 @@ const EarlyAccess: React.FC = () => {
         delay: `${Math.random() * 5}s`,
       }))
     );
-  }, []);
+  }, [isMobile]);
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
