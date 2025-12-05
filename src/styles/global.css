@@ -9,14 +9,14 @@
 html {
   scrollbar-gutter: stable;
   position: relative;
-  background-color: #0f172a;
-  /* dark - prevents white flash on iOS keyboard */
+  background-color: #000000;
+  /* dark - prevents white flash on iOS keyboard and matches footer */
 }
 
 body {
   font-family: var(--font-inter);
-  background-color: #0f172a;
-  /* dark - prevents white flash on iOS keyboard */
+  background-color: #000000;
+  /* dark - prevents white flash on iOS keyboard and matches footer */
   color: #0f172a;
   overflow-x: hidden;
   position: relative;

@@ -12,7 +12,7 @@ const canonicalUrl = new URL(Astro.url.pathname, 'https://echoe.co').toString();
 ---
 
 <!DOCTYPE html>
-<html lang="en" style="background: linear-gradient(to bottom, #ffffff 0%, #ffffff 50%, #000000 50%, #000000 100%);">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
@@ -77,7 +77,7 @@ const canonicalUrl = new URL(Astro.url.pathname, 'https://echoe.co').toString();
     <!-- Client Router for View Transitions -->
     <ClientRouter />
   </head>
-  <body style="position: relative; background: transparent;">
+  <body>
     <!-- Fixed backdrop REMOVED to allow gradient overscroll -->
 
     <!-- Skip to main content link for accessibility -->
