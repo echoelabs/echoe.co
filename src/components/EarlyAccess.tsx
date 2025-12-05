@@ -489,7 +489,7 @@ const EarlyAccess: React.FC = () => {
       <section
         id="early-access"
         ref={sectionRef}
-        className="relative h-[200vh] bg-white text-slate-900 sm:h-[350vh] md:h-[500vh] lg:h-[800vh]"
+        className="relative h-[200vh] bg-black text-slate-900 sm:h-[350vh] md:h-[500vh] lg:h-[800vh]"
         style={{ position: 'relative' }}
       >
         {/* 1. STICKY STAGE (Backgrounds + Newsletter + Footer) */}
