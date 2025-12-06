@@ -9,6 +9,7 @@
 html {
   scrollbar-gutter: stable;
   position: relative;
+  scrollbar-width: none;
 }
 
 body {
@@ -34,22 +35,9 @@ body {
   font-display: swap;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - Hiding it globally as requested */
 ::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #e2e8f0;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #cbd5e1;
+  display: none;
 }
 
 .no-scrollbar::-webkit-scrollbar {
@@ -68,6 +56,7 @@ body {
     opacity: 0.3;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.6;
     transform: scale(1.1);
@@ -80,6 +69,7 @@ body {
     opacity: 0.8;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.2;
     transform: scale(0.5);
@@ -91,10 +81,12 @@ body {
     transform: translateX(-10%) translateY(-5%) rotate(-3deg) scale(1);
     opacity: 0.6;
   }
+
   50% {
     transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
     opacity: 0.9;
   }
+
   100% {
     transform: translateX(-10%) translateY(-5%) rotate(-3deg) scale(1);
     opacity: 0.6;
@@ -106,10 +98,12 @@ body {
     transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
     opacity: 0.5;
   }
+
   50% {
     transform: translateX(-5%) translateY(-5%) rotate(-3deg) scale(1);
     opacity: 0.8;
   }
+
   100% {
     transform: translateX(5%) translateY(5%) rotate(3deg) scale(1.1);
     opacity: 0.5;
@@ -121,6 +115,7 @@ body {
   100% {
     opacity: 0.4;
   }
+
   50% {
     opacity: 0.8;
   }
@@ -149,12 +144,15 @@ body {
 .delay-100 {
   animation-delay: 0.1s;
 }
+
 .delay-200 {
   animation-delay: 0.2s;
 }
+
 .delay-500 {
   animation-delay: 0.5s;
 }
+
 .delay-1000 {
   animation-delay: 1s;
 }
