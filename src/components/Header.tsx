@@ -169,32 +169,45 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
       initial="visible"
       animate={hidden ? 'hidden' : 'visible'}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b border-transparent bg-white/90 px-3 py-3 shadow-none backdrop-blur-md transition-[background-color,box-shadow,border-color,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] supports-[backdrop-filter]:bg-white/75 sm:px-4 md:px-8 lg:px-16"
+      className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b border-transparent bg-white px-6 py-4 shadow-none transition-[background-color,box-shadow,border-color,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:px-8 lg:bg-white/90 lg:px-16 lg:backdrop-blur-md supports-[backdrop-filter]:lg:bg-white/75"
     >
-      {isHomePage ? (
-        <div
-          className="relative z-10 flex cursor-pointer items-center gap-2"
-          onClick={() => {
-            const lenis = window.lenis;
-            if (lenis) {
-              lenis.scrollTo(0);
-            } else {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-          }}
+      {/* LEFT: Hamburger (Mobile) + Logo */}
+      <div className="flex items-center gap-3">
+        {/* Hamburger - Mobile Only - Left Side */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="touch-target -ml-2 p-2 text-gray-600 transition-colors hover:text-black md:hidden"
+          aria-label="Toggle menu"
         >
-          <span className="font-display text-lg font-semibold tracking-tight text-black">
-            echoe
-          </span>
-        </div>
-      ) : (
-        <a href="/" className="relative z-10 flex items-center gap-2">
-          <span className="font-display text-lg font-semibold tracking-tight text-black">
-            echoe
-          </span>
-        </a>
-      )}
+          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
 
+        {isHomePage ? (
+          <div
+            className="relative z-10 flex cursor-pointer items-center gap-2"
+            onClick={() => {
+              const lenis = window.lenis;
+              if (lenis) {
+                lenis.scrollTo(0);
+              } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+          >
+            <span className="font-display text-lg font-semibold tracking-tight text-black">
+              echoe
+            </span>
+          </div>
+        ) : (
+          <a href="/" className="relative z-10 flex items-center gap-2">
+            <span className="font-display text-lg font-semibold tracking-tight text-black">
+              echoe
+            </span>
+          </a>
+        )}
+      </div>
+
+      {/* CENTER: Desktop Nav */}
       <nav className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-xs font-medium text-gray-600 md:flex">
         {isHomePage ? (
           <div className="flex items-center gap-8">
@@ -244,6 +257,7 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
         )}
       </nav>
 
+      {/* RIGHT: Get Started Button */}
       <div className="relative z-10 flex items-center gap-3">
         <button
           onClick={() => {
@@ -257,14 +271,6 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
           className="touch-target rounded-full bg-black px-4 py-2.5 text-xs font-medium text-white shadow-md shadow-black/20 transition-all hover:scale-105 hover:bg-gray-800 active:scale-95"
         >
           Get Started
-        </button>
-
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="touch-target p-3 text-gray-600 transition-colors hover:text-black md:hidden"
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 

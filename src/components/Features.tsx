@@ -531,7 +531,7 @@ const Features: React.FC = () => {
       id="features"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative bg-white px-3 sm:px-4 md:px-8 lg:px-16"
+      className="relative bg-white px-6 sm:px-8 md:px-8 lg:px-16"
       style={{ height: dimensions.sectionHeight }}
     >
       {/* Sticky content wrapper */}

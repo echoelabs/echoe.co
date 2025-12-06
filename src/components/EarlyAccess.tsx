@@ -546,7 +546,7 @@ const EarlyAccess: React.FC = () => {
                 scale: newsletterScale,
                 y: newsletterY,
               }}
-              className="pointer-events-auto relative z-40 flex w-full max-w-xl flex-col items-center justify-center px-6"
+              className="pointer-events-auto relative z-40 flex w-full max-w-md flex-col items-center justify-center px-10 sm:px-6"
             >
               {/* Full heading - fades out when footer appears */}
               <motion.div
@@ -605,7 +605,7 @@ const EarlyAccess: React.FC = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       exit={{ opacity: 0, scale: 0.9, transition: { duration: 0.2 } }}
                       onSubmit={handleSubscribe}
-                      className="relative w-full"
+                      className="relative mx-auto w-[85vw] sm:w-auto"
                     >
                       <TurnstileWidget
                         ref={widgetRef}
@@ -616,7 +616,7 @@ const EarlyAccess: React.FC = () => {
                         theme="dark"
                       />
                       <div
-                        className={`relative flex items-center rounded-full border bg-white/10 p-2 backdrop-blur-xl transition-all duration-300 ${
+                        className={`relative flex items-center gap-2 rounded-full border bg-white/10 p-2 backdrop-blur-xl transition-all duration-300 ${
                           status === 'error'
                             ? 'border-red-500/70 shadow-[0_0_20px_rgba(239,68,68,0.2)]'
                             : isFocused
@@ -642,20 +642,21 @@ const EarlyAccess: React.FC = () => {
                           aria-label="Email address for waitlist"
                           aria-invalid={status === 'error'}
                           aria-describedby={status === 'error' ? 'email-error' : undefined}
-                          className="min-w-0 flex-1 border-none bg-transparent px-4 py-3.5 text-sm text-white placeholder-blue-200/50 outline-none focus:ring-0 sm:px-5 sm:py-3"
+                          className="min-w-0 flex-1 border-none bg-transparent py-3 pr-2 pl-4 text-base text-white placeholder-blue-200/50 outline-none focus:ring-0 sm:py-3 sm:pr-2 sm:pl-5 sm:text-sm"
                         />
                         <button
                           type="submit"
                           disabled={status === 'loading'}
                           aria-label="Join the waitlist"
-                          className="touch-target relative min-w-[110px] rounded-full bg-slate-900 px-5 py-3.5 text-sm font-medium whitespace-nowrap text-white shadow-lg transition-all hover:scale-105 hover:bg-black active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 sm:min-w-[130px] sm:px-6 sm:py-3"
+                          className="touch-target relative min-w-[90px] shrink-0 rounded-full bg-slate-900 px-5 py-3.5 text-sm font-medium whitespace-nowrap text-white shadow-lg transition-all hover:scale-105 hover:bg-black active:scale-95 disabled:cursor-not-allowed disabled:opacity-70 sm:min-w-[130px] sm:px-6 sm:py-3"
                         >
                           <span className={status === 'loading' ? 'opacity-0' : 'opacity-100'}>
-                            Join Waitlist
+                            <span className="sm:hidden">Join</span>
+                            <span className="hidden sm:inline">Join Waitlist</span>
                           </span>
                           {status === 'loading' && (
                             <div className="absolute inset-0 flex items-center justify-center">
-                              <Loader2 className="h-5 w-5 animate-spin" />
+                              <Loader2 className="h-4 w-4 animate-spin" />
                             </div>
                           )}
                         </button>
