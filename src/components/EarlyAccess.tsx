@@ -183,8 +183,11 @@ const EarlyAccess: React.FC = () => {
   return (
     <>
       {/* PRICING SECTION - Static white background, normal flow */}
-      <section id="pricing" className="relative bg-white py-16 text-slate-900 sm:py-20 md:py-24">
-        <div className="mx-auto max-w-[1400px] px-3 sm:px-4 md:px-8 lg:px-16">
+      <section
+        id="pricing"
+        className="relative z-30 bg-white py-16 text-slate-900 sm:py-20 md:py-24"
+      >
+        <div className="mx-auto max-w-[2200px] px-6 md:px-8 lg:px-16">
           <div className="mb-16 text-center">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
@@ -210,7 +213,7 @@ const EarlyAccess: React.FC = () => {
           </div>
 
           {/* Pricing Cards Grid */}
-          <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 xl:grid-cols-4">
             {/* 1. STARTER */}
             <motion.div
               initial="hidden"

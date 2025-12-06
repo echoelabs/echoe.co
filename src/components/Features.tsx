@@ -531,11 +531,14 @@ const Features: React.FC = () => {
       id="features"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative bg-white px-6 sm:px-8 md:px-8 lg:px-16"
+      className="relative z-10 bg-white px-6 md:px-8 lg:px-16"
       style={{ height: dimensions.sectionHeight }}
     >
-      {/* Sticky content wrapper */}
-      <div ref={stickyRef} className="sticky top-14 h-[calc(100dvh-3.5rem)] pt-16 pb-16">
+      {/* Sticky content wrapper - Reduced vertical padding to maximize screen real estate */}
+      <div
+        ref={stickyRef}
+        className="sticky top-14 flex h-auto max-h-[calc(100dvh-3.5rem)] flex-col py-6 lg:py-8"
+      >
         {/* --- BACKGROUND (bg color + dot grid) --- */}
         <div className="pointer-events-none absolute inset-y-0 -right-3 -left-3 bg-white sm:-right-4 sm:-left-4 md:-right-8 md:-left-8 lg:-right-16 lg:-left-16">
           <div
@@ -557,8 +560,8 @@ const Features: React.FC = () => {
           />
         </div>
 
-        <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col">
-          <div className="shrink-0 pb-8 text-center lg:pb-12">
+        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[2200px] flex-1 flex-col">
+          <div className="shrink-0 pb-4 text-center lg:pb-8">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -574,7 +577,7 @@ const Features: React.FC = () => {
 
           <div className="grid min-h-0 flex-1 grid-cols-1 items-start gap-5 overflow-visible sm:gap-6 lg:grid-cols-12 lg:gap-8">
             {/* LEFT COLUMN: THE STREAM (Navigation) */}
-            <div className="no-scrollbar flex h-full flex-col justify-between gap-2 overflow-y-auto px-2 py-3 pb-4 sm:gap-3 sm:px-4 sm:py-4 sm:pb-6 lg:col-span-5 lg:px-6">
+            <div className="no-scrollbar flex h-full flex-col justify-between gap-2 overflow-y-auto py-3 pb-4 sm:gap-3 sm:py-4 sm:pb-4 lg:col-span-5">
               {features.map((feature, index) => {
                 const isActive = activeId === feature.id;
                 return (
@@ -639,7 +642,7 @@ const Features: React.FC = () => {
             </div>
 
             {/* RIGHT COLUMN: THE STAGE (Sticky Visual) - matches expanded list height */}
-            <div className="relative hidden h-full px-4 py-4 lg:col-span-7 lg:block">
+            <div className="relative hidden h-full py-4 lg:col-span-7 lg:block">
               <div className="h-full w-full">
                 <div className="relative h-full w-full overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl ring-1 shadow-slate-200/50 ring-slate-100">
                   {/* Monitor Header / HUD */}
@@ -654,8 +657,8 @@ const Features: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Visual Content Area */}
-                  <div className="absolute inset-0 bg-slate-50/30 pt-10">
+                  {/* Visual Content Area - Added scroll handling for smaller screens */}
+                  <div className="no-scrollbar absolute inset-0 overflow-y-auto bg-slate-50/30 pt-10 pb-4">
                     <AnimatePresence mode="wait">
                       <motion.div
                         key={activeId}
