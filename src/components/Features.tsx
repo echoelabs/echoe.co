@@ -17,17 +17,20 @@ import {
 const UnifiedChatVisual = () => {
   return (
     <div className="flex h-full w-full flex-col justify-start gap-4">
-      {/* Platform indicators */}
-      <div className="mb-2 flex gap-2">
-        <span className="rounded-full bg-pink-100 px-2 py-1 text-xs font-medium text-pink-600">
-          Platform A
-        </span>
-        <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-600">
-          Platform B
-        </span>
-        <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-600">
-          Platform C
-        </span>
+      {/* Icon-height container to match card icon */}
+      <div className="flex h-9 sm:h-10 items-center">
+        {/* Platform indicators */}
+        <div className="flex gap-2">
+          <span className="rounded-full bg-pink-100 px-2 py-1 text-xs font-medium text-pink-600">
+            Platform A
+          </span>
+          <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-600">
+            Platform B
+          </span>
+          <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-600">
+            Platform C
+          </span>
+        </div>
       </div>
 
       <motion.div
