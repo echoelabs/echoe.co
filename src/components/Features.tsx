@@ -16,17 +16,17 @@ import {
 
 const UnifiedChatVisual = () => {
   return (
-    <div className="flex h-full w-full flex-col justify-center gap-4 p-8">
+    <div className="flex h-full w-full flex-col justify-center gap-4">
       {/* Platform indicators */}
       <div className="mb-2 flex gap-2">
         <span className="rounded-full bg-pink-100 px-2 py-1 text-xs font-medium text-pink-600">
-          Instagram
+          Platform A
         </span>
         <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-600">
-          Messenger
+          Platform B
         </span>
         <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-600">
-          LINE
+          Platform C
         </span>
       </div>
 
@@ -36,7 +36,7 @@ const UnifiedChatVisual = () => {
         transition={{ delay: 0.2 }}
         className="max-w-[75%] self-start rounded-2xl rounded-tl-none bg-slate-100 px-5 py-3 text-sm text-slate-700"
       >
-        <span className="mb-1 block text-xs text-slate-400">@sarah_m via Instagram</span>
+        <span className="mb-1 block text-xs text-slate-400">@sarah_m via Platform A</span>
         Is this item in stock? I need it for a gift!
       </motion.div>
       <motion.div
@@ -125,7 +125,7 @@ const OrderCentralVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-3 overflow-hidden p-6">
+    <div className="flex h-full w-full flex-col gap-3 overflow-hidden">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Today's Orders</span>
         <span className="text-xs text-slate-400">12 total</span>
@@ -172,7 +172,7 @@ const InventoryVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div className="flex h-full w-full flex-col gap-4">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Stock Levels</span>
         <span className="rounded-full bg-amber-50 px-2 py-1 text-xs text-amber-600">2 alerts</span>
@@ -231,7 +231,7 @@ const AIAutopilotVisual = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div className="flex h-full w-full flex-col gap-4">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100">
@@ -286,7 +286,7 @@ const MarketIntelVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div className="flex h-full w-full flex-col gap-4">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Trending in Your Category</span>
         <span className="text-xs text-slate-400">Last 7 days</span>
@@ -331,7 +331,7 @@ const CompetitorWatchVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div className="flex h-full w-full flex-col gap-4">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Price Comparison</span>
         <span className="text-xs text-slate-400">Minimal Vase</span>
@@ -517,7 +517,7 @@ const Features: React.FC = () => {
     {
       id: 'chat',
       title: 'Unified Chat',
-      desc: 'All your social DMs in one place. Reply to Instagram, Messenger, and LINE from a single dashboard.',
+      desc: 'All your social DMs in one place. Reply to all your channels from a single dashboard.',
       icon: <MessageSquare className="h-5 w-5" />,
       visual: <UnifiedChatVisual />,
     },
