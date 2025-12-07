@@ -96,7 +96,7 @@ const EarlyAccess: React.FC = () => {
   const newsletterY = useTransform(
     scrollYProgress,
     [0.65, 0.85, 0.95, 1],
-    isMobile ? [0, 0, 0, finalYOffset] : [150, 0, 0, finalYOffset]
+    isMobile ? [0, 0, 0, 0] : [150, 0, 0, finalYOffset]
   );
 
   // Footer fade in at the very end
@@ -203,7 +203,7 @@ const EarlyAccess: React.FC = () => {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.8 }}
               className="font-display mb-6 text-2xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl"
             >
               Start small.
@@ -213,7 +213,7 @@ const EarlyAccess: React.FC = () => {
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
+              transition={{ delay: 0.1, duration: 0.8 }}
               viewport={{ once: true }}
               className="mx-auto max-w-2xl text-sm font-normal text-gray-500 md:text-base"
             >
@@ -233,7 +233,7 @@ const EarlyAccess: React.FC = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+              transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
               className="relative z-10 flex h-full flex-col rounded-2xl border-2 border-blue-500 bg-white p-5 shadow-xl shadow-blue-500/10 transition-shadow duration-300 hover:shadow-2xl hover:shadow-blue-500/20 sm:p-6 lg:p-8"
             >
               <div className="absolute -top-4 left-1/2 -translate-x-1/2 rounded-full bg-blue-500 px-3 py-1 text-[10px] font-semibold tracking-wider text-white uppercase">
@@ -295,7 +295,7 @@ const EarlyAccess: React.FC = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ delay: 0.1, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+              transition={{ delay: 0.1, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
               className="group relative z-10 flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-lg transition-shadow duration-300 hover:border-gray-300 hover:shadow-xl sm:p-6 lg:p-8"
             >
               {/* Overlay */}
@@ -353,7 +353,7 @@ const EarlyAccess: React.FC = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ delay: 0.2, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+              transition={{ delay: 0.2, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
               className="group relative z-10 flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-lg transition-shadow duration-300 hover:border-gray-300 hover:shadow-xl sm:p-6 lg:p-8"
             >
               {/* Overlay */}
@@ -411,7 +411,7 @@ const EarlyAccess: React.FC = () => {
                 hidden: { opacity: 0, y: 30 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ delay: 0.3, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+              transition={{ delay: 0.3, duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
               className="group relative z-10 flex h-full flex-col rounded-2xl border border-gray-200 bg-white p-5 shadow-lg transition-shadow duration-300 hover:border-gray-300 hover:shadow-xl sm:p-6 lg:p-8"
             >
               {/* Overlay */}
