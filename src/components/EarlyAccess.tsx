@@ -58,28 +58,17 @@ const EarlyAccess: React.FC = () => {
   // This prevents the "washed out white" look on the blue sky
   const auroraOpacity = useTransform(scrollYProgress, [0.55, 0.75], [0, 1]);
 
-  // BOTTOM AURORA
-  // Mobile: Fade in early (0.2) to match the earlier form appearance.
-  // Desktop: Fade in late (0.8) for the second step.
+  // BOTTOM AURORA - Fades in specifically for the newsletter section. On mobile: Always visible.
   const bottomAuroraOpacity = useTransform(
     scrollYProgress,
-    isMobile ? [0.2, 0.4] : [0.8, 0.95],
-    [0, 1]
+    [0.8, 0.95],
+    isMobile ? [1, 1] : [0, 1]
   );
 
   // Content Animations
-  // Mobile: Fade in early (0.2-0.4) to replace the "Step 1" text phase.
-  // Desktop: Fade in late (0.65-0.8) after the text phase.
-  const newsletterOpacity = useTransform(
-    scrollYProgress,
-    isMobile ? [0.2, 0.4] : [0.65, 0.8],
-    [0, 1]
-  );
-  const newsletterScale = useTransform(
-    scrollYProgress,
-    isMobile ? [0.2, 0.4] : [0.65, 0.8],
-    isMobile ? [0.95, 1] : [0.9, 1]
-  );
+  // On mobile: Always visible (1). On desktop: Fade in scroll-linked.
+  const newsletterOpacity = useTransform(scrollYProgress, [0.65, 0.8], isMobile ? [1, 1] : [0, 1]);
+  const newsletterScale = useTransform(scrollYProgress, [0.65, 0.8], isMobile ? [1, 1] : [0.9, 1]);
 
   // DYNAMIC POSITIONING - calculated based on footer height
   const footerRef = useRef<HTMLDivElement>(null);
@@ -111,14 +100,13 @@ const EarlyAccess: React.FC = () => {
 
   const newsletterY = useTransform(
     scrollYProgress,
-    isMobile ? [0.2, 0.9, 0.95, 1] : [0.65, 0.85, 0.95, 1],
-    // Mobile: Stay at 0 (center) until 95%, then slide up to finalYOffset.
-    // Desktop: Slide in from 150 -> 0 -> finalYOffset.
-    isMobile ? [0, 0, 0, finalYOffset] : [150, 0, 0, finalYOffset]
+    [0.65, 0.85, 0.95, 1],
+    // On mobile: Lock to final position immediately (Single Step)
+    isMobile ? [finalYOffset, finalYOffset, finalYOffset, finalYOffset] : [150, 0, 0, finalYOffset]
   );
 
-  // Footer fade in at the very end
-  const footerOpacity = useTransform(scrollYProgress, [0.95, 1], [0, 1]);
+  // Footer fade in at the very end. On mobile: Always visible.
+  const footerOpacity = useTransform(scrollYProgress, [0.95, 1], isMobile ? [1, 1] : [0, 1]);
 
   // Newsletter collapse when footer appears - hide heading/description
   const headingOpacity = useTransform(scrollYProgress, [0.92, 0.96], [1, 0]);
