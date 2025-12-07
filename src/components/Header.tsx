@@ -128,7 +128,7 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
     let footerMult = 2.5;
 
     if (window.innerWidth < 640) {
-      sectionMult = 1.5; // Delayed hide: only hide when very deep into section
+      sectionMult = 2;
       footerMult = 0.6; // Show earlier on mobile scroller
     } else if (window.innerWidth < 768) {
       sectionMult = 3.5;
