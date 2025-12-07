@@ -1,11 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import {
-  motion,
-  useScroll,
-  useTransform,
-  AnimatePresence,
-  useMotionValueEvent,
-} from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { Check, Lock, Loader2 } from 'lucide-react';
 import isEmail from 'validator/lib/isEmail';
 import FooterReact from './FooterReact';
@@ -86,31 +80,6 @@ const EarlyAccess: React.FC = () => {
     isMobile ? [0.2, 0.4] : [0.65, 0.8],
     isMobile ? [0.95, 1] : [0.9, 1]
   );
-
-  // DYNAMIC SAFARI SAFE AREA COLOR TOGGLE
-  // Switches body background to black when user scrolls deep into the dark area.
-  useMotionValueEvent(scrollYProgress, 'change', (latest: number) => {
-    // Threshold: 0.25 (When the blue/dark gradient is significant covering the screen)
-    // This ensures bottom bar/overscroll matches the content visual.
-    const isDark = latest > 0.25;
-    if (typeof document !== 'undefined') {
-      const targetColor = isDark ? '#000000' : '#ffffff';
-      if (document.body.style.backgroundColor !== targetColor) {
-        document.body.style.backgroundColor = targetColor;
-        document.documentElement.style.backgroundColor = targetColor;
-      }
-    }
-  });
-
-  // Reset to white on unmount
-  useEffect(() => {
-    return () => {
-      if (typeof document !== 'undefined') {
-        document.body.style.backgroundColor = '#ffffff';
-        document.documentElement.style.backgroundColor = '#ffffff';
-      }
-    };
-  }, []);
 
   // DYNAMIC POSITIONING - calculated based on footer height
   const footerRef = useRef<HTMLDivElement>(null);
