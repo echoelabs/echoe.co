@@ -690,7 +690,7 @@ const Features: React.FC = () => {
                   </div>
 
                   {/* Visual Content Area - Added scroll handling for smaller screens */}
-                  <div className="no-scrollbar absolute inset-0 overflow-y-auto bg-slate-50/30 pt-10 pb-4">
+                  <div className="no-scrollbar absolute inset-0 overflow-y-auto bg-slate-50/30 pt-10 pb-4 px-4 sm:px-5">
                     <AnimatePresence mode="popLayout" custom={direction}>
                       <motion.div
                         key={activeId}
