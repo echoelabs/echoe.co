@@ -16,10 +16,10 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
   return (
     <footer
       id="contact"
-      className={`${bgClass} px-3 pt-6 transition-colors duration-500 sm:px-4 sm:pt-8 md:px-8 lg:px-16`}
+      className={`${bgClass} px-3 pt-8 transition-colors duration-500 sm:px-4 md:px-8 lg:px-16`}
     >
       <div className="mx-auto max-w-[90vw] lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px]">
-        <div className="mb-6 flex flex-col gap-6 sm:mb-8 sm:gap-8 md:flex-row md:justify-between md:gap-12">
+        <div className="mb-8 flex flex-col gap-12 md:flex-row md:justify-between md:gap-8">
           {/* Brand Column */}
           <div className="md:max-w-sm">
             <span
@@ -27,34 +27,19 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
             >
               echoe
             </span>
-            <p className={`${textColor} mb-4 text-xs leading-relaxed sm:mb-6`}>
+            <p className={`${textColor} mb-6 text-xs leading-relaxed`}>
               Building the operating system for the next generation of commerce. Simple, unified,
               and infinitely scalable.
             </p>
-            {/* Mobile-only inline links */}
-            <div className="mt-8 flex flex-wrap gap-x-4 gap-y-2 text-xs sm:hidden">
-              <a href="/terms" className={`${hoverColor} ${textColor} transition-colors`}>
-                Terms
-              </a>
-              <a href="/privacy" className={`${hoverColor} ${textColor} transition-colors`}>
-                Privacy
-              </a>
-              <a href="/cookie" className={`${hoverColor} ${textColor} transition-colors`}>
-                Cookies
-              </a>
-              <a href="/refund" className={`${hoverColor} ${textColor} transition-colors`}>
-                Refunds
-              </a>
-            </div>
           </div>
-          {/* Links Container - Hidden on mobile */}
-          <div className="hidden w-full sm:grid sm:grid-cols-4 sm:gap-6 md:flex md:w-auto md:flex-nowrap md:gap-12 lg:gap-20 xl:gap-32">
+          {/* Links Container */}
+          <div className="grid w-full grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4 sm:gap-6 md:flex md:w-auto md:flex-nowrap md:gap-12 lg:gap-20 xl:gap-32">
             {/* Product Links */}
             <div>
               <p className={`mb-2 text-[11px] font-medium sm:mb-3 sm:text-xs ${titleColor}`}>
                 Product
               </p>
-              <ul className={`space-y-0.5 text-xs sm:space-y-1 ${textColor}`}>
+              <ul className={`space-y-1.5 text-[11px] sm:space-y-2 sm:text-xs ${textColor}`}>
                 <li>
                   <button
                     onClick={() => {
@@ -68,7 +53,7 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
                         });
                       }
                     }}
-                    className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
+                    className={`${hoverColor} transition-colors`}
                   >
                     Simulation
                   </button>
@@ -86,16 +71,13 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
                         });
                       }
                     }}
-                    className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
+                    className={`${hoverColor} transition-colors`}
                   >
                     Features
                   </button>
                 </li>
                 <li>
-                  <a
-                    href="/pricing"
-                    className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
-                  >
+                  <a href="/pricing" className={`${hoverColor} transition-colors`}>
                     Pricing
                   </a>
                 </li>
@@ -107,20 +89,17 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
               <p className={`mb-2 text-[11px] font-medium sm:mb-3 sm:text-xs ${titleColor}`}>
                 Company
               </p>
-              <ul className={`space-y-0.5 text-xs sm:space-y-1 ${textColor}`}>
+              <ul className={`space-y-1.5 text-[11px] sm:space-y-2 sm:text-xs ${textColor}`}>
                 <li>
-                  <a
-                    href="mailto:hello@echoe.co"
-                    className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
-                  >
+                  <a href="mailto:hello@echoe.co" className={`${hoverColor} transition-colors`}>
                     Contact
                   </a>
                 </li>
                 <li>
-                  <span className={`${disabledColor} -mx-1 block px-1 py-1.5`}>Newsroom</span>
+                  <span className={disabledColor}>Newsroom</span>
                 </li>
                 <li>
-                  <span className={`${disabledColor} -mx-1 block px-1 py-1.5`}>Press Kit</span>
+                  <span className={disabledColor}>Press Kit</span>
                 </li>
               </ul>
             </div>
@@ -130,15 +109,15 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
               <p className={`mb-2 text-[11px] font-medium sm:mb-3 sm:text-xs ${titleColor}`}>
                 Resources
               </p>
-              <ul className={`space-y-0.5 text-xs sm:space-y-1 ${textColor}`}>
+              <ul className={`space-y-1.5 text-[11px] sm:space-y-2 sm:text-xs ${textColor}`}>
                 <li>
-                  <span className={`${disabledColor} -mx-1 block px-1 py-1.5`}>Help Center</span>
+                  <span className={disabledColor}>Help Center</span>
                 </li>
                 <li>
-                  <span className={`${disabledColor} -mx-1 block px-1 py-1.5`}>API Docs</span>
+                  <span className={disabledColor}>API Docs</span>
                 </li>
                 <li>
-                  <span className={`${disabledColor} -mx-1 block px-1 py-1.5`}>Status</span>
+                  <span className={disabledColor}>Status</span>
                 </li>
               </ul>
             </div>
@@ -148,36 +127,24 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
               <p className={`mb-2 text-[11px] font-medium sm:mb-3 sm:text-xs ${titleColor}`}>
                 Legal
               </p>
-              <ul className={`space-y-0.5 text-xs sm:space-y-1 ${textColor}`}>
+              <ul className={`space-y-1.5 text-[11px] sm:space-y-2 sm:text-xs ${textColor}`}>
                 <li>
-                  <a
-                    href="/terms"
-                    className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
-                  >
+                  <a href="/terms" className={`${hoverColor} transition-colors`}>
                     Terms
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="/privacy"
-                    className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
-                  >
+                  <a href="/privacy" className={`${hoverColor} transition-colors`}>
                     Privacy
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="/cookie"
-                    className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
-                  >
+                  <a href="/cookie" className={`${hoverColor} transition-colors`}>
                     Cookies
                   </a>
                 </li>
                 <li>
-                  <a
-                    href="/refund"
-                    className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
-                  >
+                  <a href="/refund" className={`${hoverColor} transition-colors`}>
                     Refunds
                   </a>
                 </li>
@@ -188,17 +155,19 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
         </div>
 
         {/* Bottom Bar */}
-        <div
-          className={`flex items-center justify-between gap-2 pt-3 pb-4 sm:pt-4 sm:pb-6`}
-          style={{ paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}
-        >
-          <div className={`text-[10px] ${textColor}`}>© 2026 ECHO HQ CO., LTD.</div>
-          <a
-            href="mailto:hello@echoe.co"
-            className={`text-[10px] ${textColor} ${hoverColor} transition-colors`}
-          >
-            hello@echoe.co
-          </a>
+        <div className={`flex flex-col items-center justify-between gap-4 pt-4 pb-6 md:flex-row`}>
+          <div className={`text-[10px] ${textColor}`}>
+            © 2026 ECHO HQ CO., LTD. All rights reserved.
+          </div>
+
+          <div className="flex gap-6">
+            <a
+              href="mailto:hello@echoe.co"
+              className={`text-[10px] ${textColor} ${hoverColor} transition-colors`}
+            >
+              hello@echoe.co
+            </a>
+          </div>
         </div>
       </div>
     </footer>
