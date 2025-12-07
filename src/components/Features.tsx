@@ -16,7 +16,7 @@ import {
 
 const UnifiedChatVisual = () => {
   return (
-    <div className="flex h-full w-full flex-col justify-start gap-4">
+    <div className="flex h-full w-full flex-col justify-start gap-4 p-6 sm:p-8">
       {/* Icon-height container to match card icon */}
       <div className="flex h-9 sm:h-10 items-center">
         {/* Platform indicators */}
@@ -128,7 +128,7 @@ const OrderCentralVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-3 overflow-hidden">
+    <div className="flex h-full w-full flex-col gap-3 overflow-hidden p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Today's Orders</span>
         <span className="text-xs text-slate-400">12 total</span>
@@ -175,7 +175,7 @@ const InventoryVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-4">
+    <div className="flex h-full w-full flex-col gap-4 p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Stock Levels</span>
         <span className="rounded-full bg-amber-50 px-2 py-1 text-xs text-amber-600">2 alerts</span>
@@ -234,7 +234,7 @@ const AIAutopilotVisual = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4">
+    <div className="flex h-full w-full flex-col gap-4 p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100">
@@ -289,7 +289,7 @@ const MarketIntelVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-4">
+    <div className="flex h-full w-full flex-col gap-4 p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Trending in Your Category</span>
         <span className="text-xs text-slate-400">Last 7 days</span>
@@ -334,7 +334,7 @@ const CompetitorWatchVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-4">
+    <div className="flex h-full w-full flex-col gap-4 p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Price Comparison</span>
         <span className="text-xs text-slate-400">Minimal Vase</span>
@@ -677,7 +677,7 @@ const Features: React.FC = () => {
             </div>
 
             {/* RIGHT COLUMN: THE STAGE (Sticky Visual) - matches expanded list height */}
-            <div className="relative hidden w-full lg:col-span-7 lg:block aspect-square xl:aspect-[5/4] max-h-[800px] py-1 sm:py-4">
+            <div className="relative hidden w-full lg:col-span-7 lg:block h-full">
               <div className="h-full w-full">
                 <div className="relative h-full w-full overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl ring-1 shadow-slate-200/50 ring-slate-100">
                   {/* Monitor Header / HUD */}
