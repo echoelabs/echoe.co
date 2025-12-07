@@ -600,7 +600,15 @@ const Hero: React.FC = () => {
             {/* Z-INDEX INCREASED TO 30 TO SIT ABOVE THE FADE GRADIENT */}
             <div className="relative z-30 mx-auto flex w-full max-w-6xl flex-col items-center justify-center px-6 text-center">
               {/* Badge - No initial animation to ensure LCP visibility */}
-              {/* Badge Removed */}
+              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 shadow-sm backdrop-blur-md sm:px-3">
+                <span className="relative flex h-2 w-2">
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
+                  <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500"></span>
+                </span>
+                <span className="text-xs font-medium tracking-wider text-slate-600 uppercase">
+                  Early Access 2026
+                </span>
+              </div>
 
               {/* Dynamic Titles Wrapper */}
               <div className="perspective-1000 relative flex min-h-[100px] w-full items-center justify-center py-4 sm:min-h-[140px] md:min-h-[200px]">
