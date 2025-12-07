@@ -727,7 +727,7 @@ const Features: React.FC = () => {
               className="group flex flex-col gap-4"
             >
               {/* Card Header */}
-              <div className="flex items-start gap-4">
+              <div className="flex items-start gap-4 px-2">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 shadow-sm ring-1 ring-indigo-500/10">
                   {feature.icon}
                 </div>
