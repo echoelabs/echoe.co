@@ -185,8 +185,8 @@ const InteractiveDemo: React.FC = () => {
       className="relative bg-white px-6 py-16 sm:py-24 md:py-32"
     >
       {/* Title section - scrolls normally */}
-      <div className="px-4 pt-24 pb-8 md:px-12 lg:px-16">
-        <div className="mx-auto w-full max-w-[90vw] lg:max-w-[1600px]">
+      <div className="px-4 pt-24 pb-8 md:px-8 lg:px-16">
+        <div className="mx-auto w-full max-w-[90vw] lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px]">
           <div className="relative z-10 mb-8 shrink-0 text-center">
             <motion.div
               initial={{ opacity: 0, y: 10 }}
@@ -221,13 +221,13 @@ const InteractiveDemo: React.FC = () => {
         style={{ position: 'relative' }}
       >
         <div
-          className={`${isMobile ? 'relative px-0' : 'sticky top-16 px-2 sm:top-20 sm:px-4 md:px-12 lg:px-16 lg:py-6'} flex h-[var(--vh-hero)] flex-col py-1 sm:py-4`}
+          className={`${isMobile ? 'relative px-0' : 'sticky top-16 px-2 sm:top-20 sm:px-4 md:px-8 lg:px-16 lg:py-6'} flex h-[var(--vh-hero)] flex-col py-1 sm:py-4`}
         >
           {/* Dynamic Background decoration - Removed Grid Pattern Completely */}
           <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-full bg-gradient-to-r from-blue-100/40 via-purple-100/40 to-pink-100/40 opacity-60 blur-3xl" />
           <div className="pointer-events-none absolute top-1/2 right-10 h-64 w-64 animate-pulse rounded-full bg-emerald-100/30 blur-[80px]" />
 
-          <div className="mx-auto flex min-h-0 w-full flex-1 flex-col lg:max-w-[1600px]">
+          <div className="mx-auto flex min-h-0 w-full flex-1 flex-col lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px]">
             {/* Wrapper for the floating app window - TRANSPARENT */}
             <motion.div
               id="simulation-window"
@@ -236,7 +236,7 @@ const InteractiveDemo: React.FC = () => {
             >
               {/* The Main Interface Container (The App Window) */}
               {/* Added more horizontal padding (px-6 md:px-12) to prevent shadow cutoff */}
-              <div className="no-scrollbar mx-auto flex min-h-0 w-full flex-1 flex-col sm:max-w-[95%] md:px-12 lg:max-w-[1500px] lg:px-12">
+              <div className="no-scrollbar mx-auto flex min-h-0 w-full flex-1 flex-col sm:max-w-[95%] md:px-8 lg:max-w-[1700px] lg:px-12 xl:max-w-[1900px] 2xl:max-w-[2100px]">
                 <motion.div
                   initial={{ y: 60, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
@@ -553,7 +553,7 @@ const InteractiveDemo: React.FC = () => {
                   </div>
                 </motion.div>
 
-                <div className="mx-auto mt-2 flex w-full max-w-[90vw] shrink-0 justify-center pb-1 sm:mt-4 sm:pb-4 lg:mt-6 lg:max-w-[1600px] lg:pb-6">
+                <div className="mx-auto mt-2 flex w-full max-w-[90vw] shrink-0 justify-center pb-1 sm:mt-4 sm:pb-4 lg:mt-6 lg:max-w-[1800px] lg:pb-6 xl:max-w-[2000px] 2xl:max-w-[2200px]">
                   <p className="text-center text-[10px] leading-relaxed font-medium text-zinc-400">
                     * This is a conceptual mockup. Actual application design and functionality may
                     change drastically during development.
