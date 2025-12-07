@@ -187,7 +187,7 @@ const EarlyAccess: React.FC = () => {
         id="pricing"
         className="relative z-30 bg-white py-16 text-slate-900 sm:py-20 md:py-24"
       >
-        <div className="mx-auto max-w-[2200px] px-6 md:px-8 lg:px-16">
+        <div className="mx-auto max-w-[2200px] px-6 md:px-8 lg:px-24 xl:px-32">
           <div className="mb-16 text-center">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}

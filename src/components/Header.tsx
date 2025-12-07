@@ -169,7 +169,7 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
       initial="visible"
       animate={hidden ? 'hidden' : 'visible'}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b border-transparent bg-white px-6 py-4 shadow-none transition-[background-color,box-shadow,border-color,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:px-8 lg:bg-white/90 lg:px-16 lg:backdrop-blur-md supports-[backdrop-filter]:lg:bg-white/75"
+      className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b border-transparent bg-white px-6 py-4 shadow-none transition-[background-color,box-shadow,border-color,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:px-8 lg:bg-white/90 lg:px-24 lg:backdrop-blur-md supports-[backdrop-filter]:lg:bg-white/75 xl:px-32"
     >
       {/* LEFT: Hamburger (Mobile) + Logo */}
       <div className="flex items-center gap-3">

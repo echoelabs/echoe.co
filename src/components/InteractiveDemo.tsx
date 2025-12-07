@@ -168,7 +168,7 @@ const InteractiveDemo: React.FC = () => {
     // Increased height to 400vh for even longer stay
     <section id="demo" className="relative z-20 -mt-4 -mb-1 bg-white">
       {/* Title section - scrolls normally */}
-      <div className="px-6 pt-24 pb-8 md:px-8 lg:px-16">
+      <div className="px-6 pt-24 pb-8 md:px-8 lg:px-24 xl:px-32">
         <div className="mx-auto w-full max-w-[90vw] lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px]">
           <div className="relative z-10 mb-8 shrink-0 text-center">
             <motion.div
@@ -203,7 +203,7 @@ const InteractiveDemo: React.FC = () => {
         className="relative h-[200vh] sm:h-[280vh] lg:h-[380vh]"
         style={{ position: 'relative' }}
       >
-        <div className="sticky top-16 flex h-[var(--vh-hero)] flex-col px-6 py-1 sm:top-20 sm:py-4 md:px-8 lg:px-16 lg:py-6">
+        <div className="sticky top-16 flex h-[var(--vh-hero)] flex-col px-6 py-1 sm:top-20 sm:py-4 md:px-8 lg:px-24 lg:py-6 xl:px-32">
           {/* Dynamic Background decoration - Removed Grid Pattern Completely */}
           <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-full bg-gradient-to-r from-blue-100/40 via-purple-100/40 to-pink-100/40 opacity-60 blur-3xl" />
           <div className="pointer-events-none absolute top-1/2 right-10 h-64 w-64 animate-pulse rounded-full bg-emerald-100/30 blur-[80px]" />
