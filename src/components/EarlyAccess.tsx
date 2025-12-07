@@ -628,7 +628,10 @@ const EarlyAccess: React.FC = () => {
                   className="mb-8 text-center"
                 >
                   <h2 className="font-display mb-6 text-4xl leading-none font-semibold tracking-tighter text-white drop-shadow-2xl sm:text-5xl md:text-6xl lg:text-7xl">
-                    Ready to echoe?
+                    Ready to <br className="md:hidden" />{' '}
+                    <span className="bg-gradient-to-r from-blue-100 via-blue-300 to-indigo-200 bg-clip-text text-transparent">
+                      echoe?
+                    </span>
                   </h2>
                   <p className="mx-auto max-w-md text-sm font-normal text-blue-200/80 md:text-base">
                     Join the waiting list for early access updates and be the first to experience
