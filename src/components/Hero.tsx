@@ -604,11 +604,11 @@ const Hero: React.FC = () => {
     <LazyMotion features={domAnimation}>
       <div
         ref={containerRef}
-        className="relative min-h-[100dvh] bg-white sm:h-[150vh] md:h-[200vh] lg:h-[250vh]"
+        className="relative h-[120vh] bg-white sm:h-[150vh] md:h-[200vh] lg:h-[250vh]"
         style={{ position: 'relative' }}
         onMouseMove={handleMouseMove}
       >
-        <div className="relative flex h-dvh w-full flex-col items-center justify-center overflow-hidden sm:sticky sm:top-0">
+        <div className="sticky top-0 flex h-dvh w-full flex-col items-center justify-center overflow-hidden">
           {/* --- Content Wrapper (Standard Sticky) --- */}
           <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-white shadow-none">
             {/* --- Canvas Background --- */}
