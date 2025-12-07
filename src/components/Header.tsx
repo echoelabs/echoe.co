@@ -161,10 +161,9 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
     const lenis = window.lenis;
     if (id === 'contact') {
       if (lenis) {
-        // Use a very large number to ensure we hit the absolute bottom regardless of dynamic layout
-        lenis.scrollTo(9999999, { immediate: false });
+        lenis.scrollTo(document.documentElement.scrollHeight, { immediate: false });
       } else {
-        window.scrollTo({ top: 9999999, behavior: 'smooth' });
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
       }
       return;
     }
