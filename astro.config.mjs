@@ -9,9 +9,7 @@ import robotsTxt from 'astro-robots-txt';
 export default defineConfig({
   site: 'https://echoe.co',
   output: 'server',
-  adapter: cloudflare({
-    imageService: 'compile',
-  }),
+  adapter: cloudflare(),
   integrations: [
     react(),
     sitemap(),
