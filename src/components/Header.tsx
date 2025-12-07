@@ -160,6 +160,15 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
     const headerOffset = 80;
     const lenis = window.lenis;
 
+    if (id === 'contact') {
+      if (lenis) {
+        lenis.scrollTo('bottom');
+      } else {
+        window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
+      }
+      return;
+    }
+
     const element = document.getElementById(id);
     if (!element) return;
 
@@ -234,7 +243,10 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
             >
               Pricing
             </NavItem>
-            <NavItem isActive={false} href="mailto:hello@echoe.co">
+            <NavItem
+              isActive={activeSection === 'contact'}
+              onClick={() => scrollToSection('contact')}
+            >
               Contact
             </NavItem>
           </div>
@@ -317,12 +329,15 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
                   >
                     Pricing
                   </button>
-                  <a
-                    href="mailto:hello@echoe.co"
-                    className="block rounded-lg px-4 py-3.5 text-left text-sm font-medium text-gray-600 transition-colors hover:bg-gray-50"
+                  <button
+                    onClick={() => {
+                      scrollToSection('contact');
+                      setMobileMenuOpen(false);
+                    }}
+                    className={`rounded-lg px-4 py-3.5 text-left text-sm font-medium transition-colors ${activeSection === 'contact' ? 'bg-gray-100 text-black' : 'text-gray-600 hover:bg-gray-50'}`}
                   >
                     Contact
-                  </a>
+                  </button>
                 </>
               ) : (
                 <>
