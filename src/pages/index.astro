@@ -35,15 +35,9 @@ import CookieConsent from '../components/CookieConsent';
     import { trackSectionView } from '../services/analytics';
 
     const loadingScreen = document.getElementById('loading-screen');
-    // REMOVED CHECK: const isFirstVisit = !sessionStorage.getItem('hasVisited');
-    // User requested loading screen to always show for testing/demo purposes
+    const isFirstVisit = !sessionStorage.getItem('hasVisited');
 
     const initLenis = () => {
-      // Disable Lenis on mobile/tablet (width < 1024px) for native 60fps scroll
-      if (window.innerWidth < 1024) {
-        return undefined;
-      }
-
       // Initialize Lenis smooth scroll
       const lenis = new Lenis({
         duration: 1.2,
@@ -67,9 +61,9 @@ import CookieConsent from '../components/CookieConsent';
 
     let lenis: ReturnType<typeof initLenis> | undefined;
 
-    if (loadingScreen) {
-      // Always show loading screen
-      // sessionStorage.setItem('hasVisited', 'true'); // Reset removed
+    if (loadingScreen && isFirstVisit) {
+      // First visit - show loading screen
+      sessionStorage.setItem('hasVisited', 'true');
 
       // Disable pointer events while loading (keep scrollbar visible to prevent shift)
       document.body.style.pointerEvents = 'none';
@@ -93,9 +87,10 @@ import CookieConsent from '../components/CookieConsent';
         lenis = initLenis();
 
         setTimeout(() => loadingScreen.remove(), 600); // Remove after fade completes
-      }, 2500); // Increased to 2.5s per request
+      }, 1500);
     } else {
-      // No loading screen - init immediately
+      // Not first visit or no loading screen - remove it and init immediately
+      if (loadingScreen) loadingScreen.remove();
       lenis = initLenis();
     }
 
