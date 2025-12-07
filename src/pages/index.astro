@@ -59,8 +59,8 @@ import CookieConsent from '../components/CookieConsent';
 
     let lenis: ReturnType<typeof initLenis> | undefined;
 
-    if (loadingScreen && isFirstVisit) {
-      // First visit - show loading screen
+    if (loadingScreen) {
+      // Show loading screen on every visit (for testing)
       sessionStorage.setItem('hasVisited', 'true');
 
       // Disable pointer events while loading (keep scrollbar visible to prevent shift)
