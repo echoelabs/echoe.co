@@ -540,7 +540,7 @@ const Features: React.FC = () => {
       {/* --- DESKTOP LAYOUT (Sticky Scroll) --- */}
       <div
         ref={stickyRef}
-        className="hidden lg:sticky lg:top-14 lg:block lg:h-[calc(100svh-3.5rem)] lg:pt-16 lg:pb-16"
+        className="hidden lg:sticky lg:top-14 lg:block lg:h-[calc(100dvh-3.5rem)] lg:pt-16 lg:pb-16"
       >
         {/* --- BACKGROUND (bg color + dot grid) --- */}
         <div className="pointer-events-none absolute inset-y-0 -right-3 -left-3 bg-white sm:-right-4 sm:-left-4 md:-right-8 md:-left-8 lg:-right-16 lg:-left-16">

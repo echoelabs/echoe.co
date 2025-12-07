@@ -475,7 +475,7 @@ const EarlyAccess: React.FC = () => {
       >
         {/* 1. STICKY STAGE (Backgrounds + Newsletter + Footer) */}
         {/* This container stays pinned to the viewport while the parent section scrolls */}
-        <div className="sticky top-0 h-[100svh] w-full overflow-hidden">
+        <div className="sticky top-0 h-dvh w-full overflow-hidden">
           {/* A. BACKGROUND LAYERS (z-0) */}
           <div className="pointer-events-none absolute inset-0 z-0 h-full w-full">
             {/* Base White Background (for the start) */}
