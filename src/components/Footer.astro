@@ -5,29 +5,37 @@ interface Props {
 
 const { darkMode = false } = Astro.props;
 
-const textColor = darkMode ? "text-gray-400" : "text-gray-600";
-const titleColor = darkMode ? "text-white" : "text-gray-900";
-const hoverColor = darkMode ? "hover:text-white" : "hover:text-black";
-const disabledColor = darkMode ? "text-gray-600 cursor-not-allowed" : "text-gray-300 cursor-not-allowed";
-const bgClass = darkMode ? "bg-transparent border-none" : "bg-white border-t border-gray-100";
+const textColor = darkMode ? 'text-gray-400' : 'text-gray-600';
+const titleColor = darkMode ? 'text-white' : 'text-gray-900';
+const hoverColor = darkMode ? 'hover:text-white' : 'hover:text-black';
+const disabledColor = darkMode
+  ? 'text-gray-600 cursor-not-allowed'
+  : 'text-gray-300 cursor-not-allowed';
+const bgClass = darkMode ? 'bg-transparent border-none' : 'bg-white border-t border-gray-100';
 ---
 
-<footer id="contact" class={`${bgClass} px-3 sm:px-4 md:px-8 lg:px-16 pt-8 transition-colors duration-500`}>
+<footer
+  id="contact"
+  class={`${bgClass} px-6 md:px-8 lg:px-24 xl:px-32 pt-8 transition-colors duration-500`}
+>
   <div class="max-w-[90vw] lg:max-w-[1800px] xl:max-w-[2000px] 2xl:max-w-[2200px] mx-auto">
     <div class="flex flex-col gap-12 md:flex-row md:gap-8 md:justify-between mb-8">
-
       <!-- Brand Column -->
       <div class="md:max-w-sm">
-        <span class={`font-display font-semibold text-base tracking-tight block mb-4 ${titleColor}`}>echoe</span>
+        <span class={`font-display font-semibold text-base tracking-tight block mb-4 ${titleColor}`}
+          >echoe</span
+        >
         <p class={`${textColor} text-xs leading-relaxed mb-6`}>
-          Building the operating system for the next generation of commerce.
-          Simple, unified, and infinitely scalable.
+          Building the operating system for the next generation of commerce. Simple, unified, and
+          infinitely scalable.
         </p>
       </div>
 
       <!-- Links Container -->
-      <nav aria-label="Footer navigation" class="grid w-full grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4 sm:gap-6 md:flex md:w-auto md:flex-nowrap md:gap-12 lg:gap-20 xl:gap-32">
-
+      <nav
+        aria-label="Footer navigation"
+        class="grid w-full grid-cols-2 gap-x-6 gap-y-6 sm:grid-cols-4 sm:gap-6 md:flex md:w-auto md:flex-nowrap md:gap-12 lg:gap-20 xl:gap-32"
+      >
         <!-- Product Links -->
         <div>
           <p class={`font-medium mb-2 text-[11px] sm:mb-3 sm:text-xs ${titleColor}`}>Product</p>
@@ -42,7 +50,9 @@ const bgClass = darkMode ? "bg-transparent border-none" : "bg-white border-t bor
         <div>
           <p class={`font-medium mb-2 text-[11px] sm:mb-3 sm:text-xs ${titleColor}`}>Company</p>
           <ul class={`space-y-1.5 text-[11px] sm:space-y-2 sm:text-xs ${textColor}`}>
-            <li><a href="mailto:hello@echoe.co" class={`${hoverColor} transition-colors`}>Contact</a></li>
+            <li>
+              <a href="mailto:hello@echoe.co" class={`${hoverColor} transition-colors`}>Contact</a>
+            </li>
             <li><span class={disabledColor}>Newsroom</span></li>
             <li><span class={disabledColor}>Press Kit</span></li>
           </ul>
@@ -68,9 +78,7 @@ const bgClass = darkMode ? "bg-transparent border-none" : "bg-white border-t bor
             <li><a href="/refund" class={`${hoverColor} transition-colors`}>Refunds</a></li>
           </ul>
         </div>
-
       </nav>
-
     </div>
 
     <!-- Bottom Bar -->
@@ -80,7 +88,10 @@ const bgClass = darkMode ? "bg-transparent border-none" : "bg-white border-t bor
       </div>
 
       <div class="flex gap-6">
-        <a href="mailto:hello@echoe.co" class={`text-[10px] ${textColor} ${hoverColor} transition-colors`}>hello@echoe.co</a>
+        <a
+          href="mailto:hello@echoe.co"
+          class={`text-[10px] ${textColor} ${hoverColor} transition-colors`}>hello@echoe.co</a
+        >
       </div>
     </div>
   </div>

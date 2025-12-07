@@ -16,18 +16,21 @@ import {
 
 const UnifiedChatVisual = () => {
   return (
-    <div className="flex h-full w-full flex-col justify-center gap-4 p-8">
-      {/* Platform indicators */}
-      <div className="mb-2 flex gap-2">
-        <span className="rounded-full bg-pink-100 px-2 py-1 text-xs font-medium text-pink-600">
-          Instagram
-        </span>
-        <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-600">
-          Messenger
-        </span>
-        <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-600">
-          LINE
-        </span>
+    <div className="flex h-full w-full flex-col justify-start gap-4 p-6 sm:p-8">
+      {/* Icon-height container to match card icon */}
+      <div className="flex h-9 sm:h-10 items-center">
+        {/* Platform indicators */}
+        <div className="flex gap-2">
+          <span className="rounded-full bg-pink-100 px-2 py-1 text-xs font-medium text-pink-600">
+            Platform A
+          </span>
+          <span className="rounded-full bg-blue-100 px-2 py-1 text-xs font-medium text-blue-600">
+            Platform B
+          </span>
+          <span className="rounded-full bg-green-100 px-2 py-1 text-xs font-medium text-green-600">
+            Platform C
+          </span>
+        </div>
       </div>
 
       <motion.div
@@ -36,7 +39,7 @@ const UnifiedChatVisual = () => {
         transition={{ delay: 0.2 }}
         className="max-w-[75%] self-start rounded-2xl rounded-tl-none bg-slate-100 px-5 py-3 text-sm text-slate-700"
       >
-        <span className="mb-1 block text-xs text-slate-400">@sarah_m via Instagram</span>
+        <span className="mb-1 block text-xs text-slate-400">@sarah_m via Platform A</span>
         Is this item in stock? I need it for a gift!
       </motion.div>
       <motion.div
@@ -125,7 +128,7 @@ const OrderCentralVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-3 overflow-hidden p-6">
+    <div className="flex h-full w-full flex-col gap-3 overflow-hidden p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Today's Orders</span>
         <span className="text-xs text-slate-400">12 total</span>
@@ -172,7 +175,7 @@ const InventoryVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div className="flex h-full w-full flex-col gap-4 p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Stock Levels</span>
         <span className="rounded-full bg-amber-50 px-2 py-1 text-xs text-amber-600">2 alerts</span>
@@ -231,7 +234,7 @@ const AIAutopilotVisual = () => {
   }, []);
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div className="flex h-full w-full flex-col gap-4 p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-100">
@@ -286,7 +289,7 @@ const MarketIntelVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div className="flex h-full w-full flex-col gap-4 p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Trending in Your Category</span>
         <span className="text-xs text-slate-400">Last 7 days</span>
@@ -331,7 +334,7 @@ const CompetitorWatchVisual = () => {
   ];
 
   return (
-    <div className="flex h-full w-full flex-col gap-4 p-6">
+    <div className="flex h-full w-full flex-col gap-4 p-6 sm:p-8">
       <div className="mb-2 flex items-center justify-between">
         <span className="text-xs font-semibold text-slate-700">Price Comparison</span>
         <span className="text-xs text-slate-400">Minimal Vase</span>
@@ -394,6 +397,33 @@ const Features: React.FC = () => {
   const stickyRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const [tuple, setTuple] = useState([0, activeIndex]); // [prev, current]
+
+  if (tuple[1] !== activeIndex) {
+    setTuple([tuple[1], activeIndex]);
+  }
+
+  const direction = tuple[1] > tuple[0] ? 1 : -1;
+
+  const variants = {
+    enter: (direction: number) => ({
+      y: direction > 0 ? 50 : -50,
+      opacity: 0,
+      scale: 0.95,
+    }),
+    center: {
+      zIndex: 1,
+      y: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      y: direction < 0 ? 50 : -50,
+      opacity: 0,
+      scale: 0.95,
+    }),
+  };
 
   const featureIds = useMemo(
     () => ['chat', 'order', 'inventory', 'ai', 'market', 'competitor'],
@@ -407,8 +437,11 @@ const Features: React.FC = () => {
   useEffect(() => {
     const calculate = () => {
       const vh = window.innerHeight;
+      const isMobile = window.innerWidth < 1024; // lg breakpoint
+
       const stickyHeight = vh - headerHeight;
-      const scrollPerCard = vh * 0.18; // 18vh per card transition (more time on each card)
+      // Use smaller scroll-per-card on mobile for tighter experience
+      const scrollPerCard = isMobile ? vh * 0.1 : vh * 0.18;
       const sectionHeight = stickyHeight + (numCards - 1) * scrollPerCard + headerHeight;
 
       setDimensions({
@@ -418,6 +451,8 @@ const Features: React.FC = () => {
     };
 
     calculate();
+    window.addEventListener('resize', calculate);
+    return () => window.removeEventListener('resize', calculate);
   }, [numCards]);
 
   // Scroll-based card switching
@@ -485,7 +520,7 @@ const Features: React.FC = () => {
     {
       id: 'chat',
       title: 'Unified Chat',
-      desc: 'All your social DMs in one place. Reply to Instagram, Messenger, and LINE from a single dashboard.',
+      desc: 'All your social DMs in one place. Reply to all your channels from a single dashboard.',
       icon: <MessageSquare className="h-5 w-5" />,
       visual: <UnifiedChatVisual />,
     },
@@ -531,11 +566,14 @@ const Features: React.FC = () => {
       id="features"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative bg-white px-3 sm:px-4 md:px-8 lg:px-16"
+      className="relative z-10 bg-white px-6 md:px-8 lg:px-24 xl:px-32"
       style={{ height: dimensions.sectionHeight }}
     >
-      {/* Sticky content wrapper */}
-      <div ref={stickyRef} className="sticky top-14 h-[calc(100dvh-3.5rem)] pt-16 pb-16">
+      {/* Sticky content wrapper - Reduced vertical padding on mobile */}
+      <div
+        ref={stickyRef}
+        className="sticky top-14 flex h-[calc(100dvh-3.5rem)] flex-col py-4 lg:py-8"
+      >
         {/* --- BACKGROUND (bg color + dot grid) --- */}
         <div className="pointer-events-none absolute inset-y-0 -right-3 -left-3 bg-white sm:-right-4 sm:-left-4 md:-right-8 md:-left-8 lg:-right-16 lg:-left-16">
           <div
@@ -557,14 +595,14 @@ const Features: React.FC = () => {
           />
         </div>
 
-        <div className="relative z-10 mx-auto flex h-full max-w-7xl flex-col">
-          <div className="shrink-0 pb-8 text-center lg:pb-12">
+        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[2200px] flex-1 flex-col pb-4 lg:pb-8">
+          <div className="shrink-0 pb-3 text-center lg:pb-8">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="font-display mb-6 text-2xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl"
+              className="font-display mb-3 text-xl leading-tight font-semibold tracking-tight text-slate-900 sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl"
             >
               Command Center.
               <br />
@@ -572,9 +610,9 @@ const Features: React.FC = () => {
             </motion.h2>
           </div>
 
-          <div className="grid min-h-0 flex-1 grid-cols-1 items-start gap-5 overflow-visible sm:gap-6 lg:grid-cols-12 lg:gap-8">
+          <div className="grid min-h-0 flex-1 grid-cols-1 items-start gap-3 overflow-visible sm:gap-6 lg:grid-cols-12 lg:gap-8">
             {/* LEFT COLUMN: THE STREAM (Navigation) */}
-            <div className="no-scrollbar flex h-full flex-col justify-between gap-2 overflow-y-auto px-2 py-3 pb-4 sm:gap-3 sm:px-4 sm:py-4 sm:pb-6 lg:col-span-5 lg:px-6">
+            <div className="no-scrollbar flex h-full flex-col justify-start gap-2 overflow-y-auto py-1 sm:gap-3 sm:py-4 lg:col-span-5 lg:justify-start lg:gap-4">
               {features.map((feature, index) => {
                 const isActive = activeId === feature.id;
                 return (
@@ -639,11 +677,11 @@ const Features: React.FC = () => {
             </div>
 
             {/* RIGHT COLUMN: THE STAGE (Sticky Visual) - matches expanded list height */}
-            <div className="relative hidden h-full px-4 py-4 lg:col-span-7 lg:block">
+            <div className="relative hidden w-full lg:col-span-7 lg:block h-full">
               <div className="h-full w-full">
                 <div className="relative h-full w-full overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl ring-1 shadow-slate-200/50 ring-slate-100">
                   {/* Monitor Header / HUD */}
-                  <div className="absolute top-0 right-0 left-0 z-20 flex h-10 items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 backdrop-blur-md">
+                  <div className="absolute top-0 right-0 left-0 z-20 flex h-4 sm:h-5 items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4 backdrop-blur-md">
                     <div className="flex gap-2">
                       <div className="h-3 w-3 rounded-full bg-slate-200" />
                       <div className="h-3 w-3 rounded-full bg-slate-200" />
@@ -654,16 +692,18 @@ const Features: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Visual Content Area */}
-                  <div className="absolute inset-0 bg-slate-50/30 pt-10">
-                    <AnimatePresence mode="wait">
+                  {/* Visual Content Area - Added scroll handling for smaller screens */}
+                  <div className="no-scrollbar absolute inset-0 overflow-y-auto bg-slate-50/30 pt-4 sm:pt-5 pb-4 px-4 sm:px-5">
+                    <AnimatePresence mode="popLayout" custom={direction}>
                       <motion.div
                         key={activeId}
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.02 }}
-                        transition={{ duration: 0.2, ease: 'easeOut' }}
-                        className="flex h-full w-full items-start justify-center p-4"
+                        custom={direction}
+                        variants={variants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
+                        className="flex h-full w-full items-start justify-center"
                       >
                         {features.find((f) => f.id === activeId)?.visual}
                       </motion.div>

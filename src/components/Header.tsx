@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { trackNavClick, trackButtonClick } from '../services/analytics';
 
@@ -43,7 +43,6 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [activePath, setActivePath] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { scrollY } = useScroll();
 
   // Get current path from props or window
   const pathname = currentPath || (typeof window !== 'undefined' ? window.location.pathname : '/');
@@ -72,31 +71,46 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
       return;
     }
 
-    const sections = ['demo', 'features', 'pricing'];
+    const sections = ['hero', 'demo', 'features', 'pricing', 'early-access'];
 
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 150;
-      const windowHeight = window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight;
-      const scrolledToBottom = window.scrollY + windowHeight >= docHeight - 100;
+      // 150px buffer zone for triggering section changes
+      const triggerPoint = 150;
+
+      const scrolledToBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
 
       if (scrolledToBottom) {
         setActiveSection('contact');
         return;
       }
 
+      // "Last Started Section" logic (ScrollSpy)
+      // This is more robust against gaps or short containers.
+      // We find the last section that has started (top <= trigger).
+      let currentSection = null;
+
       for (const sectionId of sections) {
         const element = document.getElementById(sectionId);
         if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(sectionId);
-            return;
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= triggerPoint) {
+            currentSection = sectionId;
+          } else {
+            // Since sections are ordered, once we find one below trigger,
+            // all subsequent ones are also below (assuming no overlap madness).
+            // We can stop, but for safety in complex layouts, let's just let it run
+            // or optimize. Given 5 sections, running all is fine.
+            // But if we want strict visual order:
+            // break;
+            // Let's not break, just in case of weird stacking, but 'currentSection' overrides ensure last match wins.
           }
         }
       }
 
-      if (window.scrollY < 100) {
+      if (currentSection) {
+        setActiveSection(currentSection);
+      } else if (window.scrollY < 100) {
         setActiveSection(null);
       }
     };
@@ -107,26 +121,43 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isHomePage]);
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
+  // Handle Navbar Visibility - SIMPLE: Hide after exiting Pricing
+  useEffect(() => {
     if (!isHomePage) {
       setHidden(false);
       return;
     }
 
-    const docHeight = document.documentElement.scrollHeight;
-    const winHeight = window.innerHeight;
-    const maxScroll = docHeight - winHeight;
-    const distanceFromBottom = maxScroll - latest;
+    const handleVisibility = () => {
+      const pricing = document.getElementById('pricing');
+      if (!pricing) {
+        setHidden(false);
+        return;
+      }
 
-    const parallaxZoneThreshold = winHeight * 6.25;
-    const footerVisibleThreshold = winHeight * 2.5;
+      const pricingRect = pricing.getBoundingClientRect();
+      const footerThreshold = 100; // Near footer, show again
 
-    if (distanceFromBottom < parallaxZoneThreshold && distanceFromBottom > footerVisibleThreshold) {
-      setHidden(true);
-    } else {
-      setHidden(false);
-    }
-  });
+      // If pricing bottom is above the screen (we've scrolled past it)
+      const pastPricing = pricingRect.bottom < 0;
+
+      // If we're near the very bottom of the page (footer/contact)
+      const nearBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - footerThreshold;
+
+      if (pastPricing && !nearBottom) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleVisibility, { passive: true });
+    handleVisibility();
+
+    return () => window.removeEventListener('scroll', handleVisibility);
+  }, [isHomePage]);
 
   const scrollToSection = (id: string) => {
     trackNavClick(id);
@@ -169,32 +200,45 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
       initial="visible"
       animate={hidden ? 'hidden' : 'visible'}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b border-transparent bg-white/90 px-3 py-3 shadow-none backdrop-blur-md transition-[background-color,box-shadow,border-color,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] supports-[backdrop-filter]:bg-white/75 sm:px-4 md:px-8 lg:px-16"
+      className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b border-transparent bg-white px-6 py-4 shadow-none transition-[background-color,box-shadow,border-color,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] md:px-8 lg:bg-white/90 lg:px-24 lg:backdrop-blur-md supports-[backdrop-filter]:lg:bg-white/75 xl:px-32"
     >
-      {isHomePage ? (
-        <div
-          className="relative z-10 flex cursor-pointer items-center gap-2"
-          onClick={() => {
-            const lenis = window.lenis;
-            if (lenis) {
-              lenis.scrollTo(0);
-            } else {
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-          }}
+      {/* LEFT: Hamburger (Mobile) + Logo */}
+      <div className="flex items-center gap-3">
+        {/* Hamburger - Mobile Only - Left Side */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="touch-target -ml-2 p-2 text-gray-600 transition-colors hover:text-black md:hidden"
+          aria-label="Toggle menu"
         >
-          <span className="font-display text-lg font-semibold tracking-tight text-black">
-            echoe
-          </span>
-        </div>
-      ) : (
-        <a href="/" className="relative z-10 flex items-center gap-2">
-          <span className="font-display text-lg font-semibold tracking-tight text-black">
-            echoe
-          </span>
-        </a>
-      )}
+          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
 
+        {isHomePage ? (
+          <div
+            className="relative z-10 flex cursor-pointer items-center gap-2"
+            onClick={() => {
+              const lenis = window.lenis;
+              if (lenis) {
+                lenis.scrollTo(0);
+              } else {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+          >
+            <span className="font-display text-lg font-semibold tracking-tight text-black">
+              echoe
+            </span>
+          </div>
+        ) : (
+          <a href="/" className="relative z-10 flex items-center gap-2">
+            <span className="font-display text-lg font-semibold tracking-tight text-black">
+              echoe
+            </span>
+          </a>
+        )}
+      </div>
+
+      {/* CENTER: Desktop Nav */}
       <nav className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-xs font-medium text-gray-600 md:flex">
         {isHomePage ? (
           <div className="flex items-center gap-8">
@@ -244,6 +288,7 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
         )}
       </nav>
 
+      {/* RIGHT: Get Started Button */}
       <div className="relative z-10 flex items-center gap-3">
         <button
           onClick={() => {
@@ -257,14 +302,6 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
           className="touch-target rounded-full bg-black px-4 py-2.5 text-xs font-medium text-white shadow-md shadow-black/20 transition-all hover:scale-105 hover:bg-gray-800 active:scale-95"
         >
           Get Started
-        </button>
-
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="touch-target p-3 text-gray-600 transition-colors hover:text-black md:hidden"
-          aria-label="Toggle menu"
-        >
-          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
         </button>
       </div>
 

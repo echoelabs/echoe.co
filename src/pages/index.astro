@@ -12,11 +12,16 @@ import CookieConsent from '../components/CookieConsent';
   <Header client:idle currentPath="/" />
 
   <main class="overflow-visible" style="position: relative;">
-    <!-- Loading Screen - shows for 1.5s then fades out -->
-    <div id="loading-screen" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#fff;transition:opacity 0.6s ease-out;padding-bottom:8rem;">
+    <!-- Loading Screen - shows for 1s then fades out -->
+    <div
+      id="loading-screen"
+      style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#fff;transition:opacity 0.6s ease-out;padding-bottom:8rem;"
+    >
       <div style="text-align:center;padding:0 1.5rem;">
-        <h1 style="font-family:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;font-size:clamp(1.875rem,5vw,3.75rem);line-height:1.1;font-weight:600;letter-spacing:-0.025em;color:#0f172a;margin:0;">
-          Simplify Your<br/>Commerce.
+        <h1
+          style="font-family:'Space Grotesk',ui-sans-serif,system-ui,sans-serif;font-size:clamp(1.875rem,5vw,3.75rem);line-height:1.1;font-weight:600;letter-spacing:-0.025em;color:#0f172a;margin:0;"
+        >
+          Simplify Your<br />Commerce.
         </h1>
       </div>
     </div>
@@ -33,7 +38,6 @@ import CookieConsent from '../components/CookieConsent';
     import { trackSectionView } from '../services/analytics';
 
     const loadingScreen = document.getElementById('loading-screen');
-    const isFirstVisit = !sessionStorage.getItem('hasVisited');
 
     const initLenis = () => {
       // Initialize Lenis smooth scroll
@@ -59,8 +63,8 @@ import CookieConsent from '../components/CookieConsent';
 
     let lenis: ReturnType<typeof initLenis> | undefined;
 
-    if (loadingScreen && isFirstVisit) {
-      // First visit - show loading screen
+    if (loadingScreen) {
+      // Show loading screen on every visit (for testing)
       sessionStorage.setItem('hasVisited', 'true');
 
       // Disable pointer events while loading (keep scrollbar visible to prevent shift)
@@ -85,10 +89,9 @@ import CookieConsent from '../components/CookieConsent';
         lenis = initLenis();
 
         setTimeout(() => loadingScreen.remove(), 600); // Remove after fade completes
-      }, 1500);
+      }, 1000);
     } else {
       // Not first visit or no loading screen - remove it and init immediately
-      if (loadingScreen) loadingScreen.remove();
       lenis = initLenis();
     }
 

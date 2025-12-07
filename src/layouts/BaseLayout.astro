@@ -7,11 +7,14 @@ interface Props {
   description?: string;
 }
 
-const { title, description = "The operating system for next-generation commerce. Manage customer communications, inventory, orders, and AI-powered support across all channels in one unified platform." } = Astro.props;
+const {
+  title,
+  description = 'The operating system for next-generation commerce. Manage customer communications, inventory, orders, and AI-powered support across all channels in one unified platform.',
+} = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, 'https://echoe.co').toString();
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -25,30 +28,34 @@ const canonicalUrl = new URL(Astro.url.pathname, 'https://echoe.co').toString();
       openGraph={{
         basic: {
           title: title,
-          type: "website",
-          image: "https://echoe.co/og-image.png",
+          type: 'website',
+          image: 'https://echoe.co/og-image.png',
           url: canonicalUrl,
         },
         optional: {
           description: description,
-          siteName: "echoe",
-          locale: "en_US",
+          siteName: 'echoe',
+          locale: 'en_US',
         },
         image: {
-          alt: "echoe - Unified Commerce Platform",
+          alt: 'echoe - Unified Commerce Platform',
         },
       }}
       twitter={{
-        card: "summary_large_image",
+        card: 'summary_large_image',
         title: title,
         description: description,
-        image: "https://echoe.co/og-image.png",
+        image: 'https://echoe.co/og-image.png',
       }}
       extend={{
         meta: [
-          { name: "keywords", content: "unified commerce, customer support, AI automation, inventory management, order tracking, multi-channel, SaaS, e-commerce platform" },
-          { name: "author", content: "ECHO HQ CO., LTD." },
-          { name: "robots", content: "index, follow" },
+          {
+            name: 'keywords',
+            content:
+              'unified commerce, customer support, AI automation, inventory management, order tracking, multi-channel, SaaS, e-commerce platform',
+          },
+          { name: 'author', content: 'ECHO HQ CO., LTD.' },
+          { name: 'robots', content: 'index, follow' },
         ],
       }}
     />
@@ -70,34 +77,56 @@ const canonicalUrl = new URL(Astro.url.pathname, 'https://echoe.co').toString();
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 
     <!-- Google Fonts - Non-blocking load -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap" /></noscript>
+    <link
+      rel="preload"
+      as="style"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript
+      ><link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Space+Grotesk:wght@300;400;500;600&display=swap"
+      /></noscript
+    >
 
     <!-- Client Router for View Transitions -->
     <ClientRouter />
   </head>
   <body style="position: relative;">
     <!-- Skip to main content link for accessibility -->
-    <a href="#main-content" class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-500">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-50 focus:rounded-md focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-white focus:outline-none focus:ring-2 focus:ring-slate-500"
+    >
       Skip to main content
     </a>
 
     <!-- JSON-LD Structured Data -->
-    <script is:inline type="application/ld+json" set:html={JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "echoe",
-      "url": "https://echoe.co",
-      "logo": "https://echoe.co/favicon.svg",
-      "description": "The operating system for next-generation commerce. Manage customer communications, inventory, orders, and AI-powered support across all channels in one unified platform.",
-      "sameAs": [],
-      "contactPoint": {
-        "@type": "ContactPoint",
-        "email": "hello@echoe.co",
-        "contactType": "customer service"
-      }
-    })} />
+    <script
+      is:inline
+      type="application/ld+json"
+      set:html={JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'Organization',
+        name: 'echoe',
+        url: 'https://echoe.co',
+        logo: 'https://echoe.co/favicon.svg',
+        description:
+          'The operating system for next-generation commerce. Manage customer communications, inventory, orders, and AI-powered support across all channels in one unified platform.',
+        sameAs: [],
+        contactPoint: {
+          '@type': 'ContactPoint',
+          email: 'hello@echoe.co',
+          contactType: 'customer service',
+        },
+      })}
+    />
 
     <main id="main-content">
       <slot />

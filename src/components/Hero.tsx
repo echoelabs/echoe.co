@@ -564,6 +564,7 @@ const Hero: React.FC = () => {
   return (
     <LazyMotion features={domAnimation}>
       <div
+        id="hero"
         ref={containerRef}
         className="relative h-[150vh] bg-white sm:h-[200vh] lg:h-[250vh]"
         style={{ position: 'relative' }}
@@ -585,7 +586,7 @@ const Hero: React.FC = () => {
 
             {/* --- Content Layer --- */}
             {/* Z-INDEX INCREASED TO 30 TO SIT ABOVE THE FADE GRADIENT */}
-            <div className="relative z-30 mx-auto flex w-full max-w-6xl flex-col items-center justify-center px-6 text-center">
+            <div className="relative z-30 mx-auto flex w-full max-w-[2200px] flex-col items-center justify-center px-6 text-center md:px-8 lg:px-24 xl:px-32">
               {/* Badge - No initial animation to ensure LCP visibility */}
               <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 shadow-sm backdrop-blur-md sm:px-3">
                 <span className="relative flex h-2 w-2">
