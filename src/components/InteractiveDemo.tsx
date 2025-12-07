@@ -45,18 +45,9 @@ const InteractiveDemo: React.FC = () => {
     offset: ['start start', 'end end'],
   });
 
-  // Mobile detection for gentler zoom effect
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    setIsMobile(window.innerWidth < 768);
-    const handleResize = () => setIsMobile(window.innerWidth < 768);
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   // Scale from 0.75 (quite zoomed out) to 1 (full size) as user scrolls down
-  // Mobile: No zoom effect (constant 1) for better performance
-  const scale = useTransform(scrollYProgress, [0, 0.5], isMobile ? [1, 1] : [0.75, 1]);
+  // Updated: Finish zooming at 0.5 so it stays full size for the remaining 50% of the scroll ("Stay longer")
+  const scale = useTransform(scrollYProgress, [0, 0.5], [0.75, 1]);
 
   // Simulated Dashboard Data
   const [inventory, setInventory] = useState<InventoryItem[]>([
@@ -209,7 +200,7 @@ const InteractiveDemo: React.FC = () => {
       {/* Simulation section - sticky with zoom effect */}
       <div
         ref={containerRef}
-        className="relative h-[150vh] sm:h-[200vh] md:h-[280vh] lg:h-[380vh]"
+        className="relative h-[200vh] sm:h-[280vh] lg:h-[380vh]"
         style={{ position: 'relative' }}
       >
         <div className="sticky top-16 flex h-[var(--vh-hero)] flex-col px-2 py-1 sm:top-20 sm:px-4 sm:py-4 md:px-8 lg:px-16 lg:py-6">
@@ -232,7 +223,7 @@ const InteractiveDemo: React.FC = () => {
                   whileInView={{ y: 0, opacity: 1 }}
                   transition={{ duration: 0.8, ease: 'easeOut' }}
                   viewport={{ once: true, amount: 0.1 }}
-                  className="relative grid h-[calc(100dvh-110px)] grid-cols-1 grid-rows-[1fr] gap-0 overflow-hidden rounded-2xl border border-t border-gray-200/80 border-white/50 bg-white shadow-xl shadow-blue-900/5 sm:h-[calc(100dvh-130px)] sm:rounded-[2rem] md:rounded-[2.5rem] lg:h-[calc(100dvh-160px)] lg:grid-cols-12"
+                  className="relative grid h-[calc(100dvh-110px)] grid-cols-1 grid-rows-[1fr] gap-0 overflow-hidden rounded-[2rem] border border-t border-gray-200/80 border-white/50 bg-white shadow-xl shadow-blue-900/5 sm:h-[calc(100dvh-130px)] sm:rounded-[2.5rem] lg:h-[calc(100dvh-160px)] lg:grid-cols-12"
                 >
                   {/* Scanning Effect Overlay */}
                   <div
@@ -388,26 +379,20 @@ const InteractiveDemo: React.FC = () => {
                   {/* RIGHT PANEL: Chat Interface */}
                   <div className="relative z-10 col-span-1 flex min-h-0 flex-col bg-white lg:col-span-7">
                     {/* Mobile Stats Bar - visible when dashboard is hidden */}
-                    <div className="flex justify-around border-b border-gray-100 bg-gray-50/50 py-3.5 lg:hidden">
-                      <div className="px-3 text-center">
-                        <div
-                          className={`text-sm font-semibold tabular-nums transition-colors ${revenueChanged ? 'text-emerald-600' : 'text-gray-900'}`}
-                        >
+                    <div className="flex justify-around border-b border-gray-100 bg-gray-50/50 py-3 lg:hidden">
+                      <div className="text-center">
+                        <div className="text-xs font-medium text-gray-900">
                           ${revenue.toFixed(0)}
                         </div>
-                        <div className="text-[11px] text-gray-400">Revenue</div>
+                        <div className="text-[10px] text-gray-400">Revenue</div>
                       </div>
-                      <div className="px-3 text-center">
-                        <div className="text-sm font-semibold text-gray-900 tabular-nums">
-                          {visitors}
-                        </div>
-                        <div className="text-[11px] text-gray-400">Visitors</div>
+                      <div className="text-center">
+                        <div className="text-xs font-medium text-gray-900">{visitors}</div>
+                        <div className="text-[10px] text-gray-400">Visitors</div>
                       </div>
-                      <div className="px-3 text-center">
-                        <div className="text-sm font-semibold text-gray-900 tabular-nums">
-                          {activeCarts}
-                        </div>
-                        <div className="text-[11px] text-gray-400">Carts</div>
+                      <div className="text-center">
+                        <div className="text-xs font-medium text-gray-900">{activeCarts}</div>
+                        <div className="text-[10px] text-gray-400">Carts</div>
                       </div>
                     </div>
                     {/* Header */}
@@ -524,7 +509,7 @@ const InteractiveDemo: React.FC = () => {
                           onChange={(e) => setInputValue(e.target.value)}
                           onKeyDown={handleKeyDown}
                           placeholder="Ask echoe anything..."
-                          className="w-full rounded-full border border-gray-200 bg-white py-3.5 pr-14 pl-4 text-base text-gray-900 placeholder-gray-400 shadow-sm transition-all group-hover:shadow-md focus:border-gray-300 focus:ring-2 focus:ring-black/5 focus:outline-none sm:py-3 sm:pr-12 sm:pl-5 sm:text-sm"
+                          className="w-full rounded-full border border-gray-200 bg-white py-3 pr-12 pl-5 text-sm text-gray-900 placeholder-gray-400 shadow-sm transition-all group-hover:shadow-md focus:border-gray-300 focus:ring-2 focus:ring-black/5 focus:outline-none"
                         />
                         <button
                           onClick={handleSend}
