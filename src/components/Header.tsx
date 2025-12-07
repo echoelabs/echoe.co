@@ -161,7 +161,7 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
     const lenis = window.lenis;
     if (id === 'contact') {
       if (lenis) {
-        lenis.scrollTo(document.documentElement.scrollHeight, { immediate: false });
+        lenis.scrollTo('bottom');
       } else {
         window.scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' });
       }
