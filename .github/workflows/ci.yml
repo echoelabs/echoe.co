@@ -85,7 +85,7 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           MISSING=""
-          
+
           # Use printf to safely handle multiline strings and ensure strict matching
           if ! printf "%s" "$PR_BODY" | grep -q "## Summary"; then
             MISSING="${MISSING}## Summary, "
