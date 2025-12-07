@@ -56,8 +56,7 @@ const InteractiveDemo: React.FC = () => {
 
   // Scale from 0.75 (quite zoomed out) to 1 (full size) as user scrolls down
   // Mobile: No zoom effect (strictly 1)
-  // Scale: locked to 1 to ensure strict alignment with Features section (User Request)
-  const scale = useTransform(scrollYProgress, [0, 1], [1, 1]);
+  const scale = useTransform(scrollYProgress, [0, 0.5], isMobile ? [1, 1] : [0.75, 1]);
 
   // Simulated Dashboard Data
   const [inventory, setInventory] = useState<InventoryItem[]>([
