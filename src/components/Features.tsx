@@ -700,7 +700,7 @@ const Features: React.FC = () => {
                         animate="center"
                         exit="exit"
                         transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
-                        className="flex h-full w-full items-start justify-center p-4"
+                        className="flex h-full w-full items-start justify-center"
                       >
                         {features.find((f) => f.id === activeId)?.visual}
                       </motion.div>
