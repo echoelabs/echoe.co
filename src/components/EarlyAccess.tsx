@@ -110,13 +110,9 @@ const EarlyAccess: React.FC = () => {
   const [denseStars, setDenseStars] = useState<Star[]>([]);
 
   useEffect(() => {
-    // Generate stars on client only - reduce count on mobile for performance
-    const isMobile = window.innerWidth < 640;
-    const starCount = isMobile ? 25 : 50;
-    const denseStarCount = isMobile ? 60 : 150;
-
+    // Generate stars on client only
     setStars(
-      [...Array(starCount)].map((_, i) => ({
+      [...Array(50)].map((_, i) => ({
         id: i,
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
@@ -127,7 +123,7 @@ const EarlyAccess: React.FC = () => {
     );
 
     setDenseStars(
-      [...Array(denseStarCount)].map((_, i) => ({
+      [...Array(150)].map((_, i) => ({
         id: i,
         top: `${Math.random() * 100}%`,
         left: `${Math.random() * 100}%`,
@@ -457,7 +453,7 @@ const EarlyAccess: React.FC = () => {
       <section
         id="early-access"
         ref={sectionRef}
-        className="relative h-[200vh] bg-white text-slate-900 sm:h-[350vh] md:h-[500vh] lg:h-[800vh]"
+        className="relative h-[400vh] bg-white text-slate-900 sm:h-[600vh] lg:h-[800vh]"
         style={{ position: 'relative' }}
       >
         {/* 1. STICKY STAGE (Backgrounds + Newsletter + Footer) */}
@@ -561,7 +557,7 @@ const EarlyAccess: React.FC = () => {
                 }}
                 className="mb-8 text-center"
               >
-                <h2 className="font-display mb-6 text-6xl leading-none font-semibold tracking-tighter text-white drop-shadow-2xl sm:text-7xl md:text-8xl lg:text-9xl">
+                <h2 className="font-display mb-6 text-2xl leading-tight font-semibold tracking-tight text-white drop-shadow-2xl sm:text-3xl md:text-4xl lg:text-5xl">
                   Ready to <br />
                   echoe?
                 </h2>
@@ -611,6 +607,14 @@ const EarlyAccess: React.FC = () => {
                       onSubmit={handleSubscribe}
                       className="relative w-full"
                     >
+                      <TurnstileWidget
+                        ref={widgetRef}
+                        siteKey={siteKey}
+                        onSuccess={handleTurnstileSuccess}
+                        onError={handleTurnstileError}
+                        onExpire={handleTurnstileExpire}
+                        theme="dark"
+                      />
                       <div
                         className={`relative flex items-center rounded-full border bg-white/10 p-2 backdrop-blur-xl transition-all duration-300 ${
                           status === 'error'
@@ -626,8 +630,6 @@ const EarlyAccess: React.FC = () => {
                         <input
                           id="waitlist-email"
                           type="email"
-                          inputMode="email"
-                          autoComplete="email"
                           placeholder="Enter your email"
                           value={email}
                           onChange={(e) => {
@@ -640,8 +642,7 @@ const EarlyAccess: React.FC = () => {
                           aria-label="Email address for waitlist"
                           aria-invalid={status === 'error'}
                           aria-describedby={status === 'error' ? 'email-error' : undefined}
-                          style={{ transform: 'translate3d(0,0,0)' }}
-                          className="m-0 h-12 min-w-0 flex-1 appearance-none border-none bg-transparent px-4 py-0 align-middle text-base leading-normal text-white placeholder-blue-200/50 outline-none focus:ring-0 sm:h-auto sm:px-5 sm:py-3 sm:text-sm"
+                          className="min-w-0 flex-1 border-none bg-transparent px-4 py-3.5 text-sm text-white placeholder-blue-200/50 outline-none focus:ring-0 sm:px-5 sm:py-3"
                         />
                         <button
                           type="submit"
@@ -658,17 +659,6 @@ const EarlyAccess: React.FC = () => {
                             </div>
                           )}
                         </button>
-                      </div>
-                      {/* Turnstile widget - positioned absolutely to not affect layout or capture focus */}
-                      <div className="pointer-events-none absolute inset-0 -z-10">
-                        <TurnstileWidget
-                          ref={widgetRef}
-                          siteKey={siteKey}
-                          onSuccess={handleTurnstileSuccess}
-                          onError={handleTurnstileError}
-                          onExpire={handleTurnstileExpire}
-                          theme="dark"
-                        />
                       </div>
                     </motion.form>
                   )}
@@ -687,11 +677,8 @@ const EarlyAccess: React.FC = () => {
             {/* Footer sticks to bottom of this sticky container - BLENDED WITH GRADIENT */}
             <motion.div
               ref={footerRef}
-              style={{
-                opacity: footerOpacity,
-                paddingBottom: 'max(2rem, env(safe-area-inset-bottom))',
-              }}
-              className="pointer-events-auto absolute bottom-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent pt-32"
+              style={{ opacity: footerOpacity }}
+              className="pointer-events-auto absolute bottom-0 w-full bg-gradient-to-t from-black via-black/90 to-transparent pt-32 pb-8"
             >
               <FooterReact darkMode={true} />
             </motion.div>
