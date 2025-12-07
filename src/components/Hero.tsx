@@ -90,27 +90,10 @@ const Hero: React.FC = () => {
 
   // iOS detection for scroll animation optimization
   const [isIOS, setIsIOS] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [mobileTitleIndex, setMobileTitleIndex] = useState(0);
 
   useEffect(() => {
     setIsIOS(/iPad|iPhone|iPod/.test(navigator.userAgent));
-
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-
-    return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  // Auto-rotate headlines on mobile
-  useEffect(() => {
-    if (!isMobile) return;
-    const interval = setInterval(() => {
-      setMobileTitleIndex((prev) => (prev + 1) % 2);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [isMobile]);
 
   // Title Sets - pick random one on client only to avoid hydration mismatch
   // Note: "Simplify Your Commerce" is exclusive to the loading screen
@@ -617,28 +600,14 @@ const Hero: React.FC = () => {
             {/* Z-INDEX INCREASED TO 30 TO SIT ABOVE THE FADE GRADIENT */}
             <div className="relative z-30 mx-auto flex w-full max-w-6xl flex-col items-center justify-center px-6 text-center">
               {/* Badge - No initial animation to ensure LCP visibility */}
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white/80 px-2.5 py-1 shadow-sm backdrop-blur-md sm:px-3">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-blue-400 opacity-75"></span>
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-blue-500"></span>
-                </span>
-                <span className="text-xs font-medium tracking-wider text-slate-600 uppercase">
-                  Early Access 2026
-                </span>
-              </div>
+              {/* Badge Removed */}
 
               {/* Dynamic Titles Wrapper */}
               <div className="perspective-1000 relative flex min-h-[100px] w-full items-center justify-center py-4 sm:min-h-[140px] md:min-h-[200px]">
                 {/* Title 1 - initial ensures SSR renders with opacity:1 for LCP */}
                 <m.div
                   initial={{ opacity: 1, scale: 1, y: 0 }}
-                  style={{
-                    opacity: isMobile ? (mobileTitleIndex === 0 ? 1 : 0) : title1Opacity,
-                    scale: title1Scale,
-                    y: title1Y,
-                  }}
-                  animate={isMobile ? { opacity: mobileTitleIndex === 0 ? 1 : 0 } : {}}
-                  transition={{ duration: 0.5 }} // Smooth fade for mobile auto-rotate
+                  style={{ opacity: title1Opacity, scale: title1Scale, y: title1Y }}
                   className="absolute inset-0 flex items-center justify-center"
                 >
                   <h1 className="font-display text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
@@ -651,13 +620,7 @@ const Hero: React.FC = () => {
                 {/* Title 2 - initial hidden, fades in on scroll */}
                 <m.div
                   initial={{ opacity: 0, scale: 1.1, y: 50 }}
-                  style={{
-                    opacity: isMobile ? (mobileTitleIndex === 1 ? 1 : 0) : title2Opacity,
-                    scale: title2Scale,
-                    y: title2Y,
-                  }}
-                  animate={isMobile ? { opacity: mobileTitleIndex === 1 ? 1 : 0 } : {}}
-                  transition={{ duration: 0.5 }}
+                  style={{ opacity: title2Opacity, scale: title2Scale, y: title2Y }}
                   className="absolute inset-0 flex items-center justify-center"
                 >
                   <h1 className="font-display text-3xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-4xl md:text-5xl lg:text-6xl">
@@ -763,7 +726,33 @@ const Hero: React.FC = () => {
               ))}
 
             {/* --- Mobile Floating Notifications (< md) - Horizontal strip at bottom --- */}
-            {/* --- Mobile Floating Notifications Removed --- */}
+            <m.div
+              style={{ opacity: group1Opacity }}
+              className="absolute right-0 bottom-24 left-0 z-20 flex justify-center gap-2 px-3 md:hidden"
+            >
+              {activeBubbles.slice(0, 3).map((bubble, index) => (
+                <m.div
+                  key={`mobile-${index}`}
+                  initial={{ opacity: 0, y: 20, scale: 0.9 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ delay: 0.5 + index * 0.15 }}
+                  className="rounded-full border border-slate-200/60 bg-white/95 px-2.5 py-1.5 shadow-md"
+                >
+                  <div className="flex items-center gap-1.5">
+                    <div
+                      className={`flex h-5 w-5 items-center justify-center rounded-full ${bubble.item.iconBgClass} ${bubble.item.colorClass} [&>svg]:h-2.5 [&>svg]:w-2.5`}
+                    >
+                      {bubble.item.icon}
+                    </div>
+                    <div className="text-[10px] font-medium whitespace-nowrap text-slate-600">
+                      {bubble.item.text.length > 12
+                        ? bubble.item.text.slice(0, 12) + '...'
+                        : bubble.item.text}
+                    </div>
+                  </div>
+                </m.div>
+              ))}
+            </m.div>
           </div>
 
           {/* Scroll Indicator */}
