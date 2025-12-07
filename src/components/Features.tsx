@@ -16,7 +16,7 @@ import {
 
 const UnifiedChatVisual = () => {
   return (
-    <div className="flex h-full w-full flex-col justify-center gap-4">
+    <div className="flex h-full w-full flex-col justify-start gap-4">
       {/* Platform indicators */}
       <div className="mb-2 flex gap-2">
         <span className="rounded-full bg-pink-100 px-2 py-1 text-xs font-medium text-pink-600">
