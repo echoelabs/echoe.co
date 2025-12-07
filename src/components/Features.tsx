@@ -674,7 +674,7 @@ const Features: React.FC = () => {
             </div>
 
             {/* RIGHT COLUMN: THE STAGE (Sticky Visual) - matches expanded list height */}
-            <div className="relative hidden w-full lg:col-span-7 lg:block lg:self-center aspect-square xl:aspect-[5/4] max-h-[800px]">
+            <div className="relative hidden w-full lg:col-span-7 lg:block aspect-square xl:aspect-[5/4] max-h-[800px]">
               <div className="h-full w-full">
                 <div className="relative h-full w-full overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl ring-1 shadow-slate-200/50 ring-slate-100">
                   {/* Monitor Header / HUD */}
