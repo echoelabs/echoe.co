@@ -48,8 +48,8 @@ const InteractiveDemo: React.FC = () => {
   // Mobile detection for gentler zoom effect
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
-    setIsMobile(window.innerWidth < 1024);
-    const handleResize = () => setIsMobile(window.innerWidth < 1024);
+    setIsMobile(window.innerWidth < 768);
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -209,12 +209,10 @@ const InteractiveDemo: React.FC = () => {
       {/* Simulation section - sticky with zoom effect */}
       <div
         ref={containerRef}
-        className={`relative ${isMobile ? 'h-auto pb-24' : 'h-[150vh] sm:h-[200vh] md:h-[280vh] lg:h-[380vh]'}`}
+        className="relative h-[150vh] sm:h-[200vh] md:h-[280vh] lg:h-[380vh]"
         style={{ position: 'relative' }}
       >
-        <div
-          className={`${isMobile ? 'relative' : 'sticky top-16'} flex h-[var(--vh-hero)] flex-col px-2 py-1 sm:top-20 sm:px-4 sm:py-4 md:px-8 lg:px-16 lg:py-6`}
-        >
+        <div className="sticky top-16 flex h-[var(--vh-hero)] flex-col px-2 py-1 sm:top-20 sm:px-4 sm:py-4 md:px-8 lg:px-16 lg:py-6">
           {/* Dynamic Background decoration - Removed Grid Pattern Completely */}
           <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-full bg-gradient-to-r from-blue-100/40 via-purple-100/40 to-pink-100/40 opacity-60 blur-3xl" />
           <div className="pointer-events-none absolute top-1/2 right-10 h-64 w-64 animate-pulse rounded-full bg-emerald-100/30 blur-[80px]" />
