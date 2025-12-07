@@ -112,12 +112,9 @@ const EarlyAccess: React.FC = () => {
   const newsletterY = useTransform(
     scrollYProgress,
     isMobile ? [0.2, 0.9, 0.95, 1] : [0.65, 0.85, 0.95, 1],
-    // Mobile: Lock to finalYOffset / 2 (Middle Ground).
-    // Original (finalYOffset) was too high. 0 was too low.
+    // Mobile: Lock to 0 (Center of screen). User said finalYOffset was too high.
     // Desktop: Slide in from 150 -> 0 -> finalYOffset.
-    isMobile
-      ? [finalYOffset / 2, finalYOffset / 2, finalYOffset / 2, finalYOffset / 2]
-      : [150, 0, 0, finalYOffset]
+    isMobile ? [0, 0, 0, 0] : [150, 0, 0, finalYOffset]
   );
 
   // Footer fade in
