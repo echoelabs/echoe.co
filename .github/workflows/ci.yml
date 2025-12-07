@@ -3,7 +3,7 @@ name: CI
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened, closed, edited]
 
 jobs:
   validate:
@@ -85,16 +85,17 @@ jobs:
           PR_BODY: ${{ github.event.pull_request.body }}
         run: |
           MISSING=""
-
-          if ! echo "$PR_BODY" | grep -q "## Summary"; then
+          
+          # Use printf to safely handle multiline strings and ensure strict matching
+          if ! printf "%s" "$PR_BODY" | grep -q "## Summary"; then
             MISSING="${MISSING}## Summary, "
           fi
 
-          if ! echo "$PR_BODY" | grep -q "## Type of Change"; then
+          if ! printf "%s" "$PR_BODY" | grep -q "## Type of Change"; then
             MISSING="${MISSING}## Type of Change, "
           fi
 
-          if ! echo "$PR_BODY" | grep -q "## Testing"; then
+          if ! printf "%s" "$PR_BODY" | grep -q "## Testing"; then
             MISSING="${MISSING}## Testing, "
           fi
 
@@ -103,6 +104,8 @@ jobs:
             echo "Error: PR body is missing required sections: $MISSING"
             echo ""
             echo "Please use the template from .github/PULL_REQUEST_TEMPLATE.md"
+            echo "Debug: Current Body Content:"
+            echo "$PR_BODY"
             exit 1
           fi
           echo "PR body validated."
