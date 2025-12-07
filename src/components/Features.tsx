@@ -609,7 +609,7 @@ const Features: React.FC = () => {
 
           <div className="grid min-h-0 flex-1 grid-cols-1 items-start gap-3 overflow-visible sm:gap-6 lg:grid-cols-12 lg:gap-8">
             {/* LEFT COLUMN: THE STREAM (Navigation) */}
-            <div className="no-scrollbar flex h-full flex-col justify-start gap-2 overflow-y-auto py-1 sm:gap-3 sm:py-4 lg:col-span-5 lg:justify-between">
+            <div className="no-scrollbar flex h-full flex-col justify-start gap-2 overflow-y-auto py-1 sm:gap-3 sm:py-4 lg:col-span-5 lg:justify-start lg:gap-6">
               {features.map((feature, index) => {
                 const isActive = activeId === feature.id;
                 return (
