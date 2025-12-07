@@ -217,12 +217,6 @@ const AIAutopilotVisual = () => {
     'Hi! Thanks for reaching out. Yes, the Minimal Vase is available in both White and Terracotta. Would you like me to create an order for you?';
 
   useEffect(() => {
-    // Optimization: Skip animation on mobile to prevent main-thread blocking
-    if (window.innerWidth < 1024) {
-      setText(fullText);
-      return;
-    }
-
     let i = 0;
     const interval = setInterval(() => {
       setText(fullText.slice(0, i + 1));
@@ -231,9 +225,9 @@ const AIAutopilotVisual = () => {
         setTimeout(() => {
           i = 0;
           setText('');
-        }, 3000); // Slower reset
+        }, 2000);
       }
-    }, 50); // Slower typing (50ms vs 30ms) for less CPU
+    }, 30);
     return () => clearInterval(interval);
   }, []);
 
