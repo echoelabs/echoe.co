@@ -394,6 +394,33 @@ const Features: React.FC = () => {
   const stickyRef = useRef<HTMLDivElement>(null);
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
+  const [tuple, setTuple] = useState([0, activeIndex]); // [prev, current]
+
+  if (tuple[1] !== activeIndex) {
+    setTuple([tuple[1], activeIndex]);
+  }
+
+  const direction = tuple[1] > tuple[0] ? 1 : -1;
+
+  const variants = {
+    enter: (direction: number) => ({
+      y: direction > 0 ? 50 : -50,
+      opacity: 0,
+      scale: 0.95,
+    }),
+    center: {
+      zIndex: 1,
+      y: 0,
+      opacity: 1,
+      scale: 1,
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      y: direction < 0 ? 50 : -50,
+      opacity: 0,
+      scale: 0.95,
+    }),
+  };
 
   const featureIds = useMemo(
     () => ['chat', 'order', 'inventory', 'ai', 'market', 'competitor'],
@@ -531,13 +558,13 @@ const Features: React.FC = () => {
       id="features"
       ref={containerRef}
       onMouseMove={handleMouseMove}
-      className="relative z-10 bg-white px-6 md:px-8 lg:px-16"
+      className="relative z-10 bg-white px-6 md:px-8 lg:px-24 xl:px-32"
       style={{ height: dimensions.sectionHeight }}
     >
       {/* Sticky content wrapper - Reduced vertical padding to maximize screen real estate */}
       <div
         ref={stickyRef}
-        className="sticky top-14 flex h-auto max-h-[calc(100dvh-3.5rem)] flex-col py-6 lg:py-8"
+        className="sticky top-14 flex h-[calc(100dvh-3.5rem)] flex-col py-6 lg:py-8"
       >
         {/* --- BACKGROUND (bg color + dot grid) --- */}
         <div className="pointer-events-none absolute inset-y-0 -right-3 -left-3 bg-white sm:-right-4 sm:-left-4 md:-right-8 md:-left-8 lg:-right-16 lg:-left-16">
@@ -560,7 +587,7 @@ const Features: React.FC = () => {
           />
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[2200px] flex-1 flex-col">
+        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[2200px] flex-1 flex-col pb-8">
           <div className="shrink-0 pb-4 text-center lg:pb-8">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
@@ -659,13 +686,15 @@ const Features: React.FC = () => {
 
                   {/* Visual Content Area - Added scroll handling for smaller screens */}
                   <div className="no-scrollbar absolute inset-0 overflow-y-auto bg-slate-50/30 pt-10 pb-4">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="popLayout" custom={direction}>
                       <motion.div
                         key={activeId}
-                        initial={{ opacity: 0, scale: 0.98 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 1.02 }}
-                        transition={{ duration: 0.2, ease: 'easeOut' }}
+                        custom={direction}
+                        variants={variants}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{ duration: 0.4, ease: [0.32, 0.72, 0, 1] }}
                         className="flex h-full w-full items-start justify-center p-4"
                       >
                         {features.find((f) => f.id === activeId)?.visual}
