@@ -47,7 +47,6 @@
 html {
   /* Reserve space for scrollbar to prevent layout shift */
   scrollbar-gutter: stable;
-  background-color: #ffffff;
 }
 
 body {
@@ -236,59 +235,4 @@ body {
   max-width: min(100%, 1800px);
   margin-inline: auto;
   padding-inline: var(--container-padding);
-}
-
-/* ========== Mobile Touch Optimizations ========== */
-@media (max-width: 639px) {
-  /* Disable tap highlight on touch */
-  .touch-target,
-  button,
-  a {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* Reduce aurora animations on mobile for performance */
-  .animate-aurora-1,
-  .animate-aurora-2 {
-    animation-duration: 30s; /* Slower = less CPU */
-  }
-
-  .animate-twinkle {
-    animation-duration: 5s; /* Slower twinkle */
-  }
-}
-
-/* Reduce motion for battery/performance when user prefers */
-@media (prefers-reduced-motion: reduce) {
-  .animate-aurora-1,
-  .animate-aurora-2,
-  .animate-twinkle,
-  .animate-nebula,
-  .animate-aurora-shimmer {
-    animation: none !important;
-  }
-}
-
-/* Safe area insets for notched devices */
-.pb-safe-bottom {
-  padding-bottom: env(safe-area-inset-bottom, 0);
-}
-
-.pt-safe-top {
-  padding-top: env(safe-area-inset-top, 0);
-}
-
-/* Better tap feedback on touch devices */
-@media (hover: none) {
-  .touch-target:active,
-  button:active {
-    opacity: 0.8;
-    transform: scale(0.98);
-  }
-}
-
-/* Mask for horizontal scroll fade effect */
-.mask-linear-fade {
-  -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
-  mask-image: linear-gradient(to right, black 90%, transparent 100%);
 }
