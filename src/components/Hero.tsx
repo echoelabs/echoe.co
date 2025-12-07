@@ -387,18 +387,9 @@ const Hero: React.FC = () => {
 
       // Frame skipping for mobile performance
       frameCount++;
-      if (isMobile) {
-        // On mobile, draw once and stop (Static Grid) to save massive GPU/JS overhead during scroll
-        if (frameCount > 1) {
-          cancelAnimationFrame(animationFrameId);
-          return;
-        }
-      } else {
-        // Desktop: Frame skipping logic
-        if (frameCount % FRAME_SKIP !== 0) {
-          animationFrameId = requestAnimationFrame(() => draw(Date.now()));
-          return;
-        }
+      if (frameCount % FRAME_SKIP !== 0) {
+        animationFrameId = requestAnimationFrame(() => draw(Date.now()));
+        return;
       }
 
       // Clear canvas
@@ -643,8 +634,8 @@ const Hero: React.FC = () => {
                   initial={{ opacity: 1, scale: 1, y: 0 }}
                   style={{
                     opacity: isMobile ? (mobileTitleIndex === 0 ? 1 : 0) : title1Opacity,
-                    scale: isMobile ? 1 : title1Scale,
-                    y: isMobile ? 0 : title1Y,
+                    scale: title1Scale,
+                    y: title1Y,
                   }}
                   animate={isMobile ? { opacity: mobileTitleIndex === 0 ? 1 : 0 } : {}}
                   transition={{ duration: 0.5 }} // Smooth fade for mobile auto-rotate
@@ -662,8 +653,8 @@ const Hero: React.FC = () => {
                   initial={{ opacity: 0, scale: 1.1, y: 50 }}
                   style={{
                     opacity: isMobile ? (mobileTitleIndex === 1 ? 1 : 0) : title2Opacity,
-                    scale: isMobile ? 1 : title2Scale,
-                    y: isMobile ? 0 : title2Y,
+                    scale: title2Scale,
+                    y: title2Y,
                   }}
                   animate={isMobile ? { opacity: mobileTitleIndex === 1 ? 1 : 0 } : {}}
                   transition={{ duration: 0.5 }}
