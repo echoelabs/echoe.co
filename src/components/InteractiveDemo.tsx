@@ -232,7 +232,7 @@ const InteractiveDemo: React.FC = () => {
             >
               {/* The Main Interface Container (The App Window) */}
               {/* Added more horizontal padding (px-6 md:px-12) to prevent shadow cutoff */}
-              <div className="no-scrollbar mx-auto flex min-h-0 w-full flex-1 flex-col px-6 sm:px-8 md:px-12 lg:px-16">
+              <div className="no-scrollbar mx-auto flex min-h-0 w-full flex-1 flex-col px-6 sm:px-4 md:px-12 lg:px-16">
                 <motion.div
                   initial={{ y: 60, opacity: 0 }}
                   whileInView={{ y: 0, opacity: 1 }}
