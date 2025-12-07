@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useMotionValueEvent, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { trackNavClick, trackButtonClick } from '../services/analytics';
 
@@ -43,7 +43,6 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
   const [activePath, setActivePath] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { scrollY } = useScroll();
 
   // Get current path from props or window
   const pathname = currentPath || (typeof window !== 'undefined' ? window.location.pathname : '/');
@@ -72,31 +71,46 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
       return;
     }
 
-    const sections = ['demo', 'features', 'pricing'];
+    const sections = ['hero', 'demo', 'features', 'pricing', 'early-access'];
 
     const handleScroll = () => {
-      const scrollPosition = window.scrollY + 150;
-      const windowHeight = window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight;
-      const scrolledToBottom = window.scrollY + windowHeight >= docHeight - 100;
+      // 150px buffer zone for triggering section changes
+      const triggerPoint = 150;
+
+      const scrolledToBottom =
+        window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
 
       if (scrolledToBottom) {
         setActiveSection('contact');
         return;
       }
 
+      // "Last Started Section" logic (ScrollSpy)
+      // This is more robust against gaps or short containers.
+      // We find the last section that has started (top <= trigger).
+      let currentSection = null;
+
       for (const sectionId of sections) {
         const element = document.getElementById(sectionId);
         if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(sectionId);
-            return;
+          const rect = element.getBoundingClientRect();
+          if (rect.top <= triggerPoint) {
+            currentSection = sectionId;
+          } else {
+            // Since sections are ordered, once we find one below trigger,
+            // all subsequent ones are also below (assuming no overlap madness).
+            // We can stop, but for safety in complex layouts, let's just let it run
+            // or optimize. Given 5 sections, running all is fine.
+            // But if we want strict visual order:
+            // break;
+            // Let's not break, just in case of weird stacking, but 'currentSection' overrides ensure last match wins.
           }
         }
       }
 
-      if (window.scrollY < 100) {
+      if (currentSection) {
+        setActiveSection(currentSection);
+      } else if (window.scrollY < 100) {
         setActiveSection(null);
       }
     };
@@ -107,26 +121,43 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, [isHomePage]);
 
-  useMotionValueEvent(scrollY, 'change', (latest) => {
+  // Handle Navbar Visibility - SIMPLE: Hide after exiting Pricing
+  useEffect(() => {
     if (!isHomePage) {
       setHidden(false);
       return;
     }
 
-    const docHeight = document.documentElement.scrollHeight;
-    const winHeight = window.innerHeight;
-    const maxScroll = docHeight - winHeight;
-    const distanceFromBottom = maxScroll - latest;
+    const handleVisibility = () => {
+      const pricing = document.getElementById('pricing');
+      if (!pricing) {
+        setHidden(false);
+        return;
+      }
 
-    const parallaxZoneThreshold = winHeight * 6.25;
-    const footerVisibleThreshold = winHeight * 2.5;
+      const pricingRect = pricing.getBoundingClientRect();
+      const footerThreshold = 100; // Near footer, show again
 
-    if (distanceFromBottom < parallaxZoneThreshold && distanceFromBottom > footerVisibleThreshold) {
-      setHidden(true);
-    } else {
-      setHidden(false);
-    }
-  });
+      // If pricing bottom is above the screen (we've scrolled past it)
+      const pastPricing = pricingRect.bottom < 0;
+
+      // If we're near the very bottom of the page (footer/contact)
+      const nearBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - footerThreshold;
+
+      if (pastPricing && !nearBottom) {
+        setHidden(true);
+      } else {
+        setHidden(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleVisibility, { passive: true });
+    handleVisibility();
+
+    return () => window.removeEventListener('scroll', handleVisibility);
+  }, [isHomePage]);
 
   const scrollToSection = (id: string) => {
     trackNavClick(id);

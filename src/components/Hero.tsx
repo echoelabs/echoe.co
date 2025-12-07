@@ -564,6 +564,7 @@ const Hero: React.FC = () => {
   return (
     <LazyMotion features={domAnimation}>
       <div
+        id="hero"
         ref={containerRef}
         className="relative h-[150vh] bg-white sm:h-[200vh] lg:h-[250vh]"
         style={{ position: 'relative' }}

@@ -434,8 +434,11 @@ const Features: React.FC = () => {
   useEffect(() => {
     const calculate = () => {
       const vh = window.innerHeight;
+      const isMobile = window.innerWidth < 1024; // lg breakpoint
+
       const stickyHeight = vh - headerHeight;
-      const scrollPerCard = vh * 0.18; // 18vh per card transition (more time on each card)
+      // Use smaller scroll-per-card on mobile for tighter experience
+      const scrollPerCard = isMobile ? vh * 0.1 : vh * 0.18;
       const sectionHeight = stickyHeight + (numCards - 1) * scrollPerCard + headerHeight;
 
       setDimensions({
@@ -445,6 +448,8 @@ const Features: React.FC = () => {
     };
 
     calculate();
+    window.addEventListener('resize', calculate);
+    return () => window.removeEventListener('resize', calculate);
   }, [numCards]);
 
   // Scroll-based card switching
@@ -561,10 +566,10 @@ const Features: React.FC = () => {
       className="relative z-10 bg-white px-6 md:px-8 lg:px-24 xl:px-32"
       style={{ height: dimensions.sectionHeight }}
     >
-      {/* Sticky content wrapper - Reduced vertical padding to maximize screen real estate */}
+      {/* Sticky content wrapper - Reduced vertical padding on mobile */}
       <div
         ref={stickyRef}
-        className="sticky top-14 flex h-[calc(100dvh-3.5rem)] flex-col py-6 lg:py-8"
+        className="sticky top-14 flex h-[calc(100dvh-3.5rem)] flex-col py-4 lg:py-8"
       >
         {/* --- BACKGROUND (bg color + dot grid) --- */}
         <div className="pointer-events-none absolute inset-y-0 -right-3 -left-3 bg-white sm:-right-4 sm:-left-4 md:-right-8 md:-left-8 lg:-right-16 lg:-left-16">
@@ -587,14 +592,14 @@ const Features: React.FC = () => {
           />
         </div>
 
-        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[2200px] flex-1 flex-col pb-8">
-          <div className="shrink-0 pb-4 text-center lg:pb-8">
+        <div className="relative z-10 mx-auto flex min-h-0 w-full max-w-[2200px] flex-1 flex-col pb-4 lg:pb-8">
+          <div className="shrink-0 pb-3 text-center lg:pb-8">
             <motion.h2
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="font-display mb-6 text-2xl leading-tight font-semibold tracking-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl"
+              className="font-display mb-3 text-xl leading-tight font-semibold tracking-tight text-slate-900 sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl"
             >
               Command Center.
               <br />
@@ -602,9 +607,9 @@ const Features: React.FC = () => {
             </motion.h2>
           </div>
 
-          <div className="grid min-h-0 flex-1 grid-cols-1 items-start gap-5 overflow-visible sm:gap-6 lg:grid-cols-12 lg:gap-8">
+          <div className="grid min-h-0 flex-1 grid-cols-1 items-start gap-3 overflow-visible sm:gap-6 lg:grid-cols-12 lg:gap-8">
             {/* LEFT COLUMN: THE STREAM (Navigation) */}
-            <div className="no-scrollbar flex h-full flex-col justify-between gap-2 overflow-y-auto py-3 pb-4 sm:gap-3 sm:py-4 sm:pb-4 lg:col-span-5">
+            <div className="no-scrollbar flex h-full flex-col justify-start gap-2 overflow-y-auto py-1 sm:gap-3 sm:py-4 lg:col-span-5 lg:justify-between">
               {features.map((feature, index) => {
                 const isActive = activeId === feature.id;
                 return (
