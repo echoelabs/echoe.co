@@ -43,28 +43,26 @@ import CookieConsent from '../components/CookieConsent';
       const lenis = new Lenis({
         duration: 1.2,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        // direction: 'vertical', // Deprecated/Invalid in types
-        // gestureDirection: 'vertical', // Deprecated/Invalid in types
-        // smooth: true, // Invalid in types
-        // smoothTouch: true, // Invalid in types
+        direction: 'vertical',
+        gestureDirection: 'vertical',
+        smooth: true,
+        smoothTouch: true,
         touchMultiplier: 2,
       });
 
       // Expose lenis globally for navigation
       (window as unknown as { lenis: typeof lenis }).lenis = lenis;
 
-      function raf(time: number) {
+      function raf(time) {
         lenis.raf(time);
         requestAnimationFrame(raf);
       }
 
       requestAnimationFrame(raf);
       window.lenis = lenis;
-      
-      return lenis;
     };
 
-    let lenis: Lenis | undefined;
+    let lenis: ReturnType<typeof initLenis> | undefined;
 
     // Detect Lighthouse or Googlebot to bypass loading screen for performance audit
     const isLighthouse = navigator.userAgent.includes('Chrome-Lighthouse') || navigator.userAgent.includes('Googlebot');
