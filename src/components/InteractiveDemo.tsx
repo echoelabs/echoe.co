@@ -56,7 +56,8 @@ const InteractiveDemo: React.FC = () => {
 
   // Scale from 0.75 (quite zoomed out) to 1 (full size) as user scrolls down
   // Mobile: No zoom effect (strictly 1)
-  const scale = useTransform(scrollYProgress, [0, 0.5], isMobile ? [1, 1] : [0.75, 1]);
+  // Scale: locked to 1 to ensure strict alignment with Features section (User Request)
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1]);
 
   // Simulated Dashboard Data
   const [inventory, setInventory] = useState<InventoryItem[]>([
@@ -217,7 +218,7 @@ const InteractiveDemo: React.FC = () => {
         style={{ position: 'relative' }}
       >
         <div
-          className={`${isMobile ? 'relative px-0' : 'sticky top-16 px-2 sm:top-20 sm:px-8 md:px-12 lg:px-16 lg:py-6'} flex h-[var(--vh-hero)] flex-col py-1 sm:py-4`}
+          className={`${isMobile ? 'relative px-6 sm:px-8' : 'sticky top-16 px-2 sm:top-20 sm:px-8 md:px-12 lg:px-16 lg:py-6'} flex h-[var(--vh-hero)] flex-col py-1 sm:py-4`}
         >
           {/* Dynamic Background decoration - Removed Grid Pattern Completely */}
           <div className="pointer-events-none absolute top-1/4 left-0 h-[500px] w-full bg-gradient-to-r from-blue-100/40 via-purple-100/40 to-pink-100/40 opacity-60 blur-3xl" />
