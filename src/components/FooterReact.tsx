@@ -111,7 +111,6 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
                 <li>
                   <a
                     href="mailto:hello@echoe.co"
-                    data-astro-reload
                     className={`${hoverColor} -mx-1 block px-1 py-1.5 transition-colors`}
                   >
                     Contact
@@ -196,7 +195,6 @@ const FooterReact: React.FC<FooterProps> = ({ darkMode = false }) => {
           <div className={`text-[10px] ${textColor}`}>© 2026 ECHO HQ CO., LTD.</div>
           <a
             href="mailto:hello@echoe.co"
-            data-astro-reload
             className={`text-[10px] ${textColor} ${hoverColor} transition-colors`}
           >
             hello@echoe.co
