@@ -29,27 +29,13 @@ const EarlyAccess: React.FC = () => {
     offset: ['start start', 'end end'],
   });
 
-  // Mobile detection for disabling expensive parallax
-  const [isMobile, setIsMobile] = useState(false);
-
-  useEffect(() => {
-    const checkMobile = () => setIsMobile(window.innerWidth < 768);
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
   // --- REFINED PHYSICS-BASED SKY TRANSITION ---
   // HEIGHT: 800vh total
   // Background moves UP to reveal the "night" section.
-  const backgroundY = useTransform(
-    scrollYProgress,
-    [0, 1],
-    isMobile ? ['0%', '0%'] : ['0%', '-75%']
-  );
+  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '-75%']);
 
   // Parallax for stars:
-  const starsY = useTransform(scrollYProgress, [0, 1], isMobile ? ['0%', '0%'] : ['10%', '-20%']);
+  const starsY = useTransform(scrollYProgress, [0, 1], ['10%', '-20%']);
 
   // Fade stars in later to ensure sky is dark enough
   const starsOpacity = useTransform(scrollYProgress, [0.6, 0.8], [0, 1]);
@@ -67,7 +53,7 @@ const EarlyAccess: React.FC = () => {
 
   // Content Animations
   const newsletterOpacity = useTransform(scrollYProgress, [0.65, 0.8], [0, 1]);
-  const newsletterScale = useTransform(scrollYProgress, [0.65, 0.8], isMobile ? [1, 1] : [0.9, 1]);
+  const newsletterScale = useTransform(scrollYProgress, [0.65, 0.8], [0.9, 1]);
 
   // DYNAMIC POSITIONING - calculated based on footer height
   const footerRef = useRef<HTMLDivElement>(null);
@@ -100,7 +86,7 @@ const EarlyAccess: React.FC = () => {
   const newsletterY = useTransform(
     scrollYProgress,
     [0.65, 0.85, 0.95, 1],
-    isMobile ? [0, 0, 0, 0] : [150, 0, 0, finalYOffset]
+    [150, 0, 0, finalYOffset]
   );
 
   // Footer fade in at the very end
@@ -125,6 +111,7 @@ const EarlyAccess: React.FC = () => {
 
   useEffect(() => {
     // Generate stars on client only - reduce count on mobile for performance
+    const isMobile = window.innerWidth < 640;
     const starCount = isMobile ? 25 : 50;
     const denseStarCount = isMobile ? 60 : 150;
 
