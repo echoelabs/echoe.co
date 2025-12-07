@@ -96,7 +96,7 @@ import CookieConsent from '../components/CookieConsent';
         lenis = initLenis();
 
         setTimeout(() => loadingScreen.remove(), 600); // Remove after fade completes
-      }, 1500); // Reduced to 1.5s per request
+      }, 2500); // Increased to 2.5s per request
     } else {
       // No loading screen (or bypassed for Lighthouse) - remove it and init immediately
       if (loadingScreen) loadingScreen.remove();
