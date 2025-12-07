@@ -118,7 +118,7 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
     const maxScroll = docHeight - winHeight;
     const distanceFromBottom = maxScroll - latest;
 
-    const parallaxZoneThreshold = winHeight * 8; // Start hiding earlier (full 800vh section)
+    const parallaxZoneThreshold = winHeight * 6.25;
     const footerVisibleThreshold = winHeight * 2.5;
 
     if (distanceFromBottom < parallaxZoneThreshold && distanceFromBottom > footerVisibleThreshold) {
@@ -169,41 +169,31 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
       initial="visible"
       animate={hidden ? 'hidden' : 'visible'}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b px-4 py-3 shadow-none transition-[background-color,box-shadow,border-color,backdrop-filter] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-5 md:px-8 lg:px-16 ${mobileMenuOpen ? 'border-gray-100 bg-white' : 'border-transparent bg-white/90 backdrop-blur-md supports-[backdrop-filter]:bg-white/75'}`}
+      className="fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b border-transparent bg-white/90 px-3 py-3 shadow-none backdrop-blur-md transition-[background-color,box-shadow,border-color,backdrop-filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] supports-[backdrop-filter]:bg-white/75 sm:px-4 md:px-8 lg:px-16"
     >
-      <div className="flex items-center gap-3">
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="touch-target -ml-2 p-2 text-gray-600 transition-colors hover:text-black md:hidden"
-          aria-label="Toggle menu"
+      {isHomePage ? (
+        <div
+          className="relative z-10 flex cursor-pointer items-center gap-2"
+          onClick={() => {
+            const lenis = window.lenis;
+            if (lenis) {
+              lenis.scrollTo(0);
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+          }}
         >
-          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-        </button>
-
-        {isHomePage ? (
-          <div
-            className="relative z-10 flex cursor-pointer items-center gap-2"
-            onClick={() => {
-              const lenis = window.lenis;
-              if (lenis) {
-                lenis.scrollTo(0);
-              } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-          >
-            <span className="font-display text-lg font-semibold tracking-tight text-black">
-              echoe
-            </span>
-          </div>
-        ) : (
-          <a href="/" className="relative z-10 flex items-center gap-2">
-            <span className="font-display text-lg font-semibold tracking-tight text-black">
-              echoe
-            </span>
-          </a>
-        )}
-      </div>
+          <span className="font-display text-lg font-semibold tracking-tight text-black">
+            echoe
+          </span>
+        </div>
+      ) : (
+        <a href="/" className="relative z-10 flex items-center gap-2">
+          <span className="font-display text-lg font-semibold tracking-tight text-black">
+            echoe
+          </span>
+        </a>
+      )}
 
       <nav className="absolute top-1/2 left-1/2 hidden -translate-x-1/2 -translate-y-1/2 items-center gap-8 text-xs font-medium text-gray-600 md:flex">
         {isHomePage ? (
@@ -268,16 +258,24 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
         >
           Get Started
         </button>
+
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="touch-target p-3 text-gray-600 transition-colors hover:text-black md:hidden"
+          aria-label="Toggle menu"
+        >
+          {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
 
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="absolute top-full right-0 left-0 overflow-hidden border-b border-gray-100 bg-white shadow-lg md:hidden"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-full right-0 left-0 border-b border-gray-100 bg-white shadow-lg md:hidden"
           >
             <nav className="flex flex-col px-4 py-4">
               {isHomePage ? (
