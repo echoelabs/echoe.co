@@ -189,7 +189,7 @@ const Header: React.FC<HeaderProps> = ({ currentPath }) => {
       initial="visible"
       animate={hidden ? 'hidden' : 'visible'}
       transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className={`fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b px-4 py-3 shadow-none transition-[background-color,box-shadow,border-color] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-5 md:px-8 lg:px-16 ${mobileMenuOpen ? 'border-gray-100 bg-white' : 'border-transparent bg-white'}`}
+      className={`fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b px-4 py-3 shadow-none transition-[background-color,box-shadow,border-color,backdrop-filter] duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] sm:px-5 md:px-8 lg:px-16 ${mobileMenuOpen ? 'border-gray-100 bg-white' : 'border-transparent bg-white/95 md:bg-white/90 md:backdrop-blur-md supports-[backdrop-filter]:md:bg-white/75'}`}
     >
       <div className="flex items-center gap-3">
         <button
